@@ -1,0 +1,1 @@
+const a={getItem:async t=>{try{return localStorage.getItem(t)}catch{return null}},setItem:async(t,e)=>{try{localStorage.setItem(t,e)}catch{}},removeItem:async t=>{try{localStorage.removeItem(t)}catch{}},clear:async()=>{try{localStorage.clear()}catch{}}};export{a as default};

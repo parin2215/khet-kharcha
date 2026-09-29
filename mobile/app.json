@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Khet Kharcha",
+    "slug": "khet-kharcha",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.khetkharcha.app"
+    },
+    "android": {
+      "package": "com.khetkharcha.app"
+    },
+    "plugins": [
+      "@react-native-google-signin/google-signin",
+      "expo-sharing",
+      "expo-status-bar"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "35d30a64-73b0-4e33-9e6f-01874d14d161"
+      }
+    }
+  }
+}

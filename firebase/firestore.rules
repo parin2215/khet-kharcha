@@ -1,0 +1,172 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ━━━ Helper Functions ━━━
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(ownerId) {
+      return isAuthenticated() && request.auth.uid == ownerId;
+    }
+
+    function isValidAmount(field) {
+      return request.resource.data[field] is number
+             && request.resource.data[field] > 0;
+    }
+
+    // ━━━ Users ━━━
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ━━━ Farms ━━━
+    match /farms/{farmId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0;
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ━━━ Expenses ━━━
+    match /expenses/{expenseId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && isValidAmount('amount')
+                    && request.resource.data.expenseType in ['own', 'partner']
+                    && request.resource.data.category is string;
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid
+                    && request.resource.data.expenseType in ['own', 'partner'];
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ━━━ Bills ━━━
+    match /bills/{billId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && isValidAmount('amount');
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ━━━ Partners ━━━
+    match /partners/{partnerId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && request.resource.data.sharePercent >= 0
+                    && request.resource.data.sharePercent <= 100;
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ━━━ Settlements ━━━
+    match /settlements/{settlementId} {
+      allow read: if isAuthenticated()
+                  && resource.data.settledBy == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.settledBy == request.auth.uid
+                    && isValidAmount('amount');
+      allow update: if isAuthenticated()
+                    && resource.data.settledBy == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.settledBy == request.auth.uid;
+    }
+
+    // ━━━ Reminders ━━━
+    match /reminders/{reminderId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+    // ━━━ Partner Loans ━━━
+    // A loan belongs to a farm, so authorise via the farm's ownerId rather than
+    // trusting the caller or the (client-writable) loan document itself.
+    function ownsFarm(farmId) {
+      return isAuthenticated()
+             && exists(/databases/$(database)/documents/farms/$(farmId))
+             && get(/databases/$(database)/documents/farms/$(farmId)).data.ownerId == request.auth.uid;
+    }
+
+    match /partner_loans/{loanId} {
+      allow read: if isAuthenticated() && ownsFarm(resource.data.farmId);
+      allow create: if isAuthenticated()
+                    && ownsFarm(request.resource.data.farmId)
+                    && isValidAmount('amount');
+      allow update: if isAuthenticated()
+                    && ownsFarm(resource.data.farmId)
+                    && ownsFarm(request.resource.data.farmId);
+      allow delete: if isAuthenticated() && ownsFarm(resource.data.farmId);
+    }
+
+    // ━━━ Transactions (unified expense/crop/loan model) ━━━
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && isValidAmount('amount');
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid
+                    && request.resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ━━━ Advances ━━━
+    match /advances/{advanceId} {
+      allow read: if isAuthenticated()
+                  && resource.data.ownerId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.ownerId == request.auth.uid
+                    && isValidAmount('amount');
+      allow update: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid
+                    && request.resource.data.ownerId == request.auth.uid;
+      allow delete: if isAuthenticated()
+                    && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ━━━ Audit Logs (immutable, owner-scoped) ━━━
+    match /audit_logs/{logId} {
+      allow read: if isAuthenticated()
+                  && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid;
+      // Audit entries are write-once: no update, no delete.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ━━━ Partnership Templates (subcollection of the caller's own user doc) ━━━
+    match /users/{userId}/partnershipTemplates/{templateId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}
