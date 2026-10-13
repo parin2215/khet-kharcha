@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../store/useAuthStore.js';
-import { useSettingsStore } from '../store/useSettingsStore.js';
 import { 
   LayoutDashboard, 
   Sprout, 
   PlusCircle, 
   BarChart3, 
-  Users, 
   Receipt, 
   Bell, 
   Settings, 
   LogOut, 
-  Menu, 
-  X, 
-  Globe,
-  Wheat,
-  User
+  Wheat, 
+  Globe, 
+  User, 
+  Users,
+  Activity,
+  BookOpen
 } from 'lucide-react';
+import { useAuthStore } from '../store/useAuthStore.js';
+import { useSettingsStore } from '../store/useSettingsStore.js';
 import { LANGUAGES } from '../../../shared/constants/index.js';
 import BottomNav from './BottomNav.jsx';
 
@@ -29,24 +29,20 @@ export default function Layout({ children }) {
   const { profile, logout } = useAuthStore();
   const { language, setLanguage } = useSettingsStore();
 
-  // Keyboard shortcuts listener
+  // Keyboard navigation shortcuts (Desktop power users)
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Ignore shortcut if user is typing in an input/textarea/select
       const activeEl = document.activeElement;
       if (activeEl && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeEl.tagName) || activeEl.isContentEditable) {
         return;
       }
 
-      if (e.key === 'n' || e.key === 'N') {
+      if (e.key === 'c' || e.key === 'C') {
         e.preventDefault();
-        navigate('/expenses/new');
+        navigate('/current-state');
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
         navigate('/farms');
-      } else if (e.key === 'r' || e.key === 'R') {
-        e.preventDefault();
-        navigate('/reports');
       }
     };
     
@@ -66,9 +62,9 @@ export default function Layout({ children }) {
   const navItems = [
     { to: '/dashboard', label: t('navigation.dashboard'), icon: LayoutDashboard },
     { to: '/farms', label: t('navigation.farms'), icon: Sprout },
+    { to: '/current-state', label: 'Current State', icon: Activity },
+    { to: '/library', label: 'Library', icon: BookOpen },
     { to: '/partners', label: t('navigation.partners') || 'Partners', icon: Users },
-    { to: '/expenses/new', label: t('navigation.addExpense'), icon: PlusCircle },
-    { to: '/reports', label: t('navigation.reports'), icon: BarChart3 },
     { to: '/bills', label: t('navigation.bills'), icon: Receipt },
     { to: '/reminders', label: t('navigation.reminders'), icon: Bell },
     { to: '/settings', label: t('settings.title'), icon: Settings },
@@ -78,8 +74,10 @@ export default function Layout({ children }) {
   const getPageTitle = () => {
     const path = location.pathname;
     if (path.startsWith('/dashboard')) return t('navigation.dashboard');
+    if (path.startsWith('/current-state')) return 'Current State - Ongoing Crops';
+    if (path.startsWith('/library')) return 'Crop Knowledge Library & Agronomy Guides';
     if (path.startsWith('/farms/new')) return 'Add Farm';
-    if (path.startsWith('/farms/')) return 'Farm Details';
+    if (path.startsWith('/farms/')) return 'Farm Details & Historical Analytics';
     if (path.startsWith('/farms')) return t('navigation.farms');
     if (path.startsWith('/expenses/new')) return t('navigation.addExpense');
     if (path.startsWith('/reports')) return t('navigation.reports');
@@ -100,7 +98,7 @@ export default function Layout({ children }) {
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-6 py-6 border-b border-stone-800">
           <div className="flex items-center justify-center w-10 h-10 bg-primary/20 rounded-xl text-primary">
-            <Wheat className="w-6 h-6" />
+            <Wheat className="w-6 h-6 text-emerald-400" />
           </div>
           <div>
             <span className="font-extrabold text-lg tracking-tight block">{t('app.name')}</span>
@@ -119,7 +117,7 @@ export default function Layout({ children }) {
                 className={({ isActive }) => 
                   `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     isActive 
-                      ? 'bg-primary/20 text-[#1D9E75] border border-primary/10 shadow-sm' 
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm' 
                       : 'text-stone-300 hover:bg-stone-800/50 hover:text-white border border-transparent'
                   }`
                 }
@@ -138,12 +136,12 @@ export default function Layout({ children }) {
               {profile?.photoURL ? (
                 <img src={profile.photoURL} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
-                <User className="w-5 h-5" />
+                <User className="w-5 h-5 text-emerald-400" />
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold truncate text-stone-100">{profile?.name || 'Jai Kisan'}</p>
-              <p className="text-xs text-stone-400 truncate">{profile?.email || profile?.phone || ''}</p>
+              <p className="text-sm font-bold truncate text-stone-100">{profile?.name || 'Ramji Patel'}</p>
+              <p className="text-xs text-stone-400 truncate">{profile?.email || profile?.phone || 'Farmer Account'}</p>
             </div>
           </div>
           
@@ -162,7 +160,7 @@ export default function Layout({ children }) {
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-[#1a1a18] text-white border-b border-stone-800 sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-8 h-8 bg-primary/20 rounded-lg text-primary">
-            <Wheat className="w-5 h-5" />
+            <Wheat className="w-5 h-5 text-emerald-400" />
           </div>
           <span className="font-extrabold text-base tracking-tight">{t('app.name')}</span>
         </div>
@@ -179,14 +177,14 @@ export default function Layout({ children }) {
             {/* Quick Keyboard shortcuts helper */}
             <div className="hidden lg:flex items-center text-xs text-stone-400 gap-3 border-r border-stone-200 pr-6">
               <span>Shortcuts:</span>
-              <span className="bg-stone-100 border border-stone-200 px-1.5 py-0.5 rounded text-stone-600 font-bold font-mono">N</span> New Expense
+              <span className="bg-stone-100 border border-stone-200 px-1.5 py-0.5 rounded text-stone-600 font-bold font-mono">C</span> Current State
               <span className="bg-stone-100 border border-stone-200 px-1.5 py-0.5 rounded text-stone-600 font-bold font-mono">F</span> Farms
-              <span className="bg-stone-100 border border-stone-200 px-1.5 py-0.5 rounded text-stone-600 font-bold font-mono">R</span> Reports
+              
             </div>
 
             {/* Language Selection */}
             <div className="flex items-center bg-stone-100 hover:bg-stone-200/50 border border-stone-200/50 rounded-xl p-1.5 shadow-sm transition">
-              <Globe className="w-4 h-4 text-primary mr-1.5 ml-1" />
+              <Globe className="w-4 h-4 text-emerald-600 mr-1.5 ml-1" />
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}

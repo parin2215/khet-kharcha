@@ -3,8 +3,6 @@ import {
   signUpWithEmail, 
   signInWithEmail, 
   signInWithGoogleWeb, 
-  sendOTPWeb, 
-  verifyOTPWeb, 
   signOut, 
   getUserProfile, 
   updateUserProfile,
@@ -22,6 +20,23 @@ export const useAuthStore = create((set, get) => ({
   setError: (error) => set({ error }),
 
   initializeAuth: () => {
+    // Check if demo session is stored
+    const storedDemo = localStorage.getItem('khet_kharcha_demo_user');
+    if (storedDemo) {
+      try {
+        const parsed = JSON.parse(storedDemo);
+        set({
+          user: { uid: parsed.uid, email: parsed.email },
+          profile: parsed,
+          loading: false,
+          initialized: true
+        });
+        return () => {};
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     return onAuthStateChange(async (user) => {
       if (user) {
         set({ user, loading: true });
@@ -36,6 +51,26 @@ export const useAuthStore = create((set, get) => ({
         set({ user: null, profile: null, loading: false, initialized: true });
       }
     });
+  },
+
+  loginAsDemo: () => {
+    const demoProfile = {
+      uid: 'demo_farmer_101',
+      name: 'Ramji Patel',
+      email: 'ramji.patel@khetkharcha.com',
+      phone: '+91 98765 43210',
+      state: 'GJ',
+      language: 'en',
+      unitPreference: 'bigha'
+    };
+    localStorage.setItem('khet_kharcha_demo_user', JSON.stringify(demoProfile));
+    set({
+      user: { uid: demoProfile.uid, email: demoProfile.email },
+      profile: demoProfile,
+      loading: false,
+      initialized: true
+    });
+    return demoProfile;
   },
 
   loginWithEmail: async (email, password) => {
@@ -80,11 +115,12 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     set({ loading: true });
     try {
+      localStorage.removeItem('khet_kharcha_demo_user');
       await signOut();
       set({ user: null, profile: null, loading: false });
     } catch (error) {
-      set({ loading: false, error: error.message });
-      throw error;
+      localStorage.removeItem('khet_kharcha_demo_user');
+      set({ user: null, profile: null, loading: false });
     }
   },
 

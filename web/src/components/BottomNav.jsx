@@ -13,10 +13,13 @@ import {
   Bell, 
   Settings, 
   LogOut, 
-  ChevronRight 
+  ChevronRight,
+  Activity,
+  BookOpen
 } from 'lucide-react';
 
 const LABELS = {
+  currentState: { en: 'Current', hi: 'चल रहा', gu: 'ચાલુ પાક', mr: 'सुरू' },
   home: { en: 'Home', hi: 'होम', gu: 'હોમ', mr: 'होम' },
   farms: { en: 'Farms', hi: 'खेत', gu: 'ખેત', mr: 'शेत' },
   add: { en: 'Add', hi: 'जोड़ें', gu: 'ઉમેરો', mr: 'जोडा' },
@@ -152,7 +155,7 @@ export default function BottomNav() {
           </span>
         </button>
 
-        {renderTab(isReportsActive, BarChart3, 'reports', '/reports', 'reports')}
+        {renderTab(location.pathname.startsWith('/current-state'), Activity, 'currentState', '/current-state', 'currentState')}
         {renderTab(isMoreOpen, Menu, 'more', null, 'more')}
       </nav>
 
@@ -186,6 +189,29 @@ export default function BottomNav() {
 
             {/* List Rows */}
             <div className="px-4 space-y-1 overflow-y-auto">
+              {/* Crop Library */}
+              <button
+                onClick={() => handleTabClick('/library', 'library')}
+                className="w-full h-[52px] flex items-center justify-between border-b border-stone-100 hover:bg-emerald-50 px-2 rounded-xl transition active:bg-emerald-100 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-5 h-5 text-emerald-600" />
+                  <span className="text-xs font-bold text-stone-900">Crop Library & Agronomy Guides</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-stone-400" />
+              </button>
+
+              {/* Current State */}
+              <button
+                onClick={() => handleTabClick('/current-state', 'currentState')}
+                className="w-full h-[52px] flex items-center justify-between border-b border-stone-100 hover:bg-emerald-50 px-2 rounded-xl transition active:bg-emerald-100 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Activity className="w-5 h-5 text-emerald-600" />
+                  <span className="text-xs font-bold text-stone-900">Current State (Ongoing Crops)</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-stone-400" />
+              </button>
               
               {/* Partnership Agreement */}
               <button

@@ -13,6 +13,8 @@ import DashboardPage from './pages/dashboard/DashboardPage.jsx';
 import FarmsPage from './pages/farms/FarmsPage.jsx';
 import FarmDetailPage from './pages/farms/FarmDetailPage.jsx';
 import AddFarmPage from './pages/farms/AddFarmPage.jsx';
+import CurrentStatePage from './pages/currentState/CurrentStatePage.jsx';
+import LibraryPage from './pages/library/LibraryPage.jsx';
 import AddExpensePage from './pages/expenses/AddExpensePage.jsx';
 import ReportsPage from './pages/reports/ReportsPage.jsx';
 import PartnerSettlementPage from './pages/partners/PartnerSettlementPage.jsx';
@@ -30,7 +32,7 @@ function ProtectedRoute({ children }) {
   if (!initialized || loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#F7F7F5]">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
         <p className="mt-4 text-sm font-semibold text-[#6b6b67] animate-pulse">Loading Khet Kharcha...</p>
       </div>
     );
@@ -47,7 +49,6 @@ export default function App() {
   const { initializeAuth, profile } = useAuthStore();
   const { syncFromProfile } = useSettingsStore();
 
-  // Initialize Firebase and Auth listener on mount
   useEffect(() => {
     const setupFirebase = async () => {
       try {
@@ -70,7 +71,6 @@ export default function App() {
     };
   }, [initializeAuth]);
 
-  // Sync settings when profile updates
   useEffect(() => {
     if (profile) {
       syncFromProfile(profile);
@@ -93,6 +93,18 @@ export default function App() {
         <Route path="/farms" element={
           <ProtectedRoute>
             <FarmsPage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/current-state" element={
+          <ProtectedRoute>
+            <CurrentStatePage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/library" element={
+          <ProtectedRoute>
+            <LibraryPage />
           </ProtectedRoute>
         } />
         

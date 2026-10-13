@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
-import { useTransactionStore } from '../../store/useTransactionStore.js';
-import { usePartnerStore } from '../../store/usePartnerStore.js';
+import { useCurrentCropStore } from '../../store/useCurrentCropStore.js';
 import { 
   Sprout, 
   MapPin, 
@@ -12,30 +11,42 @@ import {
   Calendar, 
   Plus, 
   Trash2, 
-  Edit,
-  ChevronRight, 
-  Users,
-  Settings,
-  DollarSign,
-  FileText,
-  Clock,
-  ArrowLeft,
-  UserCheck,
-  Wheat,
-  Coins
+  Edit, 
+  Users, 
+  TrendingUp, 
+  BarChart3, 
+  Wheat, 
+  Clock, 
+  ArrowLeft, 
+  CheckCircle2, 
+  Droplets, 
+  Layers, 
+  Receipt, 
+  FileText, 
+  DollarSign, 
+  Coins, 
+  X,
+  ExternalLink,
+  Award
 } from 'lucide-react';
-import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
+import { 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  Legend, 
+  CartesianGrid, 
+  LineChart, 
+  Line,
+  ComposedChart
+} from 'recharts';
 import { formatINR, formatDate, toLocalDateString } from '../../../../shared/utils/helpers.js';
-import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js';
-import AmountDisplay from '../../components/AmountDisplay.jsx';
-import DataTable from '../../components/DataTable.jsx';
-import Modal from '../../components/Modal.jsx';
-import Toast from '../../components/Toast.jsx';
 import SeasonBadge from '../../components/SeasonBadge.jsx';
 import OwnershipBadge from '../../components/OwnershipBadge.jsx';
-import EmptyState from '../../components/EmptyState.jsx';
-import LoadingSkeleton from '../../components/LoadingSkeleton.jsx';
-import { getCategoryById } from '../../../../shared/constants/categories.js';
+import Toast from '../../components/Toast.jsx';
+import HisabFarmoModal from '../../components/HisabFarmoModal.jsx';
 
 export default function FarmDetailPage() {
   const { t } = useTranslation();
@@ -43,1171 +54,1300 @@ export default function FarmDetailPage() {
   const navigate = useNavigate();
   
   const { profile } = useAuthStore();
-  const { selectedFarm, setSelectedFarm, removeFarm, editFarm } = useFarmStore();
-  const { transactions, fetchTransactions, removeTransaction, createTransaction, loading: expLoading } = useTransactionStore();
-  const { partners, settlements, fetchPartnersByFarm, fetchSettlements, createSettlement } = usePartnerStore();
+  const { farms, fetchFarms, selectedFarm, setSelectedFarm, editFarm, addFarmHistory, removeFarm } = useFarmStore();
+  const { crops, fetchCrops } = useCurrentCropStore();
 
-  const [activeTab, setActiveTab] = useState('expenses'); // 'expenses' | 'partners' | 'settings' | 'lease_details' | 'lease_payments'
+  const [activeTab, setActiveTab] = useState('history'); // 'history' | 'analytics' | 'partners' | 'details'
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState('success');
-  const [isSettlementModalOpen, setIsSettlementModalOpen] = useState(false);
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-  
-  // Settlement form states
-  const [selectedPartner, setSelectedPartner] = useState(null);
-  const [settleAmount, setSettleAmount] = useState('');
-  const [settleNote, setSettleNote] = useState('');
-  const [settleLoading, setSettleLoading] = useState(false);
 
-  // Lend Money form states
-  const [isLendModalOpen, setIsLendModalOpen] = useState(false);
-  const [lendAmount, setLendAmount] = useState('');
-  const [lendNote, setLendNote] = useState('');
-  const [lendLoading, setLendLoading] = useState(false);
+  // Modals state
+  const [isEditFarmModalOpen, setIsEditFarmModalOpen] = useState(false);
+  const [isAddHistoryModalOpen, setIsAddHistoryModalOpen] = useState(false);
+  const [selectedFarmoHistory, setSelectedFarmoHistory] = useState(null);
 
-  // Add partner to own farm states
-  const [partnerName, setPartnerName] = useState('');
-  const [partnerPhone, setPartnerPhone] = useState('');
-  const [partnerShare, setPartnerShare] = useState('');
-  const [addPartnerLoading, setAddPartnerLoading] = useState(false);
+  // Edit Farm Form state
+  const [farmName, setFarmName] = useState('');
+  const [farmLocation, setFarmLocation] = useState('');
+  const [farmSize, setFarmSize] = useState('');
+  const [farmSizeUnit, setFarmSizeUnit] = useState('bigha');
+  const [farmOwnership, setFarmOwnership] = useState('own');
+  const [farmSoilType, setFarmSoilType] = useState('Black Cotton');
+  const [farmIrrigation, setFarmIrrigation] = useState('Canal & Tubewell');
+  const [farmNotes, setFarmNotes] = useState('');
 
-  // Load Farm details
+  // Add Past Harvest Form state
+  const [histCropName, setHistCropName] = useState('');
+  const [histVariety, setHistVariety] = useState('');
+  const [histSeason, setHistSeason] = useState('kharif');
+  const [histYear, setHistYear] = useState(new Date().getFullYear().toString());
+  const [histHarvestDate, setHistHarvestDate] = useState(toLocalDateString());
+  const [histYield, setHistYield] = useState('');
+  const [histYieldUnit, setHistYieldUnit] = useState('quintal');
+  const [histMandiRate, setHistMandiRate] = useState('');
+  const [histExpenses, setHistExpenses] = useState('');
+  const [histRevenue, setHistRevenue] = useState('');
+  const [histPartnerName, setHistPartnerName] = useState('');
+  const [histPartnerShare, setHistPartnerShare] = useState('50');
+  const [histPartnerSettled, setHistPartnerSettled] = useState('');
+  const [histNotes, setHistNotes] = useState('');
+
+  // Selected crop filter for analytics
+  const [selectedCropAnalytics, setSelectedCropAnalytics] = useState('all');
+
+  // Load farm and current crops
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const db = await import('../../../../shared/services/farmService.js');
-        const farm = await db.getFarmById(id);
-        if (farm) {
-          setSelectedFarm(farm);
-          fetchTransactions(profile.uid, { farmId: id });
-          if (farm.ownershipType === 'partner' || farm.ownershipType === 'leased') {
-            fetchPartnersByFarm(id);
-            fetchSettlements(id);
-          }
-        } else {
-          setToastMsg('Farm not found');
-          setToastType('error');
-          navigate('/farms');
-        }
-      } catch (e) {
-        console.error(e);
+    const uid = profile?.uid || 'default';
+    fetchFarms(uid);
+    fetchCrops(uid);
+  }, [profile, fetchFarms, fetchCrops]);
+
+  // Set selected farm from store
+  useEffect(() => {
+    if (farms.length > 0 && id) {
+      const found = farms.find(f => f.id === id);
+      if (found) {
+        setSelectedFarm(found);
+        setFarmName(found.name || '');
+        setFarmLocation(found.location || '');
+        setFarmSize((found.size || found.sizeValue || 1).toString());
+        setFarmSizeUnit(found.sizeUnit || 'bigha');
+        setFarmOwnership(found.ownershipType || 'own');
+        setFarmSoilType(found.soilType || 'Black Cotton');
+        setFarmIrrigation(found.irrigationSource || 'Canal & Tubewell');
+        setFarmNotes(found.notes || '');
       }
+    }
+  }, [farms, id, setSelectedFarm]);
+
+  // Real-time fetched ongoing crop from Current State for this farm
+  const liveOngoingCrop = useMemo(() => {
+    return crops.find(c => c.farmId === id && c.status === 'ongoing');
+  }, [crops, id]);
+
+  // Real-time crop history for this farm
+  const cropHistory = useMemo(() => {
+    return (selectedFarm?.cropHistory || []).slice().sort((a, b) => {
+      const yearDiff = (b.year || 0) - (a.year || 0);
+      if (yearDiff !== 0) return yearDiff;
+      return new Date(b.harvestDate || 0) - new Date(a.harvestDate || 0);
+    });
+  }, [selectedFarm?.cropHistory]);
+
+  // ========================================================
+  // ANALYTICS COMPUTATIONS
+  // ========================================================
+
+  // 1. Entire Average Per Season of All Crops
+  const seasonAnalytics = useMemo(() => {
+    const seasonMap = {
+      kharif: { season: 'Kharif', count: 0, totalYield: 0, totalExp: 0, totalRev: 0, totalNet: 0 },
+      rabi: { season: 'Rabi', count: 0, totalYield: 0, totalExp: 0, totalRev: 0, totalNet: 0 },
+      zaid: { season: 'Zaid', count: 0, totalYield: 0, totalExp: 0, totalRev: 0, totalNet: 0 },
     };
 
-    if (profile?.uid && id) {
-      loadData();
-    }
-  }, [id, profile, setSelectedFarm, fetchTransactions, fetchPartnersByFarm, fetchSettlements, navigate]);
-
-  // Set default tab for leased farm
-  useEffect(() => {
-    if (selectedFarm?.ownershipType === 'leased' && activeTab === 'expenses') {
-      setActiveTab('lease_details');
-    }
-  }, [selectedFarm?.ownershipType]);
-
-  const handleDeleteFarm = async () => {
-    if (window.confirm('Are you sure you want to delete this farm plot? All records will be removed.')) {
-      try {
-        await removeFarm(id);
-        navigate('/farms');
-      } catch (err) {
-        setToastMsg('Failed to delete farm');
-        setToastType('error');
+    cropHistory.forEach(h => {
+      const s = (h.season || 'kharif').toLowerCase();
+      if (seasonMap[s]) {
+        seasonMap[s].count += 1;
+        seasonMap[s].totalYield += parseFloat(h.yieldAmount) || 0;
+        seasonMap[s].totalExp += parseFloat(h.totalExpenses) || 0;
+        seasonMap[s].totalRev += parseFloat(h.totalRevenue) || 0;
+        seasonMap[s].totalNet += parseFloat(h.netProfit) || 0;
       }
-    }
-  };
+    });
 
-  const handleDeleteExpense = async (expenseId) => {
-    if (window.confirm('Are you sure you want to delete this expense record?')) {
-      try {
-        await removeTransaction(expenseId);
-        setToastMsg('Expense deleted successfully');
-        setToastType('success');
-      } catch (err) {
-        setToastMsg('Failed to delete expense');
-        setToastType('error');
+    return Object.values(seasonMap).map(item => ({
+      season: item.season,
+      count: item.count,
+      avgYield: item.count > 0 ? Number((item.totalYield / item.count).toFixed(1)) : 0,
+      avgExpenses: item.count > 0 ? Math.round(item.totalExp / item.count) : 0,
+      avgRevenue: item.count > 0 ? Math.round(item.totalRev / item.count) : 0,
+      avgNetProfit: item.count > 0 ? Math.round(item.totalNet / item.count) : 0,
+      roi: item.totalExp > 0 ? Number(((item.totalNet / item.totalExp) * 100).toFixed(1)) : 0
+    }));
+  }, [cropHistory]);
+
+  // 2. Crop-Wise Analytics
+  const cropWiseAnalytics = useMemo(() => {
+    const map = {};
+    cropHistory.forEach(h => {
+      // Normalize crop name (e.g., 'Wheat (Sharbati)' -> 'Wheat')
+      const baseName = (h.cropName || 'Other').split('(')[0].trim();
+      if (!map[baseName]) {
+        map[baseName] = { cropName: baseName, count: 0, totalYield: 0, totalExp: 0, totalRev: 0, totalNet: 0, historyList: [] };
       }
-    }
-  };
+      map[baseName].count += 1;
+      map[baseName].totalYield += parseFloat(h.yieldAmount) || 0;
+      map[baseName].totalExp += parseFloat(h.totalExpenses) || 0;
+      map[baseName].totalRev += parseFloat(h.totalRevenue) || 0;
+      map[baseName].totalNet += parseFloat(h.netProfit) || 0;
+      map[baseName].historyList.push(h);
+    });
 
-  const handleAddPartnerToOwnFarm = async (e) => {
-    e.preventDefault();
-    if (!partnerName.trim() || !partnerPhone.trim() || !partnerShare) return;
-    
-    setAddPartnerLoading(true);
-    try {
-      const shareVal = parseFloat(partnerShare) || 50;
-      const formattedPhone = partnerPhone.startsWith('+91') ? partnerPhone : `+91${partnerPhone}`;
-      
-      const pObj = {
-        name: partnerName,
-        phone: formattedPhone,
-        sharePercent: shareVal,
-        totalOwed: 0,
-        totalPaid: 0
+    return Object.values(map).map(c => ({
+      cropName: c.cropName,
+      count: c.count,
+      avgYield: c.count > 0 ? Number((c.totalYield / c.count).toFixed(1)) : 0,
+      totalYield: c.totalYield,
+      avgExpense: c.count > 0 ? Math.round(c.totalExp / c.count) : 0,
+      avgRevenue: c.count > 0 ? Math.round(c.totalRev / c.count) : 0,
+      avgNetProfit: c.count > 0 ? Math.round(c.totalNet / c.count) : 0,
+      totalNetProfit: c.totalNet,
+      roi: c.totalExp > 0 ? Number(((c.totalNet / c.totalExp) * 100).toFixed(1)) : 0,
+      historyList: c.historyList
+    }));
+  }, [cropHistory]);
+
+  // Overall KPI stats
+  const totalLifetimeYield = cropHistory.reduce((s, h) => s + (parseFloat(h.yieldAmount) || 0), 0);
+  const totalLifetimeNetProfit = cropHistory.reduce((s, h) => s + (parseFloat(h.netProfit) || 0), 0);
+  const totalHarvestsCount = cropHistory.length;
+  const bestCrop = cropWiseAnalytics.slice().sort((a, b) => b.totalNetProfit - a.totalNetProfit)[0]?.cropName || 'N/A';
+
+  // All distinct partners from history and live
+  const allPartnersHistory = useMemo(() => {
+    const pMap = {};
+    // Check live ongoing crop partner
+    if (liveOngoingCrop?.partner?.hasPartner) {
+      const p = liveOngoingCrop.partner;
+      pMap[p.name] = {
+        name: p.name,
+        phone: p.phone,
+        status: 'Active (Ongoing)',
+        cropName: liveOngoingCrop.cropName,
+        season: liveOngoingCrop.season,
+        sharePercent: p.sharePercent,
+        settledAmount: 0
       };
-      
-      const pDb = await import('../../../../shared/services/partnerService.js');
-      
-      const terms = {
-        templateName: `Batai ${shareVal}-${100 - shareVal}`,
-        systemType: 'batai',
-        cropSharePercent: shareVal,
-        cropShareBasis: 'yield_kg',
-        paymentTiming: 'after_harvest',
-        expenseSharing: {
-          khad_fertilizer: shareVal,
-          keetnashak_pesticide: shareVal,
-          beej_seeds: shareVal,
-          bijli_electricity: shareVal,
-          sinchai_irrigation: shareVal,
-          majdoori_labour: shareVal,
-          tractor_machinery: shareVal,
-          diesel_fuel: shareVal,
-          transport: shareVal,
-          mandi_charges: shareVal,
-          packaging: shareVal,
-          other: shareVal
-        },
-        partnerResponsibilities: ['labour', 'irrigation', 'sowing', 'weeding', 'harvesting'],
-        customNotes: ''
-      };
-
-      const newPartnerId = await pDb.addPartner({
-        farmId: id,
-        ownerId: profile.uid,
-        name: partnerName,
-        phone: formattedPhone,
-        season: selectedFarm.cropSeason || 'kharif',
-        startDate: new Date(),
-        status: 'active',
-        totalOwed: 0,
-        totalPaid: 0,
-        terms
-      });
-
-      pObj.partnerId = newPartnerId;
-      await editFarm(id, {
-        ownershipType: 'partner',
-        partners: [pObj]
-      });
-
-      const updatedFarm = { ...selectedFarm, ownershipType: 'partner', partners: [pObj] };
-      setSelectedFarm(updatedFarm);
-      fetchPartnersByFarm(id);
-      fetchSettlements(id);
-      
-      setToastMsg('Partner added & farm plot converted to Partnership!');
-      setToastType('success');
-      
-      setPartnerName('');
-      setPartnerPhone('');
-      setPartnerShare('');
-      
-    } catch (err) {
-      console.error(err);
-      setToastMsg('Failed to add partner: ' + err.message);
-      setToastType('error');
-    } finally {
-      setAddPartnerLoading(false);
     }
-  };
+    // Check past history
+    cropHistory.forEach(h => {
+      if (h.partner?.name) {
+        const p = h.partner;
+        if (!pMap[p.name]) {
+          pMap[p.name] = {
+            name: p.name,
+            phone: p.phone || '',
+            status: 'Past (Settled)',
+            cropName: h.cropName,
+            season: h.season,
+            sharePercent: p.sharePercent || 50,
+            settledAmount: p.settledAmount || 0
+          };
+        } else if (pMap[p.name].status !== 'Active (Ongoing)') {
+          pMap[p.name].settledAmount += (p.settledAmount || 0);
+        }
+      }
+    });
+    return Object.values(pMap);
+  }, [liveOngoingCrop, cropHistory]);
 
-  const handleOpenSettlement = (partner) => {
-    setSelectedPartner(partner);
-    
-    // Auto-calculate the remaining balance due using FinancialEngine
-    const financials = FinancialEngine.calculate(transactions, { partnerProfitSharePercent: partner.terms?.cropSharePercent || partner.sharePercent || 50 });
-    const balanceDue = financials.partnerSettlement; // negative means partner owes owner, positive means owner owes partner
-    // For payment recording, if balanceDue > 0, owner is paying partner.
-    setSettleAmount(Math.abs(balanceDue) > 0 ? Math.abs(balanceDue) : '');
-    setIsSettlementModalOpen(true);
-  };
-
-  const handleSaveSettlement = async (e) => {
+  // Save Edit Farm handler
+  const handleSaveEditFarm = (e) => {
     e.preventDefault();
-    if (!settleAmount || parseFloat(settleAmount) <= 0) return;
-    setSettleLoading(true);
+    if (!farmName.trim()) return;
 
-    try {
-      await createSettlement({
-        farmId: id,
-        partnerId: selectedPartner.id,
-        amount: parseFloat(settleAmount),
-        settledBy: profile.uid,
-        note: settleNote,
-        season: selectedFarm?.cropSeason || 'year-round'
-      });
-      
-      setToastMsg('Settlement recorded successfully!');
-      setToastType('success');
-      setIsSettlementModalOpen(false);
-      setSettleAmount('');
-      setSettleNote('');
-    } catch (err) {
-      setToastMsg(err.message || 'Failed to save settlement');
-      setToastType('error');
-    } finally {
-      setSettleLoading(false);
-    }
+    editFarm(id, {
+      name: farmName.trim(),
+      location: farmLocation.trim(),
+      size: parseFloat(farmSize) || 1,
+      sizeValue: parseFloat(farmSize) || 1,
+      sizeUnit: farmSizeUnit,
+      ownershipType: farmOwnership,
+      soilType: farmSoilType,
+      irrigationSource: farmIrrigation,
+      notes: farmNotes.trim()
+    });
+
+    setToastMsg('Farm parameters updated successfully in real time!');
+    setToastType('success');
+    setIsEditFarmModalOpen(false);
   };
 
-  const handleOpenLend = (partner) => {
-    setSelectedPartner(partner);
-    setLendAmount('');
-    setLendNote('');
-    setIsLendModalOpen(true);
-  };
-
-  const handleSaveLend = async (e) => {
+  // Save Add Past Harvest Record handler
+  const handleSaveAddHistory = (e) => {
     e.preventDefault();
-    if (!selectedPartner || !lendAmount) return;
-    const amountVal = parseFloat(lendAmount);
-    if (isNaN(amountVal) || amountVal <= 0) {
-      setToastMsg('Please enter a valid lending amount');
-      setToastType('error');
-      return;
-    }
+    if (!histCropName.trim() || !histYield || parseFloat(histYield) <= 0) return;
 
-    setLendLoading(true);
-    try {
-      await createTransaction({
-        farmId: id,
-        ownerId: profile.uid,
-        type: 'loan',
-        loanDirection: 'owner_to_partner',
-        amount: amountVal,
-        category: 'loan_interest',
-        expenseType: 'partner',
-        ownerShare: 0,
-        partnerShare: amountVal,
-        partnerId: selectedPartner.id,
-        partnerName: selectedPartner.name,
-        notes: lendNote || `Lended money to ${selectedPartner.name}`,
-        date: toLocalDateString(),
-        season: selectedFarm?.cropSeason || 'year-round'
-      });
+    const expVal = parseFloat(histExpenses) || 0;
+    const revVal = parseFloat(histRevenue) || 0;
+    const netVal = revVal - expVal;
+    const yVal = parseFloat(histYield);
 
-      // Refresh transactions and partners
-      fetchTransactions(profile.uid, { farmId: id });
-      fetchPartnersByFarm(id);
-      fetchSettlements(id);
+    const record = {
+      id: `hist_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+      cropName: histCropName.trim(),
+      variety: histVariety.trim(),
+      season: histSeason,
+      year: parseInt(histYear) || new Date().getFullYear(),
+      harvestDate: histHarvestDate,
+      yieldAmount: yVal,
+      yieldUnit: histYieldUnit,
+      mandiRate: parseFloat(histMandiRate) || 0,
+      totalExpenses: expVal,
+      totalRevenue: revVal,
+      netProfit: netVal,
+      roiPercent: expVal > 0 ? Number(((netVal / expVal) * 100).toFixed(1)) : 100,
+      partner: histPartnerName.trim() ? {
+        name: histPartnerName.trim(),
+        sharePercent: parseFloat(histPartnerShare) || 50,
+        settledAmount: parseFloat(histPartnerSettled) || Math.round((netVal * (parseFloat(histPartnerShare) || 50)) / 100),
+        status: 'cleared'
+      } : null,
+      notes: histNotes.trim()
+    };
 
-      setToastMsg('Loan recorded successfully! Opening SMS...');
-      setToastType('success');
-      setIsLendModalOpen(false);
-      setLendAmount('');
-      setLendNote('');
+    addFarmHistory(id, record);
+    setToastMsg(`Past record for ${histCropName} added to farm history!`);
+    setToastType('success');
+    setIsAddHistoryModalOpen(false);
 
-      // Open SMS link
-      const message = `Khet Kharcha: Lent money ₹${amountVal} to you for farm ${selectedFarm.name}. This will be payback in farming partnership profit.`;
-      const smsUrl = `sms:${selectedPartner.phone}?body=${encodeURIComponent(message)}`;
-      window.location.href = smsUrl;
-    } catch (err) {
-      setToastMsg(err.message || 'Failed to save loan');
-      setToastType('error');
-    } finally {
-      setLendLoading(false);
-    }
+    // Reset
+    setHistCropName('');
+    setHistVariety('');
+    setHistYield('');
+    setHistExpenses('');
+    setHistRevenue('');
+    setHistNotes('');
   };
-
 
   if (!selectedFarm) {
     return (
-      <div className="space-y-6">
-        <LoadingSkeleton height="h-20" />
-        <LoadingSkeleton height="h-44" />
+      <div className="p-8 text-center text-stone-400">
+        <Sprout className="w-10 h-10 mx-auto mb-2 animate-bounce text-emerald-600" />
+        <p className="font-bold">Loading Farm Details...</p>
       </div>
     );
   }
 
-  const financials = FinancialEngine.calculate(transactions);
-
-  // Chart Data: Own vs Partner expenses
-  const shareChartData = [
-    { name: 'My Share', value: financials.ownerShareExpense, color: '#16a34a' },
-    { name: 'Partners Share', value: financials.partnerShareExpense, color: '#d97706' }
-  ].filter(c => c.value > 0);
-
-  // Expenses columns config
-  const expenseColumns = [
-    { 
-      key: 'date', 
-      label: 'Date', 
-      sortable: true,
-      render: (row) => formatDate(row.date)
-    },
-    { 
-      key: 'category', 
-      label: 'Category', 
-      sortable: true,
-      render: (row) => {
-        const cat = getCategoryById(row.category);
-        return cat?.nameKey ? t(cat.nameKey) : row.category;
-      }
-    },
-    { 
-      key: 'expenseType', 
-      label: 'Split Type',
-      render: (row) => <OwnershipBadge type={row.expenseType} />
-    },
-    {
-      key: 'notes',
-      label: 'Notes'
-    },
-    { 
-      key: 'amount', 
-      label: 'Amount', 
-      sortable: true,
-      render: (row) => <AmountDisplay amount={row.amount} className="font-bold text-stone-900" />
-    },
-    {
-      key: 'actions',
-      label: 'Actions',
-      render: (row) => (
-        <div className="flex gap-2 justify-end">
-          <button
-            onClick={() => navigate(`/expenses/${row.id}/edit`)}
-            className="p-1 border border-stone-200 hover:border-primary hover:text-primary rounded text-stone-500 transition cursor-pointer"
-            title="Edit"
-          >
-            <Edit className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => handleDeleteExpense(row.id)}
-            className="p-1 border border-stone-200 hover:border-red-500 hover:text-red-500 rounded text-stone-500 transition cursor-pointer"
-            title="Delete"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )
-    }
-  ];
+  const farmAreaSize = selectedFarm.size || selectedFarm.sizeValue || 1;
 
   return (
     <div className="space-y-6">
-      
-      {/* Toast Notifications */}
+      {/* Toast */}
       <Toast message={toastMsg} type={toastType} onClose={() => setToastMsg('')} />
 
-      {/* Header Info Banner */}
-      <div className="bg-white border border-stone-200/50 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-primary/10 text-primary rounded-2xl flex items-center justify-center shrink-0">
-            <Sprout className="w-8 h-8" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-extrabold text-stone-900">{selectedFarm.name}</h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1.5 text-xs text-stone-400 font-medium">
-              <span className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5" />
-                {selectedFarm.location || 'India'}
-              </span>
-              <span className="flex items-center gap-1">
-                <Scale className="w-3.5 h-3.5" />
-                {selectedFarm.size} {t(`unit.${selectedFarm.sizeUnit || 'bigha'}`)}
-              </span>
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
-                Crop: {selectedFarm.currentCrop || 'None'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-2 items-center">
-          {selectedFarm.ownershipType === 'partner' && (
-            <button
-              onClick={() => navigate(`/farms/${id}/harvest`)}
-              className="flex items-center gap-1.5 px-4.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow transition cursor-pointer"
-            >
-              <Wheat className="w-4 h-4" />
-              Record Harvest
-            </button>
-          )}
-          <SeasonBadge seasonId={selectedFarm.cropSeason} />
-          <OwnershipBadge type={selectedFarm.ownershipType} />
-        </div>
-      </div>
-
-      {/* Tabs list */}
-      <div className="flex border-b border-stone-200/50">
-        {selectedFarm.ownershipType === 'leased' ? (
-          <>
-            <button
-              onClick={() => setActiveTab('lease_details')}
-              className={`py-3 px-6 font-bold text-sm transition ${
-                activeTab === 'lease_details' 
-                  ? 'border-b-2 border-primary text-primary' 
-                  : 'text-stone-400 hover:text-stone-600'
-              }`}
-            >
-              Lease Details
-            </button>
-            <button
-              onClick={() => setActiveTab('lease_payments')}
-              className={`py-3 px-6 font-bold text-sm transition ${
-                activeTab === 'lease_payments' 
-                  ? 'border-b-2 border-primary text-primary' 
-                  : 'text-stone-400 hover:text-stone-600'
-              }`}
-            >
-              Payments
-            </button>
-            <button
-              onClick={() => setActiveTab('expenses')}
-              className={`py-3 px-6 font-bold text-sm transition ${
-                activeTab === 'expenses' 
-                  ? 'border-b-2 border-primary text-primary' 
-                  : 'text-stone-400 hover:text-stone-600'
-              }`}
-            >
-              Expenses ({transactions.filter(t => t.type === 'expense').length})
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => setActiveTab('expenses')}
-              className={`py-3 px-6 font-bold text-sm transition ${
-                activeTab === 'expenses' 
-                  ? 'border-b-2 border-primary text-primary' 
-                  : 'text-stone-400 hover:text-stone-600'
-              }`}
-            >
-              Expenses ({transactions.filter(t => t.type === 'expense').length})
-            </button>
-            <button
-              onClick={() => setActiveTab('harvests')}
-              className={`py-3 px-6 font-bold text-sm transition ${
-                activeTab === 'harvests' 
-                  ? 'border-b-2 border-primary text-primary' 
-                  : 'text-stone-400 hover:text-stone-600'
-              }`}
-            >
-              Harvests ({selectedFarm.harvests?.length || 0})
-            </button>
-          </>
-        )}
-        
-        {selectedFarm.ownershipType === 'partner' && (
-          <button
-            onClick={() => setActiveTab('partners')}
-            className={`py-3 px-6 font-bold text-sm transition ${
-              activeTab === 'partners' 
-                ? 'border-b-2 border-primary text-primary' 
-                : 'text-stone-400 hover:text-stone-600'
-            }`}
-          >
-            Partner Share Split
-          </button>
-        )}
+      {/* Top Breadcrumb & Actions Bar */}
+      <div className="flex items-center justify-between">
         <button
-          onClick={() => setActiveTab('settings')}
-          className={`py-3 px-6 font-bold text-sm transition ${
-            activeTab === 'settings' 
-              ? 'border-b-2 border-primary text-primary' 
-              : 'text-stone-400 hover:text-stone-600'
-          }`}
+          onClick={() => navigate('/farms')}
+          className="inline-flex items-center gap-1.5 text-xs font-extrabold text-stone-600 hover:text-stone-900 bg-white border border-stone-200/60 px-3 py-1.5 rounded-xl shadow-sm transition cursor-pointer"
         >
-          Plot Settings
+          <ArrowLeft className="w-4 h-4" />
+          Back to Farms
         </button>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsEditFarmModalOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold text-stone-700 hover:text-stone-950 bg-white border border-stone-200/60 hover:border-stone-400 px-3.5 py-2 rounded-xl shadow-sm transition cursor-pointer"
+          >
+            <Edit className="w-3.5 h-3.5 text-emerald-600" />
+            Edit Farm Details
+          </button>
+        </div>
       </div>
 
-      {/* Tab Panels */}
-      <div className="mt-4">
-        {activeTab === 'lease_details' && (
-          <div className="space-y-4">
-            <h3 className="text-base font-bold text-stone-900">Lease Agreement</h3>
-            {(() => {
-              const lessee = partners.find(p => p.terms?.systemType === 'lease');
-              if (!lessee) return <EmptyState message="No lease agreement found." />;
-              return (
-                <div className="bg-white border border-stone-200/50 rounded-2xl p-5 shadow-sm space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    <div>
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase">Lessee</span>
-                      <span className="font-bold text-stone-900">{lessee.name}</span>
-                    </div>
-                    <div>
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase">Phone</span>
-                      <span className="font-bold text-stone-900">{lessee.phone || 'N/A'}</span>
-                    </div>
-                    <div>
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase">Lease Amount</span>
-                      <span className="font-extrabold text-purple-600">₹{lessee.terms.leaseAmount?.toLocaleString('en-IN') || 0}</span>
-                    </div>
-                    <div>
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase">Start Date</span>
-                      <span className="font-bold text-stone-900">{formatDate(lessee.terms.startDate)}</span>
-                    </div>
-                    {lessee.terms.endDate && (
-                      <div>
-                        <span className="block text-[10px] font-bold text-stone-400 uppercase">End Date</span>
-                        <span className="font-bold text-stone-900">{formatDate(lessee.terms.endDate)}</span>
-                      </div>
-                    )}
-                  </div>
+      {/* Master Farm Profile Card */}
+      <div className="bg-white border border-stone-200/70 rounded-3xl p-6 md:p-8 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-stone-100">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 shadow-sm border border-emerald-100">
+              <Sprout className="w-9 h-9" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-2xl md:text-3xl font-extrabold text-stone-900 tracking-tight">
+                  {selectedFarm.name}
+                </h1>
+                <OwnershipBadge type={selectedFarm.ownershipType || 'own'} />
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-2 text-xs text-stone-400 font-semibold">
+                <span className="flex items-center gap-1 text-stone-600">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  {selectedFarm.location || 'India'}
+                </span>
+                <span className="flex items-center gap-1 text-stone-600">
+                  <Scale className="w-3.5 h-3.5 text-emerald-600" />
+                  {farmAreaSize} {t(`unit.${selectedFarm.sizeUnit || 'bigha'}`)}
+                </span>
+                <span className="flex items-center gap-1 text-stone-600">
+                  <Layers className="w-3.5 h-3.5 text-amber-600" />
+                  Soil: {selectedFarm.soilType || 'Black Cotton'}
+                </span>
+                <span className="flex items-center gap-1 text-stone-600">
+                  <Droplets className="w-3.5 h-3.5 text-sky-600" />
+                  Water: {selectedFarm.irrigationSource || 'Canal & Tubewell'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Lifetime Summary Badges */}
+          <div className="flex items-center gap-3">
+            <div className="bg-stone-50 border border-stone-200/60 rounded-2xl p-3 text-center min-w-[100px]">
+              <span className="text-[10px] text-stone-400 font-bold block uppercase">Harvests</span>
+              <span className="text-base font-extrabold text-stone-900">{totalHarvestsCount}</span>
+            </div>
+            <div className="bg-stone-50 border border-stone-200/60 rounded-2xl p-3 text-center min-w-[110px]">
+              <span className="text-[10px] text-stone-400 font-bold block uppercase">Total Yield</span>
+              <span className="text-base font-extrabold text-stone-900">{totalLifetimeYield} Qtl</span>
+            </div>
+            <div className="bg-emerald-50 border border-emerald-200/60 rounded-2xl p-3 text-center min-w-[120px]">
+              <span className="text-[10px] text-emerald-700 font-bold block uppercase">Net Return</span>
+              <span className="text-base font-extrabold text-emerald-800">{formatINR(totalLifetimeNetProfit)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Real-Time Live Ongoing Crop & Partner Status Banner */}
+        <div className="mt-6">
+          {liveOngoingCrop ? (
+            <div className="bg-gradient-to-r from-emerald-950 via-stone-900 to-emerald-950 border border-emerald-800/50 rounded-2xl p-5 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400">
+                    Active Ongoing Crop in Current State
+                  </span>
+                  <SeasonBadge seasonId={liveOngoingCrop.season} />
                 </div>
-              );
-            })()}
-          </div>
-        )}
-
-        {activeTab === 'lease_payments' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-base font-bold text-stone-900">Lease Payments</h3>
-              {(() => {
-                const lessee = partners.find(p => p.terms?.systemType === 'lease');
-                if (!lessee) return null;
-                return (
-                  <button
-                    onClick={() => handleOpenSettlement(lessee)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-xs shadow transition cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    Record Payment
-                  </button>
-                );
-              })()}
-            </div>
-            
-            {(() => {
-              const lessee = partners.find(p => p.terms?.systemType === 'lease');
-              if (!lessee) return <EmptyState message="No lease agreement found." />;
-              
-              const totalAmount = lessee.terms.leaseAmount || 0;
-              const paidAmount = lessee.totalPaid || 0;
-              const balance = totalAmount - paidAmount;
-              
-              return (
-                <>
-                  <div className="grid grid-cols-3 gap-4 mb-6">
-                    <div className="bg-white border border-stone-200/50 rounded-xl p-4 shadow-sm">
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase mb-1">Total Lease</span>
-                      <span className="font-extrabold text-stone-900 text-lg">₹{totalAmount.toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="bg-white border border-stone-200/50 rounded-xl p-4 shadow-sm">
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase mb-1">Received</span>
-                      <span className="font-extrabold text-emerald-600 text-lg">₹{paidAmount.toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="bg-white border border-stone-200/50 rounded-xl p-4 shadow-sm">
-                      <span className="block text-[10px] font-bold text-stone-400 uppercase mb-1">Pending</span>
-                      <span className={`font-extrabold text-lg ${balance > 0 ? 'text-red-500' : 'text-stone-400'}`}>₹{balance.toLocaleString('en-IN')}</span>
-                    </div>
-                  </div>
-
-                  <h4 className="text-sm font-bold text-stone-900 border-b border-stone-100 pb-2">Payment History</h4>
-                  {settlements.filter(s => s.partnerId === lessee.id).length === 0 ? (
-                     <div className="text-center py-4 text-xs text-stone-500">No payments recorded yet.</div>
-                  ) : (
-                    <div className="space-y-3">
-                      {settlements.filter(s => s.partnerId === lessee.id).map(s => (
-                        <div key={s.id} className="flex flex-col sm:flex-row justify-between sm:items-center bg-white border border-stone-100 rounded-xl p-3.5 shadow-sm gap-2">
-                          <div>
-                            <span className="font-extrabold text-stone-900 block text-base">₹{s.amount?.toLocaleString('en-IN')}</span>
-                            <span className="text-[10px] font-bold text-stone-400">{formatDate(s.settledAt)}</span>
-                          </div>
-                          {s.note && <span className="text-xs text-stone-500 bg-stone-50 px-3 py-1.5 rounded-lg border border-stone-100">{s.note}</span>}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              );
-            })()}
-          </div>
-        )}
-
-        {activeTab === 'expenses' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            
-            {/* Table */}
-            <div className="lg:col-span-2">
-              <DataTable
-                columns={expenseColumns}
-                data={transactions.filter(t => t.type === 'expense')}
-                emptyMessage="No expenses recorded for this farm yet."
-              />
-            </div>
-
-            {/* Split statistics */}
-            <div className="space-y-6">
-              
-              {/* Summary card */}
-              <div className="bg-white border border-stone-200/50 rounded-2xl p-5 shadow-sm space-y-4">
-                <h3 className="text-sm font-bold text-stone-900 border-b border-stone-100 pb-2.5">
-                  Farm Totals
+                <h3 className="text-xl font-extrabold text-white">
+                  {liveOngoingCrop.cropName}
+                  {liveOngoingCrop.variety && <span className="text-xs text-stone-300 font-medium ml-2">({liveOngoingCrop.variety})</span>}
                 </h3>
-                
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-stone-400 font-medium">Total Cost</span>
-                  <AmountDisplay amount={financials.totalExpenses} className="font-extrabold text-stone-900" />
-                </div>
-                
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-stone-400 font-medium">My Share Cost</span>
-                  <AmountDisplay amount={financials.ownerShareExpense} className="font-bold text-ownExpense" />
-                </div>
-                
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-stone-400 font-medium">Partner Cost</span>
-                  <AmountDisplay amount={financials.partnerShareExpense} className="font-bold text-partnerExpense" />
+                <div className="flex flex-wrap items-center gap-4 text-xs text-stone-300 pt-1">
+                  <span>📅 Sown: {formatDate(liveOngoingCrop.sowingDate)}</span>
+                  <span>
+                    {liveOngoingCrop.partner?.hasPartner ? (
+                      <span className="text-indigo-300 font-bold">
+                        🤝 Current Partner: {liveOngoingCrop.partner.name} ({liveOngoingCrop.partner.sharePercent}% Share) • {liveOngoingCrop.partner.phone}
+                      </span>
+                    ) : (
+                      <span className="text-emerald-300 font-bold">🚜 Self-Managed (No Partner)</span>
+                    )}
+                  </span>
                 </div>
               </div>
 
-              {/* Pie Chart */}
-              {shareChartData.length > 0 && (
-                <div className="bg-white border border-stone-200/50 rounded-2xl p-5 shadow-sm flex flex-col items-center">
-                  <h3 className="text-sm font-bold text-stone-900 mb-4 self-start">Cost Split Ratio</h3>
-                  <ResponsiveContainer width="100%" height={160}>
-                    <PieChart>
-                      <Pie
-                        data={shareChartData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={45}
-                        outerRadius={65}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {shareChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={(value) => formatINR(value)} />
-                      <Legend verticalAlign="bottom" height={36} iconType="circle" />
-                    </PieChart>
-                  </ResponsiveContainer>
+              <div className="flex items-center gap-3">
+                <div className="text-right hidden sm:block pr-3 border-r border-stone-700">
+                  <span className="text-[10px] text-stone-400 uppercase font-bold block">Current Active Expenses</span>
+                  <span className="text-sm font-extrabold text-amber-400">
+                    {formatINR((liveOngoingCrop.expenses || []).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0))}
+                  </span>
                 </div>
-              )}
-
-            </div>
-
-          </div>
-        )}
-
-        {activeTab === 'harvests' && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-base font-bold text-stone-900">Recorded Harvests</h3>
-              <button
-                onClick={() => navigate(`/farms/${id}/harvest`)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition duration-200 cursor-pointer shadow-sm"
-              >
-                <Wheat className="w-3.5 h-3.5" />
-                Record Harvest
-              </button>
-            </div>
-            
-            {(!selectedFarm.harvests || selectedFarm.harvests.length === 0) ? (
-              <EmptyState
-                icon="Wheat"
-                message="No harvests recorded for this farm yet."
-                btnLabel="Record Harvest"
-                onBtnPress={() => navigate(`/farms/${id}/harvest`)}
-              />
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedFarm.harvests.map((harvest, idx) => (
-                  <div key={idx} className="bg-white border border-stone-200 rounded-xl p-4 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs font-bold text-stone-400 uppercase">{harvest.season}</span>
-                        <span className="text-xs text-stone-500 font-medium">
-                          {new Date(harvest.date?.seconds ? harvest.date.seconds * 1000 : harvest.date).toLocaleDateString('en-IN')}
-                        </span>
-                      </div>
-                      <h4 className="font-extrabold text-stone-900 text-lg mb-1">{harvest.totalYield} {harvest.yieldUnit || 'quintal'}</h4>
-                      <div className="space-y-1 mt-3 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-stone-500">Mandi Rate:</span>
-                          <span className="font-bold text-stone-800">₹{harvest.mandiRate || 0}/{harvest.yieldUnit || 'quintal'}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-stone-500">Deductions:</span>
-                          <span className="font-bold text-red-500">-₹{harvest.harvestDeductions || 0}</span>
-                        </div>
-                        <div className="flex justify-between border-t border-dashed border-stone-200 pt-1 mt-1">
-                          <span className="text-stone-600 font-medium">Total Sale Value:</span>
-                          <span className="font-extrabold text-emerald-600">₹{harvest.totalSaleAmount?.toLocaleString('en-IN') || 0}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'partners' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            
-            {/* Partners List */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-base font-bold text-stone-900">Partner Settlements</h3>
                 <button
-                  onClick={() => navigate(`/farms/${id}/partners/new`)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-primary hover:bg-primary-dark text-white font-bold rounded-lg text-xs transition duration-200 cursor-pointer"
+                  onClick={() => navigate(`/current-state?farmId=${id}`)}
+                  className="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-extrabold px-4 py-2.5 rounded-xl text-xs shadow transition cursor-pointer"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  Add Partner
-                </button>
-              </div>
-              
-              {partners.length === 0 ? (
-                <EmptyState
-                  message="No partners added to this Bataidari plot."
-                  btnLabel="Add Partner"
-                  onBtnPress={() => navigate(`/farms/${id}/partners/new`)}
-                />
-              ) : (
-                partners.map((partner) => {
-                  const financials = FinancialEngine.calculate(transactions, { partnerProfitSharePercent: partner.terms?.cropSharePercent || partner.sharePercent || 50 });
-                  
-                  // Compute balance to mirror old structure for the UI
-                  // balance > 0 means partner owes owner, balance < 0 means owner owes partner
-                  // Wait, financials.partnerSettlement is positive if partner gets money (owner owes partner), negative if partner owes owner.
-                  // Old `balance > 0` meant 'owed' (partner owes owner)
-                  const uiBalance = -(financials.partnerSettlement);
-                  
-                  const settlement = {
-                    due: financials.partnerShareExpense,
-                    paid: financials.lentMoney.netPartnerLiability < 0 ? Math.abs(financials.lentMoney.netPartnerLiability) : 0, // Roughly maps to paid
-                    balance: uiBalance,
-                    status: uiBalance > 0 ? 'owed' : (uiBalance < 0 ? 'overpaid' : 'settled')
-                  };
-                  
-                  return (
-                    <div 
-                      key={partner.id}
-                      className="bg-white border border-stone-200/50 rounded-2xl p-5 shadow-sm space-y-4"
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h4 className="font-bold text-stone-900 flex items-center gap-2">
-                            {partner.name}
-                            {partner.terms && (
-                              <span className="text-[9px] bg-primary-light text-primary font-bold px-1.5 py-0.5 rounded uppercase">
-                                {partner.terms.systemType}
-                              </span>
-                            )}
-                          </h4>
-                          <p className="text-xs text-stone-400 font-medium mt-0.5">{partner.phone}</p>
-                        </div>
-                        <div className="text-right">
-                          <span className="inline-block bg-primary-light text-primary font-extrabold text-xs px-2.5 py-1 rounded-lg">
-                            Share: {partner.terms?.cropSharePercent !== undefined ? partner.terms.cropSharePercent : partner.sharePercent}%
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-4 border-t border-b border-stone-100 py-3 text-xs">
-                        <div>
-                          <p className="text-stone-400 font-medium mb-1">Calculated Share</p>
-                          <AmountDisplay amount={settlement.due} className="font-bold text-stone-800" />
-                        </div>
-                        <div>
-                          <p className="text-stone-400 font-medium mb-1">Paid Already</p>
-                          <AmountDisplay amount={settlement.paid} className="font-bold text-stone-800" />
-                        </div>
-                        <div>
-                          <p className="text-stone-400 font-medium mb-1">Outstanding Balance</p>
-                          <AmountDisplay 
-                            amount={Math.abs(settlement.balance)} 
-                            className={`font-extrabold ${settlement.balance > 0 ? 'text-red-500' : 'text-emerald-500'}`} 
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between items-center pt-2">
-                        <span className={`text-xs font-bold uppercase ${
-                          settlement.status === 'owed' 
-                            ? 'text-red-500' 
-                            : settlement.status === 'overpaid' 
-                              ? 'text-emerald-600' 
-                              : 'text-stone-400'
-                        }`}>
-                          {settlement.status === 'owed' 
-                            ? 'Owes You Money' 
-                            : settlement.status === 'overpaid' 
-                              ? 'Overpaid / Owed by You' 
-                              : 'All Settled'}
-                        </span>
-                        
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => {
-                              setSelectedPartner(partner);
-                              setIsTermsModalOpen(true);
-                            }}
-                            className="flex items-center gap-1 text-xs font-bold text-stone-600 hover:text-stone-800 transition cursor-pointer"
-                          >
-                            <FileText className="w-4 h-4" />
-                            View Terms
-                          </button>
-                          
-                          <button
-                            onClick={() => handleOpenLend(partner)}
-                            className="flex items-center gap-1 text-xs font-bold text-amber-650 hover:text-amber-750 transition cursor-pointer"
-                          >
-                            <Coins className="w-4 h-4" />
-                            Lend Money
-                          </button>
-
-                          {settlement.balance !== 0 && (
-                            <button
-                              onClick={() => handleOpenSettlement(partner)}
-                              className="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-dark transition cursor-pointer"
-                            >
-                              <UserCheck className="w-4 h-4" />
-                              Record Payment
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                    </div>
-                  );
-                })
-              )}
-            </div>
-
-            {/* Settlements History */}
-            <div className="bg-white border border-stone-200/50 rounded-2xl p-5 shadow-sm space-y-4">
-              <h3 className="text-sm font-bold text-stone-900 border-b border-stone-100 pb-2.5">
-                Settlement Log
-              </h3>
-
-              {settlements.length > 0 ? (
-                <div className="space-y-3 max-h-[350px] overflow-y-auto pr-1">
-                  {settlements.map((log) => {
-                    const partner = partners.find(p => p.id === log.partnerId);
-                    return (
-                      <div key={log.id} className="p-3 bg-stone-50 border border-stone-100 rounded-xl flex justify-between items-start gap-4">
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-stone-900 truncate">
-                            {partner?.name || 'Partner'}
-                          </p>
-                          <p className="text-[10px] text-stone-400 font-semibold mt-0.5">
-                            {formatDate(log.settledAt)}
-                          </p>
-                          {log.note && (
-                            <p className="text-[10px] text-stone-500 italic mt-1 truncate">
-                              "{log.note}"
-                            </p>
-                          )}
-                        </div>
-                        <AmountDisplay amount={log.amount} className="text-xs font-extrabold text-emerald-600 shrink-0" />
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-center py-6 text-xs text-stone-400 font-semibold">
-                  No settlements recorded.
-                </div>
-              )}
-            </div>
-
-          </div>
-        )}
-
-        {activeTab === 'settings' && (
-          <div className="max-w-md bg-white border border-stone-200/50 rounded-2xl shadow-sm p-6 space-y-6">
-            <h3 className="text-base font-bold text-stone-900">Manage Farm Plot</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-                  Update Crop Name
-                </label>
-                <input
-                  type="text"
-                  defaultValue={selectedFarm.currentCrop}
-                  placeholder="e.g. Cotton"
-                  onBlur={(e) => editFarm(id, { currentCrop: e.target.value })}
-                  className="w-full px-4 py-3 text-sm border border-stone-200 rounded-xl focus:border-primary focus:outline-none transition shadow-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-                  Crop Season
-                </label>
-                <select
-                  defaultValue={selectedFarm.cropSeason}
-                  onChange={(e) => editFarm(id, { cropSeason: e.target.value })}
-                  className="w-full px-4 py-3 text-sm border border-stone-200 rounded-xl focus:border-primary focus:outline-none transition shadow-sm bg-white cursor-pointer"
-                >
-                  <option value="kharif">Kharif</option>
-                  <option value="rabi">Rabi</option>
-                  <option value="zaid">Zaid</option>
-                  <option value="year-round">Year Round</option>
-                </select>
-              </div>
-
-              {selectedFarm.ownershipType === 'own' && (
-                <div className="border-t border-stone-100 pt-6 space-y-4">
-                  <h4 className="text-sm font-bold text-stone-900">Take a Partner / Add Partnership</h4>
-                  <p className="text-[11px] text-stone-400 font-medium">
-                    Convert this self-owned plot into a partnership plot. You can add a partner and start splitting costs.
-                  </p>
-                  <form onSubmit={handleAddPartnerToOwnFarm} className="space-y-3">
-                    <div>
-                      <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                        Partner Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={partnerName}
-                        onChange={(e) => setPartnerName(e.target.value)}
-                        placeholder="e.g. Ramesh Patel"
-                        className="w-full px-3 py-2 text-xs border border-stone-200 rounded-lg focus:border-primary focus:outline-none transition shadow-sm"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                          Phone Number *
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          value={partnerPhone}
-                          onChange={(e) => setPartnerPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                          placeholder="e.g. 9876543210"
-                          className="w-full px-3 py-2 text-xs border border-stone-200 rounded-lg focus:border-primary focus:outline-none transition shadow-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">
-                          Crop/Cost Share % *
-                        </label>
-                        <div className="relative">
-                          <input
-                            type="number"
-                            required
-                            min="1"
-                            max="99"
-                            value={partnerShare}
-                            onChange={(e) => setPartnerShare(e.target.value)}
-                            placeholder="50"
-                            className="w-full pl-3 pr-6 py-2 text-xs border border-stone-200 rounded-lg focus:border-primary focus:outline-none transition shadow-sm"
-                          />
-                          <span className="absolute right-2.5 top-2 text-stone-400 text-xs font-bold">%</span>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={addPartnerLoading}
-                      className="w-full py-2 bg-primary hover:bg-primary-dark disabled:bg-stone-300 text-white font-bold rounded-xl text-xs transition duration-200 shadow-sm cursor-pointer"
-                    >
-                      {addPartnerLoading ? 'Adding...' : 'Add Partner & Enable splits'}
-                    </button>
-                  </form>
-                </div>
-              )}
-
-              <div className="border-t border-stone-100 pt-6">
-                <h4 className="text-sm font-bold text-red-600 mb-1.5">Danger Zone</h4>
-                <p className="text-[11px] text-stone-400 font-medium mb-4">
-                  Deleting a farm will remove all associated logs and invoices permanently.
-                </p>
-                <button
-                  onClick={handleDeleteFarm}
-                  className="flex items-center gap-1.5 w-full justify-center bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 text-red-650 font-bold py-2.5 px-4 rounded-xl text-sm transition duration-200 cursor-pointer"
-                >
-                  <Trash2 className="w-4.5 h-4.5" />
-                  Delete Farm Plot
-                </button>
-              </div>
-            </div>
-
-          </div>
-        )}
-      </div>
-
-      {/* Lend Money Modal */}
-      {selectedPartner && (
-        <Modal
-          isOpen={isLendModalOpen}
-          onClose={() => setIsLendModalOpen(false)}
-          title={`Lend Money to ${selectedPartner.name}`}
-        >
-          <form onSubmit={handleSaveLend} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-                Lending Amount (₹) *
-              </label>
-              <input
-                type="number"
-                required
-                value={lendAmount}
-                onChange={(e) => setLendAmount(e.target.value)}
-                placeholder="0.00"
-                className="w-full px-4 py-2.5 text-sm border border-stone-200 rounded-xl focus:border-primary focus:outline-none shadow-sm"
-              />
-              <p className="text-[10px] text-stone-400 font-medium mt-1 leading-relaxed">
-                This amount will be added 100% to the partner's share of expense balance, and will be automatically deducted from their crop harvest profits during settlement.
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-                Note / Description
-              </label>
-              <input
-                type="text"
-                value={lendNote}
-                onChange={(e) => setLendNote(e.target.value)}
-                placeholder="e.g. Advance cash for household expenses"
-                className="w-full px-4 py-2.5 text-sm border border-stone-200 rounded-xl focus:border-primary focus:outline-none shadow-sm"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={lendLoading || !lendAmount}
-              className="w-full py-3 bg-amber-500 hover:bg-amber-600 disabled:bg-stone-300 text-white font-bold rounded-xl shadow transition duration-200 mt-2 cursor-pointer text-sm"
-            >
-              {lendLoading ? 'Recording Loan...' : 'Confirm Loan & Prepare SMS'}
-            </button>
-          </form>
-        </Modal>
-      )}
-
-      {/* Record Payment Modal */}
-      {selectedPartner && (
-        <Modal
-          isOpen={isSettlementModalOpen}
-          onClose={() => setIsSettlementModalOpen(false)}
-          title={`Settle Share with ${selectedPartner.name}`}
-        >
-          <form onSubmit={handleSaveSettlement} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-                Settlement Amount *
-              </label>
-              <input
-                type="number"
-                required
-                value={settleAmount}
-                onChange={(e) => setSettleAmount(e.target.value)}
-                placeholder="0.00"
-                className="w-full px-4 py-2.5 text-sm border border-stone-200 rounded-xl focus:border-primary focus:outline-none shadow-sm"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-                Note / Description
-              </label>
-              <input
-                type="text"
-                value={settleNote}
-                onChange={(e) => setSettleNote(e.target.value)}
-                placeholder="e.g. Cash payment for kharif crop"
-                className="w-full px-4 py-2.5 text-sm border border-stone-200 rounded-xl focus:border-primary focus:outline-none shadow-sm"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={settleLoading || !settleAmount}
-              className="w-full py-3 bg-primary hover:bg-primary-dark disabled:bg-stone-300 text-white font-bold rounded-xl shadow transition duration-200 mt-2 cursor-pointer text-sm"
-            >
-              {settleLoading ? 'Recording...' : 'Record Payment'}
-            </button>
-          </form>
-        </Modal>
-      )}
-
-      {/* View Terms Modal */}
-      {selectedPartner && (
-        <Modal
-          isOpen={isTermsModalOpen}
-          onClose={() => setIsTermsModalOpen(false)}
-          title={`Partnership Terms: ${selectedPartner.name}`}
-        >
-          {selectedPartner.terms ? (
-            <div className="space-y-4">
-              <div className="border border-stone-200 rounded-xl bg-stone-50 p-4 font-mono text-xs space-y-3">
-                <p><strong>System Type  :</strong> {selectedPartner.terms.systemType?.toUpperCase()}</p>
-                <p><strong>Crop Share   :</strong> {selectedPartner.terms.cropSharePercent}% ({selectedPartner.terms.cropShareBasis?.replace('_', ' ')})</p>
-                <p><strong>Payment Time :</strong> {selectedPartner.terms.paymentTiming?.replace('_', ' ')}</p>
-                
-                {selectedPartner.terms.expenseSharing && (
-                  <div className="border-t border-dashed border-stone-300 pt-2.5 space-y-1">
-                    <p className="font-bold text-primary text-[10px] uppercase">Expense Sharing Splits</p>
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
-                      {Object.entries(selectedPartner.terms.expenseSharing).map(([key, val]) => (
-                        <div key={key} className="flex justify-between">
-                          <span className="capitalize">{key.split('_')[1] || key}:</span>
-                          <span>{val}%</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedPartner.terms.partnerResponsibilities?.length > 0 && (
-                  <div className="border-t border-dashed border-stone-300 pt-2.5">
-                    <p className="font-bold text-emerald-700 text-[10px] uppercase">Partner's Work Duties</p>
-                    <p className="mt-1 font-sans text-stone-700">
-                      {selectedPartner.terms.partnerResponsibilities.join(', ')}
-                    </p>
-                  </div>
-                )}
-
-                {selectedPartner.terms.customNotes && (
-                  <div className="border-t border-dashed border-stone-300 pt-2.5">
-                    <p className="font-bold text-stone-400 text-[9px] uppercase">Notes</p>
-                    <p className="italic mt-1">"{selectedPartner.terms.customNotes}"</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-3">
-                <button
-                  onClick={() => {
-                    setIsTermsModalOpen(false);
-                    navigate(`/farms/${id}/partners/${selectedPartner.id}/edit`);
-                  }}
-                  className="w-full py-2.5 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl text-center transition cursor-pointer text-xs"
-                >
-                  Edit Terms
-                </button>
-                <button
-                  onClick={() => setIsTermsModalOpen(false)}
-                  className="w-full py-2.5 border border-stone-200 rounded-xl hover:bg-stone-50 text-stone-600 font-bold text-center transition cursor-pointer text-xs"
-                >
-                  Close
+                  Manage in Current State
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
           ) : (
-            <div className="text-center py-6 text-xs text-stone-400 font-semibold space-y-4">
-              <p>No custom partnership terms built for this partner yet.</p>
+            <div className="bg-stone-50 border border-stone-200/60 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-stone-200 text-stone-500 flex items-center justify-center shrink-0">
+                  <Wheat className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-extrabold text-stone-800">No Crop Currently Ongoing in this Farm</p>
+                  <p className="text-[11px] text-stone-400">Start a new cultivation cycle in Current State to track live expenses & sales.</p>
+                </div>
+              </div>
               <button
-                onClick={() => {
-                  setIsTermsModalOpen(false);
-                  navigate(`/farms/${id}/partners/${selectedPartner.id}/edit`);
-                }}
-                className="px-4 py-2 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl text-xs transition cursor-pointer"
+                onClick={() => navigate(`/current-state?farmId=${id}&action=new_crop`)}
+                className="inline-flex items-center gap-1.5 bg-stone-900 hover:bg-black text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm cursor-pointer self-start sm:self-center"
               >
-                Create Terms Agreement
+                <Plus className="w-3.5 h-3.5" />
+                Start Crop in Current State
               </button>
             </div>
           )}
-        </Modal>
+        </div>
+      </div>
+
+      {/* Tabs Navigation */}
+      <div className="flex border-b border-stone-200/60 gap-2">
+        <button
+          onClick={() => setActiveTab('history')}
+          className={`flex items-center gap-2 py-3 px-5 font-bold text-xs transition border-b-2 cursor-pointer ${
+            activeTab === 'history' 
+              ? 'border-emerald-600 text-emerald-800 bg-emerald-50/30' 
+              : 'border-transparent text-stone-400 hover:text-stone-600'
+          }`}
+        >
+          <Wheat className="w-4 h-4" />
+          Yield & Harvest History ({cropHistory.length})
+        </button>
+
+        <button
+          onClick={() => setActiveTab('analytics')}
+          className={`flex items-center gap-2 py-3 px-5 font-bold text-xs transition border-b-2 cursor-pointer ${
+            activeTab === 'analytics' 
+              ? 'border-emerald-600 text-emerald-800 bg-emerald-50/30' 
+              : 'border-transparent text-stone-400 hover:text-stone-600'
+          }`}
+        >
+          <BarChart3 className="w-4 h-4" />
+          Analytics & Seasonal Charts
+        </button>
+
+        <button
+          onClick={() => setActiveTab('partners')}
+          className={`flex items-center gap-2 py-3 px-5 font-bold text-xs transition border-b-2 cursor-pointer ${
+            activeTab === 'partners' 
+              ? 'border-emerald-600 text-emerald-800 bg-emerald-50/30' 
+              : 'border-transparent text-stone-400 hover:text-stone-600'
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          Partners History ({allPartnersHistory.length})
+        </button>
+
+        <button
+          onClick={() => setActiveTab('details')}
+          className={`flex items-center gap-2 py-3 px-5 font-bold text-xs transition border-b-2 cursor-pointer ${
+            activeTab === 'details' 
+              ? 'border-emerald-600 text-emerald-800 bg-emerald-50/30' 
+              : 'border-transparent text-stone-400 hover:text-stone-600'
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          Land Parameters & Specs
+        </button>
+      </div>
+
+      {/* ======================================================== */}
+      {/* TAB 1: YIELD & HARVEST HISTORY LEDGER                    */}
+      {/* ======================================================== */}
+      {activeTab === 'history' && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
+            <div>
+              <h3 className="text-sm font-extrabold text-stone-900">Historical Crop Harvests & Financial Yields</h3>
+              <p className="text-[11px] text-stone-400 mt-0.5">
+                Archived records automatically saved upon harvest clearance in Current State, or entered manually below.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsAddHistoryModalOpen(true)}
+              className="inline-flex items-center gap-1.5 bg-stone-900 hover:bg-black text-white font-bold px-3.5 py-2 rounded-xl text-xs transition shadow-sm cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 text-emerald-400" />
+              Add Past Season Record
+            </button>
+          </div>
+
+          {cropHistory.length > 0 ? (
+            <div className="space-y-4">
+              {cropHistory.map((h) => {
+                const yieldVal = parseFloat(h.yieldAmount) || 0;
+                const productivity = farmAreaSize > 0 ? (yieldVal / farmAreaSize).toFixed(1) : yieldVal;
+
+                return (
+                  <div 
+                    key={h.id} 
+                    className="bg-white border border-stone-200/70 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <SeasonBadge seasonId={h.season} />
+                        <span className="text-xs font-bold text-stone-400">{h.year} Season</span>
+                        <span className="text-xs font-semibold text-stone-400">• Harvested {formatDate(h.harvestDate)}</span>
+                      </div>
+
+                      <h4 className="text-xl font-extrabold text-stone-900">
+                        {h.cropName}
+                        {h.variety && <span className="text-xs font-semibold text-stone-400 ml-2">({h.variety})</span>}
+                      </h4>
+
+                      {/* Yield details */}
+                      <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-stone-600">
+                        <span className="bg-amber-50 border border-amber-200/60 text-amber-900 px-2.5 py-1 rounded-lg">
+                          🌾 Total Yield: <strong>{yieldVal} {h.yieldUnit || 'quintal'}</strong>
+                        </span>
+                        <span className="bg-emerald-50 border border-emerald-200/60 text-emerald-900 px-2.5 py-1 rounded-lg">
+                          📈 Productivity: <strong>{productivity} Qtl/{selectedFarm.sizeUnit || 'bigha'}</strong>
+                        </span>
+                        {h.mandiRate > 0 && (
+                          <span className="bg-stone-100 text-stone-700 px-2.5 py-1 rounded-lg">
+                            Mandi Rate: ₹{h.mandiRate}/Qtl
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Partner settlement status */}
+                      {h.partner?.name && (
+                        <div className="text-xs font-bold text-indigo-700 bg-indigo-50/60 border border-indigo-100 px-3 py-1.5 rounded-xl inline-flex items-center gap-2">
+                          <Users className="w-3.5 h-3.5" />
+                          Partner: {h.partner.name} ({h.partner.sharePercent}% Share) • {formatINR(h.partner.settledAmount)} Settled & Cleared
+                        </div>
+                      )}
+
+                      {h.notes && (
+                        <p className="text-xs text-stone-400 italic pt-1">"{h.notes}"</p>
+                      )}
+
+                      <div className="pt-1">
+                        <button
+                          onClick={() => setSelectedFarmoHistory({
+                            ...h,
+                            farmName: selectedFarm.name,
+                            farmoDetails: h.farmoDetails || {
+                              totalKharch: h.totalExpenses || 0,
+                              totalUpad: h.totalUpad || 0,
+                              totalGrossWeightKg: h.grossWeightKg || ((h.yieldAmount || 0) * 20),
+                              totalOtherWeightKg: h.otherWeightKg || 0,
+                              totalWeightDeductionKg: h.weightDeductionKg || 0,
+                              totalNetWeightKg: h.netWeightKg || ((h.yieldAmount || 0) * 20),
+                              totalWeightInMann: h.weightInMann || h.yieldAmount || 0,
+                              totalMadatar: h.totalRevenue || 0,
+                              kharchKapatMadatar: h.kharchKapatMadatar !== undefined ? h.kharchKapatMadatar : ((h.totalRevenue || 0) - (h.totalExpenses || 0)),
+                              bhageAavtiRakamOwner: h.bhageAavtiRakamOwner !== undefined ? h.bhageAavtiRakamOwner : Math.round(((h.totalRevenue || 0) - (h.totalExpenses || 0)) * 0.5),
+                              bhageAavtiRakamPartner: h.bhageAavtiRakamPartner !== undefined ? h.bhageAavtiRakamPartner : Math.round(((h.totalRevenue || 0) - (h.totalExpenses || 0)) * 0.5),
+                              partnerNetShare: h.partnerNetShare !== undefined ? h.partnerNetShare : (h.partner?.settledAmount || 0),
+                              maneMadelRakam: h.bhageAavtiRakamOwner !== undefined ? h.bhageAavtiRakamOwner : Math.round(((h.totalRevenue || 0) - (h.totalExpenses || 0)) * 0.5),
+                              partnerNeMadelRakam: h.partnerNetShare !== undefined ? h.partnerNetShare : (h.partner?.settledAmount || 0),
+                              partnerNeAapvaniRakam: h.partnerNeAapvaniRakam || (h.partner?.settledAmount || 0),
+                              partnerJodeLevaniRakam: h.partnerJodeLevaniRakam || 0
+                            }
+                          })}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition cursor-pointer border border-stone-200"
+                        >
+                          <FileText className="w-3.5 h-3.5 text-stone-600" />
+                          <span>📄 હિસાબ ફરમો (Hisab Farmo)</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Financial summary HUD */}
+                    <div className="bg-stone-50 border border-stone-200/60 rounded-2xl p-4 min-w-[240px] text-right space-y-1.5 shrink-0">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-stone-400 font-semibold">Total Expenses:</span>
+                        <span className="font-extrabold text-stone-700">{formatINR(h.totalExpenses)}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-stone-400 font-semibold">Total Revenue:</span>
+                        <span className="font-extrabold text-stone-700">{formatINR(h.totalRevenue)}</span>
+                      </div>
+                      <div className="pt-2 border-t border-stone-200/70 flex justify-between items-center">
+                        <span className="text-xs font-extrabold text-stone-900 uppercase">Net Profit:</span>
+                        <span className="text-base font-extrabold text-emerald-700">+{formatINR(h.netProfit)}</span>
+                      </div>
+                      <div className="text-[10px] text-stone-400 font-bold">
+                        ROI: <span className="text-emerald-600 font-extrabold">{h.roiPercent || 100}%</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="bg-white border border-stone-200/60 rounded-3xl p-12 text-center">
+              <Wheat className="w-12 h-12 mx-auto mb-3 text-stone-300" />
+              <h4 className="text-base font-extrabold text-stone-800">No Harvest Records Yet</h4>
+              <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
+                Once ongoing crops in Current State are harvested, their complete data will automatically appear here.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 2: ANALYTICS CHARTS & GRAPHS                         */}
+      {/* ======================================================== */}
+      {activeTab === 'analytics' && (
+        <div className="space-y-8">
+          
+          {/* Top KPI Ribbon */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
+              <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Lifetime Net Return</span>
+              <p className="text-2xl font-extrabold text-emerald-700 mt-1">{formatINR(totalLifetimeNetProfit)}</p>
+              <p className="text-[11px] text-stone-400 mt-0.5">All seasons combined</p>
+            </div>
+
+            <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
+              <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Total Production</span>
+              <p className="text-2xl font-extrabold text-stone-900 mt-1">{totalLifetimeYield} Qtl</p>
+              <p className="text-[11px] text-stone-400 mt-0.5">Harvested output</p>
+            </div>
+
+            <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
+              <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Average Productivity</span>
+              <p className="text-2xl font-extrabold text-stone-900 mt-1">
+                {cropHistory.length > 0 ? (totalLifetimeYield / (farmAreaSize * cropHistory.length)).toFixed(1) : 0} Qtl/{selectedFarm.sizeUnit || 'bigha'}
+              </p>
+              <p className="text-[11px] text-stone-400 mt-0.5">Average per crop cycle</p>
+            </div>
+
+            <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
+              <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Top Performing Crop</span>
+              <p className="text-2xl font-extrabold text-stone-900 mt-1">{bestCrop}</p>
+              <p className="text-[11px] text-stone-400 mt-0.5">Highest net return</p>
+            </div>
+          </div>
+
+          {/* CHART 1: ENTIRE AVERAGE PER SEASON OF ALL CROPS */}
+          <div className="bg-white border border-stone-200/70 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+              <div>
+                <h3 className="text-lg font-extrabold text-stone-900 flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-emerald-600" />
+                  Entire Average Per Season of All Crops
+                </h3>
+                <p className="text-xs text-stone-400 mt-0.5">
+                  Seasonal comparison (Kharif vs Rabi vs Zaid) based on historical average yields, expenses, and net returns.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Financial Averages Chart */}
+              <div>
+                <h4 className="text-xs font-bold text-stone-600 uppercase tracking-wider mb-4">
+                  Average Revenue vs Expense vs Net Profit (₹)
+                </h4>
+                <div className="h-72 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={seasonAnalytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0ee" />
+                      <XAxis dataKey="season" tick={{ fontSize: 12, fontWeight: 'bold' }} stroke="#78716c" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#78716c" tickFormatter={(v) => `₹${v / 1000}k`} />
+                      <Tooltip formatter={(value) => [formatINR(value), '']} />
+                      <Legend wrapperStyle={{ fontSize: 11, fontWeight: 'bold' }} />
+                      <Bar dataKey="avgRevenue" name="Avg Revenue" fill="#1D9E75" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="avgExpenses" name="Avg Expense" fill="#d97706" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="avgNetProfit" name="Avg Net Profit" fill="#0284c7" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Yield Averages Chart */}
+              <div>
+                <h4 className="text-xs font-bold text-stone-600 uppercase tracking-wider mb-4">
+                  Average Yield per Season (Quintals)
+                </h4>
+                <div className="h-72 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={seasonAnalytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0ee" />
+                      <XAxis dataKey="season" tick={{ fontSize: 12, fontWeight: 'bold' }} stroke="#78716c" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#78716c" />
+                      <Tooltip formatter={(value) => [`${value} Quintal`, 'Average Output']} />
+                      <Legend wrapperStyle={{ fontSize: 11, fontWeight: 'bold' }} />
+                      <Bar dataKey="avgYield" name="Avg Yield (Qtl)" fill="#84cc16" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            {/* Season Data Table */}
+            <div className="border border-stone-200/60 rounded-2xl overflow-hidden text-xs">
+              <table className="w-full text-left">
+                <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase text-[10px]">
+                  <tr>
+                    <th className="p-3">Season</th>
+                    <th className="p-3">Crops Harvested</th>
+                    <th className="p-3">Average Yield</th>
+                    <th className="p-3">Average Expenses</th>
+                    <th className="p-3">Average Revenue</th>
+                    <th className="p-3">Average Net Profit</th>
+                    <th className="p-3">Average ROI</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100 font-semibold text-stone-800">
+                  {seasonAnalytics.map(s => (
+                    <tr key={s.season} className="hover:bg-stone-50/50">
+                      <td className="p-3 font-extrabold">{s.season}</td>
+                      <td className="p-3">{s.count} cycle(s)</td>
+                      <td className="p-3 font-bold text-emerald-700">{s.avgYield} Quintal</td>
+                      <td className="p-3 text-amber-700">{formatINR(s.avgExpenses)}</td>
+                      <td className="p-3">{formatINR(s.avgRevenue)}</td>
+                      <td className="p-3 font-extrabold text-emerald-700">+{formatINR(s.avgNetProfit)}</td>
+                      <td className="p-3 font-bold text-sky-700">{s.roi}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* CHART 2: CROP-WISE ANALYTICS CHARTS */}
+          <div className="bg-white border border-stone-200/70 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+              <div>
+                <h3 className="text-lg font-extrabold text-stone-900 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-600" />
+                  Crop-Wise Performance & Productivity Comparison
+                </h3>
+                <p className="text-xs text-stone-400 mt-0.5">
+                  Detailed analytics breakdown for each individual crop type grown historically in this farm plot.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-stone-500">Filter Crop:</span>
+                <select
+                  value={selectedCropAnalytics}
+                  onChange={(e) => setSelectedCropAnalytics(e.target.value)}
+                  className="text-xs font-semibold bg-stone-100 border border-stone-200 rounded-xl px-3 py-1.5 focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Crops Combined</option>
+                  {cropWiseAnalytics.map(c => (
+                    <option key={c.cropName} value={c.cropName}>{c.cropName}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Crop Yield Chart */}
+              <div>
+                <h4 className="text-xs font-bold text-stone-600 uppercase tracking-wider mb-4">
+                  Average Yield Output by Crop (Quintals)
+                </h4>
+                <div className="h-72 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={cropWiseAnalytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0ee" />
+                      <XAxis dataKey="cropName" tick={{ fontSize: 11, fontWeight: 'bold' }} stroke="#78716c" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#78716c" />
+                      <Tooltip formatter={(value) => [`${value} Qtl`, 'Average Yield']} />
+                      <Bar dataKey="avgYield" name="Avg Yield" fill="#1D9E75" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Crop Net Profit Comparison */}
+              <div>
+                <h4 className="text-xs font-bold text-stone-600 uppercase tracking-wider mb-4">
+                  Total Cumulative Net Profit by Crop (₹)
+                </h4>
+                <div className="h-72 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={cropWiseAnalytics} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0ee" />
+                      <XAxis dataKey="cropName" tick={{ fontSize: 11, fontWeight: 'bold' }} stroke="#78716c" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#78716c" tickFormatter={(v) => `₹${v / 1000}k`} />
+                      <Tooltip formatter={(value) => [formatINR(value), 'Total Net Profit']} />
+                      <Bar dataKey="totalNetProfit" name="Total Net Profit" fill="#0284c7" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            {/* Individual Crop Progression Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+              {cropWiseAnalytics
+                .filter(c => selectedCropAnalytics === 'all' || c.cropName === selectedCropAnalytics)
+                .map(c => (
+                  <div key={c.cropName} className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-2">
+                    <div className="flex justify-between items-center">
+                      <h5 className="font-extrabold text-sm text-stone-900">{c.cropName}</h5>
+                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                        {c.count} Harvest(s)
+                      </span>
+                    </div>
+                    <div className="text-xs space-y-1 text-stone-600">
+                      <div className="flex justify-between">
+                        <span>Average Yield:</span>
+                        <strong className="text-stone-900">{c.avgYield} Quintals</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Average Cycle Expense:</span>
+                        <strong>{formatINR(c.avgExpense)}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Cumulative Net Profit:</span>
+                        <strong className="text-emerald-700">+{formatINR(c.totalNetProfit)}</strong>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Return on Investment:</span>
+                        <strong className="text-sky-700">{c.roi}% ROI</strong>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+          </div>
+
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 3: PARTNERS HISTORY ARCHIVE                          */}
+      {/* ======================================================== */}
+      {activeTab === 'partners' && (
+        <div className="space-y-4">
+          <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
+            <h3 className="text-sm font-extrabold text-stone-900">Partnership History on {selectedFarm.name}</h3>
+            <p className="text-[11px] text-stone-400 mt-0.5">
+              Historical record of all farming partners, shares, and settled payouts on this land parcel.
+            </p>
+          </div>
+
+          {allPartnersHistory.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {allPartnersHistory.map((p, idx) => (
+                <div key={idx} className="bg-white border border-stone-200/70 rounded-3xl p-6 shadow-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-extrabold text-base">
+                        {p.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="text-base font-extrabold text-stone-900">{p.name}</h4>
+                        <p className="text-xs text-stone-400">{p.phone || 'No phone'}</p>
+                      </div>
+                    </div>
+                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                      p.status.includes('Active') ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-700'
+                    }`}>
+                      {p.status}
+                    </span>
+                  </div>
+
+                  <div className="pt-2 border-t border-stone-100 grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-[10px] text-stone-400 block uppercase font-bold">Crop & Season</span>
+                      <span className="font-extrabold text-stone-800">{p.cropName} ({p.season})</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-stone-400 block uppercase font-bold">Agreement Share</span>
+                      <span className="font-extrabold text-indigo-700">{p.sharePercent}% Share</span>
+                    </div>
+                    <div className="col-span-2 pt-1">
+                      <span className="text-[10px] text-stone-400 block uppercase font-bold">Total Settled Amount</span>
+                      <span className="font-extrabold text-emerald-700 text-sm">{formatINR(p.settledAmount)} (Account Cleared)</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white border border-stone-200/60 rounded-3xl p-12 text-center">
+              <Users className="w-12 h-12 mx-auto mb-3 text-stone-300" />
+              <h4 className="text-base font-extrabold text-stone-800">No Partners Recorded on this Farm</h4>
+              <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
+                This farm parcel is currently self-managed, or no partnership crops have been harvested yet.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* TAB 4: LAND PARAMETERS & SPECS                           */}
+      {/* ======================================================== */}
+      {activeTab === 'details' && (
+        <div className="bg-white border border-stone-200/70 rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
+          <div className="flex justify-between items-center pb-4 border-b border-stone-100">
+            <div>
+              <h3 className="text-lg font-extrabold text-stone-900">Land Parcel Master Parameters</h3>
+              <p className="text-xs text-stone-400">Fixed property attributes, soil profile, and water source</p>
+            </div>
+            <button
+              onClick={() => setIsEditFarmModalOpen(true)}
+              className="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-xl transition cursor-pointer"
+            >
+              <Edit className="w-3.5 h-3.5" />
+              Edit These Parameters
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+            <div className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Farm Parcel Name</span>
+              <p className="font-extrabold text-sm text-stone-900">{selectedFarm.name}</p>
+            </div>
+
+            <div className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Location & District</span>
+              <p className="font-extrabold text-sm text-stone-900">{selectedFarm.location || 'Gujarat, India'}</p>
+            </div>
+
+            <div className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Total Land Area</span>
+              <p className="font-extrabold text-sm text-stone-900">{farmAreaSize} {selectedFarm.sizeUnit || 'bigha'}</p>
+            </div>
+
+            <div className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Ownership Tenure</span>
+              <p className="font-extrabold text-sm text-stone-900 capitalize">{selectedFarm.ownershipType || 'own'}</p>
+            </div>
+
+            <div className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Soil Profile</span>
+              <p className="font-extrabold text-sm text-stone-900">{selectedFarm.soilType || 'Black Cotton'}</p>
+            </div>
+
+            <div className="p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Irrigation Infrastructure</span>
+              <p className="font-extrabold text-sm text-stone-900">{selectedFarm.irrigationSource || 'Canal & Tubewell'}</p>
+            </div>
+
+            <div className="md:col-span-2 p-4 bg-stone-50 border border-stone-200/60 rounded-2xl space-y-1">
+              <span className="text-stone-400 font-bold uppercase text-[10px] block">Plot Notes / Registry Details</span>
+              <p className="font-semibold text-stone-800 leading-relaxed">{selectedFarm.notes || 'No special notes recorded.'}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: EDIT FARM DETAILS                                 */}
+      {/* ======================================================== */}
+      {isEditFarmModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-stone-100 p-6 md:p-8">
+            <div className="flex justify-between items-center pb-4 border-b border-stone-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <Edit className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-stone-900">Edit Farm Details</h3>
+                  <p className="text-xs text-stone-400">Update land area, location, soil & water specs</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsEditFarmModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditFarm} className="space-y-4 mt-5">
+              <div>
+                <label className="block text-xs font-bold text-stone-600 mb-1">Farm Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={farmName}
+                  onChange={(e) => setFarmName(e.target.value)}
+                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-600 mb-1">Location (Village / District) *</label>
+                <input
+                  type="text"
+                  required
+                  value={farmLocation}
+                  onChange={(e) => setFarmLocation(e.target.value)}
+                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Land Area *</label>
+                  <input
+                    type="number"
+                    step="any"
+                    required
+                    value={farmSize}
+                    onChange={(e) => setFarmSize(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Area Unit</label>
+                  <select
+                    value={farmSizeUnit}
+                    onChange={(e) => setFarmSizeUnit(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white"
+                  >
+                    <option value="bigha">Bigha</option>
+                    <option value="acre">Acre</option>
+                    <option value="hectare">Hectare</option>
+                    <option value="guntha">Guntha</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Ownership Type</label>
+                  <select
+                    value={farmOwnership}
+                    onChange={(e) => setFarmOwnership(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white"
+                  >
+                    <option value="own">Self-Owned Land</option>
+                    <option value="leased">Leased / Rental Land</option>
+                    <option value="partner">Joint Partnership Plot</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Soil Type</label>
+                  <select
+                    value={farmSoilType}
+                    onChange={(e) => setFarmSoilType(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white"
+                  >
+                    <option value="Black Cotton">Black Cotton Soil (Kali Mitti)</option>
+                    <option value="Loamy Alluvial">Loamy Alluvial Soil</option>
+                    <option value="Red Sandy">Red Sandy Loam</option>
+                    <option value="Clayey">Clayey Soil</option>
+                    <option value="Sandy">Sandy Soil</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-600 mb-1">Irrigation Source</label>
+                <input
+                  type="text"
+                  value={farmIrrigation}
+                  onChange={(e) => setFarmIrrigation(e.target.value)}
+                  placeholder="e.g. Canal & Tubewell / Drip System"
+                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-600 mb-1">Notes & Description</label>
+                <textarea
+                  rows="3"
+                  value={farmNotes}
+                  onChange={(e) => setFarmNotes(e.target.value)}
+                  placeholder="Plot notes, Khata survey number, boundary details..."
+                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                />
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsEditFarmModalOpen(false)}
+                  className="flex-1 py-3 text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-xl transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition shadow cursor-pointer"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL: ADD PAST SEASON HARVEST RECORD                     */}
+      {/* ======================================================== */}
+      {isAddHistoryModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-stone-100 p-6 md:p-8">
+            <div className="flex justify-between items-center pb-4 border-b border-stone-100">
+              <div>
+                <h3 className="text-lg font-extrabold text-stone-900">Add Past Season Record</h3>
+                <p className="text-xs text-stone-400">Record past harvests to complete farm historical analytics</p>
+              </div>
+              <button 
+                onClick={() => setIsAddHistoryModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveAddHistory} className="space-y-4 mt-5">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Crop Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={histCropName}
+                    onChange={(e) => setHistCropName(e.target.value)}
+                    placeholder="e.g. Wheat, Cotton"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Variety</label>
+                  <input
+                    type="text"
+                    value={histVariety}
+                    onChange={(e) => setHistVariety(e.target.value)}
+                    placeholder="e.g. GW-496"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Season</label>
+                  <select
+                    value={histSeason}
+                    onChange={(e) => setHistSeason(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white"
+                  >
+                    <option value="kharif">Kharif</option>
+                    <option value="rabi">Rabi</option>
+                    <option value="zaid">Zaid</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Year</label>
+                  <input
+                    type="number"
+                    value={histYear}
+                    onChange={(e) => setHistYear(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Harvest Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={histHarvestDate}
+                    onChange={(e) => setHistHarvestDate(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Total Yield *</label>
+                  <input
+                    type="number"
+                    step="any"
+                    required
+                    value={histYield}
+                    onChange={(e) => setHistYield(e.target.value)}
+                    placeholder="e.g. 50"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Unit</label>
+                  <select
+                    value={histYieldUnit}
+                    onChange={(e) => setHistYieldUnit(e.target.value)}
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white"
+                  >
+                    <option value="quintal">Quintal</option>
+                    <option value="kg">Kg</option>
+                    <option value="ton">Metric Ton</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Total Expenses (₹)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={histExpenses}
+                    onChange={(e) => setHistExpenses(e.target.value)}
+                    placeholder="₹ 0"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Total Revenue (₹)</label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={histRevenue}
+                    onChange={(e) => setHistRevenue(e.target.value)}
+                    placeholder="₹ 0"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 text-emerald-800"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Partner Name (Optional)</label>
+                  <input
+                    type="text"
+                    value={histPartnerName}
+                    onChange={(e) => setHistPartnerName(e.target.value)}
+                    placeholder="e.g. Bhavesh Patel"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">Partner Share %</label>
+                  <input
+                    type="number"
+                    value={histPartnerShare}
+                    onChange={(e) => setHistPartnerShare(e.target.value)}
+                    placeholder="50"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-stone-600 mb-1">Notes</label>
+                <input
+                  type="text"
+                  value={histNotes}
+                  onChange={(e) => setHistNotes(e.target.value)}
+                  placeholder="e.g. Sold at APMC Mandi, good rates"
+                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600"
+                />
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsAddHistoryModalOpen(false)}
+                  className="flex-1 py-3 text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-xl transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition shadow cursor-pointer"
+                >
+                  Save Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Hisab Farmo Ledger Modal for Past Record */}
+      {selectedFarmoHistory && (
+        <HisabFarmoModal
+          crop={selectedFarmoHistory}
+          onClose={() => setSelectedFarmoHistory(null)}
+        />
       )}
 
     </div>

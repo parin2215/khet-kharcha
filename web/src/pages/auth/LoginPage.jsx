@@ -370,6 +370,20 @@ export default function LoginPage() {
           </span>
         </div>
 
+        {/* Demo Farmer Quick Login */}
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={() => {
+              useAuthStore.getState().loginAsDemo();
+              navigate('/dashboard');
+            }}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-extrabold text-sm transition shadow-sm cursor-pointer"
+          >
+            ⚡ Quick Demo Login (Ramji Patel - Full Sample Data)
+          </button>
+        </div>
+
         {/* Social Buttons */}
         <div className="grid grid-cols-2 gap-4">
           <button
