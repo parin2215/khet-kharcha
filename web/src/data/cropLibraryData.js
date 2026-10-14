@@ -1,7 +1,7 @@
 /**
  * Crop Cultivation Library Catalog
  * Contains complete master catalog of 241 agricultural crops.
- * Ready as cards; agronomic practices and detailed timelines will be added subsequently.
+ * Cereals & Pseudocereals mapped with comprehensive market types & certified cultivars.
  */
 
 export const CROP_CATEGORIES = [
@@ -78,6 +78,66 @@ export const MASTER_CROPS = [
     "name": "Rice (Paddy)",
     "category": "cereals",
     "subcategory": "Primary Staples",
+    "localNames": {
+      "gu": "ડાંગર (ચોખા)",
+      "hi": "धान / चावल",
+      "en": "Rice / Paddy"
+    },
+    "scientificName": "Oryza sativa",
+    "marketTypes": [
+      {
+        "typeName": "Premium Long-Grain Basmati (સુગંધિત બાસમતી)",
+        "varieties": [
+          "Pusa Basmati 1121",
+          "Pusa Basmati 1509",
+          "Pusa Basmati 1718",
+          "PB 1847",
+          "Taraori Basmati",
+          "Dehraduni Type 3"
+        ],
+        "marketUse": "Export market, premium biryani, pulav, high-end culinary",
+        "grainType": "Extra-long slender grain, exceptional elongation after cooking, delicate floral aroma"
+      },
+      {
+        "typeName": "Medium Slender Non-Basmati (સોના મસૂરી / સાંભા)",
+        "varieties": [
+          "Sona Masoori",
+          "BPT 5204 (Samba Mahsuri)",
+          "RNR 15048 (Telangana Sona - Low GI)",
+          "HMT Kolam",
+          "Wada Kolam"
+        ],
+        "marketUse": "Daily staple cooking, south Indian cuisines, health conscious diet (low GI)",
+        "grainType": "Medium slender, lightweight, soft texture"
+      },
+      {
+        "typeName": "High-Yielding Coarse Rice (જાડા ચોખા / પરબોઈલ્ડ)",
+        "varieties": [
+          "IR-64",
+          "Swarna (MTU 7029)",
+          "Jaya",
+          "PR-126",
+          "Gurjari (Gujarat)",
+          "GR-11",
+          "Dandi (Salt tolerant)"
+        ],
+        "marketUse": "Mandi bulk trade, PDS distribution, parboiled rice mills, idli/dosa batter, poha (flattened rice)",
+        "grainType": "Bold, short to medium grain, high starch yield"
+      },
+      {
+        "typeName": "Aromatic Heritage & Specialty Rice (વિશિષ્ટ સુગંધિત)",
+        "varieties": [
+          "Kalanamak (Buddha Rice)",
+          "Gobindobhog (West Bengal)",
+          "Ambemohar (Maharashtra)",
+          "Jeerakasala / Kaima",
+          "Chak-Hao (Manipur Black Rice)",
+          "Navara (Kerala Red Ayurvedic)"
+        ],
+        "marketUse": "Gourmet desserts (Kheer/Payasam), temple offerings, medicinal and organic export",
+        "grainType": "Short aromatic grain or pigmented pericarp (anthocyanin rich black/red)"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -85,6 +145,62 @@ export const MASTER_CROPS = [
     "name": "Wheat (Durum, Bread, Emmer)",
     "category": "cereals",
     "subcategory": "Primary Staples",
+    "localNames": {
+      "gu": "ઘઉં",
+      "hi": "गेहूं",
+      "en": "Wheat"
+    },
+    "scientificName": "Triticum spp.",
+    "marketTypes": [
+      {
+        "typeName": "Sharbati & Premium Bread Wheat (શરબતી / દેશી લોકવાન)",
+        "varieties": [
+          "C-306 (Original Sharbati)",
+          "Lokwan (Lok-1)",
+          "GW-496 (Gujarat Gold)",
+          "GW-322",
+          "GW-366",
+          "Raj-4037"
+        ],
+        "marketUse": "Premium chapatis, rotis, consumer flour brands, golden luster mandis (Sehore / Gujarat)",
+        "grainType": "Semi-hard to hard golden bold grain, sweet taste, high protein"
+      },
+      {
+        "typeName": "High-Yielding Irrigated Milling Wheat (મિલિંગ / પીડીએસ)",
+        "varieties": [
+          "HD-2967 (Pusa Sindhu)",
+          "HD-3086 (Pusa Gautami)",
+          "PBW-343",
+          "DBW-187 (Karan Vandana)",
+          "DBW-303 (Karan Vaishnavi)"
+        ],
+        "marketUse": "Commercial roller flour mills, Maida, Suji, bakery bread, biscuit industry",
+        "grainType": "Amber colored, medium hard, high gluten strength"
+      },
+      {
+        "typeName": "Durum / Macaroni / Kathiya Wheat (કાઠીયા / સોજી ઘઉં)",
+        "varieties": [
+          "GW-1",
+          "GW-2",
+          "HI-8713 (Pusa Mangal)",
+          "WHD-943",
+          "PDW-233",
+          "Malavshakti"
+        ],
+        "marketUse": "Pasta, macaroni, spaghetti, rava/suji, vermicelli (seviyan), dalia",
+        "grainType": "Extremely vitreous (glassy), amber bold hard grain, high carotenoid pigment"
+      },
+      {
+        "typeName": "Emmer / Khapli Wheat (ખાપલી / પ્રાચીન ડાયાબિટીક ઘઉં)",
+        "varieties": [
+          "DDK-1029",
+          "DDK-1009",
+          "Local Desi Khapli"
+        ],
+        "marketUse": "Specialty diabetic flour, therapeutic diets, low glycemic index chapatis",
+        "grainType": "Hulled grain, long reddish spindle shape, rich in dietary fiber"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -92,6 +208,71 @@ export const MASTER_CROPS = [
     "name": "Maize (Corn)",
     "category": "cereals",
     "subcategory": "Primary Staples",
+    "localNames": {
+      "gu": "મકાઈ",
+      "hi": "मक्का / भुट्टा",
+      "en": "Maize / Corn"
+    },
+    "scientificName": "Zea mays",
+    "marketTypes": [
+      {
+        "typeName": "Commercial Yellow Dent & Flint Corn (પીળી મકાઈ)",
+        "varieties": [
+          "Pioneer P3396",
+          "Syngenta NK-6240",
+          "Dekalb 9108",
+          "Monsanto DKC-9144",
+          "HQPM-1 (High Quality Protein)",
+          "GAYMH-1"
+        ],
+        "marketUse": "Poultry feed, cattle feed, industrial starch, corn oil, ethanol production",
+        "grainType": "Hard yellow flint or dent kernels with high starch density"
+      },
+      {
+        "typeName": "Sweet Corn (મીઠી મકાઈ / ટેબલ કોર્ન)",
+        "varieties": [
+          "Sugar-75 (Syngenta)",
+          "Madhuri",
+          "Priya Sweet Corn",
+          "Mishti",
+          "Advanta Golden"
+        ],
+        "marketUse": "Fresh green cob roasting, boiling, frozen sweet corn kernels, restaurant salads",
+        "grainType": "High sugar content (shrunken kernel gene), tender translucent golden grains"
+      },
+      {
+        "typeName": "Baby Corn (બેબી કોર્ન)",
+        "varieties": [
+          "GAYMH-1 (Gujarat)",
+          "HM-4",
+          "VL Baby Corn 1",
+          "Golden Baby"
+        ],
+        "marketUse": "Canned vegetables, gourmet stir-fries, hotel salad buffet, export processing",
+        "grainType": "Immature unfertilized ear harvested within 2-3 days of silk emergence"
+      },
+      {
+        "typeName": "White Maize / Desi Corn (સફેદ મકાઈ / દેશી)",
+        "varieties": [
+          "Gujarat Anand White Maize-2",
+          "GWM-3",
+          "Narmada Moti",
+          "Bhiloda Desi"
+        ],
+        "marketUse": "Traditional maize rotlas (Makai no Rotlo in Saurashtra/Panchmahal), cornmeal",
+        "grainType": "Pure white flint kernels, traditional rustic corn flavor"
+      },
+      {
+        "typeName": "Popcorn (પોપકોર્ન)",
+        "varieties": [
+          "Amber Popcorn",
+          "Pearl Popcorn",
+          "VL Popcorn-2"
+        ],
+        "marketUse": "Movie theater popcorn, ready-to-eat puffed snacks",
+        "grainType": "Dense, small hard pericarp with moisture-steam expansion capacity"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -99,6 +280,49 @@ export const MASTER_CROPS = [
     "name": "Barley",
     "category": "cereals",
     "subcategory": "Primary Staples",
+    "localNames": {
+      "gu": "જવ",
+      "hi": "जौ",
+      "en": "Barley"
+    },
+    "scientificName": "Hordeum vulgare",
+    "marketTypes": [
+      {
+        "typeName": "Two-Row Malting Barley (બ્રુઅરી / માલ્ટ જવ)",
+        "varieties": [
+          "DWRB-101",
+          "DWRB-180",
+          "RD-2849",
+          "VJM-201",
+          "Alfa"
+        ],
+        "marketUse": "Beer brewing, malted health food drinks (Horlicks/Bournvita), whisky distillation",
+        "grainType": "Uniform bold plump grains, low protein, high diastatic power"
+      },
+      {
+        "typeName": "Six-Row Feed & Food Barley (સામાન્ય જવ)",
+        "varieties": [
+          "RD-2552",
+          "RD-2035",
+          "BH-902",
+          "PL-426",
+          "Ratna",
+          "Azad"
+        ],
+        "marketUse": "Animal feed, barley flour (Jau Sattu), medicinal water (cooling beverage)",
+        "grainType": "Six-row asymmetric grains, high fiber, high beta-glucan"
+      },
+      {
+        "typeName": "Hulless / Naked Barley (ફોતરા વગરના જવ)",
+        "varieties": [
+          "BHS-352",
+          "Karan-16",
+          "Himani"
+        ],
+        "marketUse": "Direct human food grain, porridges, whole grain flatbreads",
+        "grainType": "Free-threshing grain without adherent lemma and palea hull"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -106,6 +330,38 @@ export const MASTER_CROPS = [
     "name": "Oats",
     "category": "cereals",
     "subcategory": "Primary Staples",
+    "localNames": {
+      "gu": "ઓટ્સ / જઈ",
+      "hi": "जई / ओट्स",
+      "en": "Oats"
+    },
+    "scientificName": "Avena sativa",
+    "marketTypes": [
+      {
+        "typeName": "Breakfast & Food Grain Oats (બ્રેકફાસ્ટ ઓટ્સ)",
+        "varieties": [
+          "Kent",
+          "HJ-8",
+          "OS-6",
+          "UPO-212",
+          "SKO-90"
+        ],
+        "marketUse": "Rolled oats, oatmeal porridge, oat flour, dietary fiber supplements",
+        "grainType": "Plump groats rich in soluble beta-glucan fiber and antioxidants"
+      },
+      {
+        "typeName": "Dual Purpose & Green Fodder Oats (ઘાસચારો / જઈ)",
+        "varieties": [
+          "RO-19 (Gujarat)",
+          "JHO-822",
+          "Bundel Oat-991",
+          "OL-9",
+          "JHO-851"
+        ],
+        "marketUse": "High-protein green fodder for dairy cattle, multi-cut hay production",
+        "grainType": "Heavy vegetative biomass with nutritive grain recovery"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -113,6 +369,35 @@ export const MASTER_CROPS = [
     "name": "Rye",
     "category": "cereals",
     "subcategory": "Primary Staples",
+    "localNames": {
+      "gu": "રાય (ધાન્ય)",
+      "hi": "राई (सीरियल)",
+      "en": "Cereal Rye"
+    },
+    "scientificName": "Secale cereale",
+    "marketTypes": [
+      {
+        "typeName": "Winter Rye (શિયાળુ રાય)",
+        "varieties": [
+          "Gazelle",
+          "Dacold",
+          "Danko",
+          "Ryman"
+        ],
+        "marketUse": "Pumpernickel & dark rye bread, sourdough starters, rye whiskey distilling",
+        "grainType": "Slender grayish-green grain with distinctive earthy, tangy flavor"
+      },
+      {
+        "typeName": "Cover Crop & Forage Rye",
+        "varieties": [
+          "Abruzzi",
+          "Elbon",
+          "Wheeler"
+        ],
+        "marketUse": "Soil conservation green manure, winter grazing for livestock",
+        "grainType": "Rapid germination, cold-hardy tillering growth"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -120,6 +405,60 @@ export const MASTER_CROPS = [
     "name": "Sorghum (Jowar)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "જુવાર",
+      "hi": "ज्वार",
+      "en": "Sorghum / Jowar"
+    },
+    "scientificName": "Sorghum bicolor",
+    "marketTypes": [
+      {
+        "typeName": "Rabi Grain Sorghum (શિયાળુ માલદંડી જુવાર)",
+        "varieties": [
+          "M-35-1 (Maldandi)",
+          "Phule Yashoda",
+          "Phule Revati",
+          "Parbhani Moti",
+          "CSV-29R",
+          "GJ-38"
+        ],
+        "marketUse": "Premium food grain for rotlas (Jowar Bhakri), high market price in Maharashtra & Gujarat",
+        "grainType": "Pearlescent ivory-white bold grain, sweet dough texture, gluten-free"
+      },
+      {
+        "typeName": "Kharif Grain Sorghum (ચોમાસુ જુવાર હાઇબ્રિડ)",
+        "varieties": [
+          "CSH-14",
+          "CSH-16",
+          "CSH-25",
+          "CSV-15",
+          "GJ-42 (Gujarat Jowar)"
+        ],
+        "marketUse": "Industrial alcohol, starch manufacturing, poultry feed, flour blending",
+        "grainType": "Creamy white to light yellow grain with high starch extraction"
+      },
+      {
+        "typeName": "Sweet Sorghum (શેરડી જુવાર - બાયોઇથેનોલ)",
+        "varieties": [
+          "SSV-84",
+          "CSH-22SS",
+          "Phule Vasundhara"
+        ],
+        "marketUse": "Stalk juice for bio-ethanol, jaggery syrup, bagasse for paper",
+        "grainType": "Sugar-rich juicy stalks with dual grain harvest"
+      },
+      {
+        "typeName": "Multicut Fodder Sorghum (ગુંદરી ઘાસચારો)",
+        "varieties": [
+          "Gundari (Gujarat Chari)",
+          "MP Chari",
+          "SSG-59-3 (Meethi Sudax)",
+          "Pant Chari-5"
+        ],
+        "marketUse": "Green succulent fodder for dairy cows and buffaloes",
+        "grainType": "Tall vegetative tillering with sweet palatable foliage"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -127,6 +466,49 @@ export const MASTER_CROPS = [
     "name": "Pearl Millet (Bajra)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "બાજરી",
+      "hi": "बाजरा",
+      "en": "Pearl Millet / Bajra"
+    },
+    "scientificName": "Pennisetum glaucum",
+    "marketTypes": [
+      {
+        "typeName": "Commercial High-Yielding Hybrids (હાઇબ્રિડ બાજરી)",
+        "varieties": [
+          "GHB-558 (Gujarat Hybrid)",
+          "GHB-744",
+          "GHB-905",
+          "Pioneer 86M88",
+          "ProAgro 9444",
+          "Kaveri Super Boss",
+          "Nandi-65"
+        ],
+        "marketUse": "Commercial grain trade, khichdi, flour mills, animal feed compounding",
+        "grainType": "Steel gray to golden globular bold grain, high yield per bigha"
+      },
+      {
+        "typeName": "Biofortified Iron & Zinc Bajra (પોષક તત્વો સભર)",
+        "varieties": [
+          "Dhanshakti (High Iron)",
+          "AHB-1200",
+          "HHB-67 Improved",
+          "ProAgro 9444 Fe"
+        ],
+        "marketUse": "Nutritional programs, health-oriented millet flour, infant mixes",
+        "grainType": "Dense nutritious gray-green grains with >70 ppm Iron"
+      },
+      {
+        "typeName": "Desi Landraces (દેશી સૌરાષ્ટ્ર / રાજસ્થાન બાજરી)",
+        "varieties": [
+          "Desi Barmer Bajra",
+          "Kathiawadi Desi Bajri",
+          "Jakhrana"
+        ],
+        "marketUse": "Traditional Saurashtra & Marwad winter rotla, distinct sweet natural flavor",
+        "grainType": "Smaller grain size, higher fat content and exceptional aroma"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -134,6 +516,47 @@ export const MASTER_CROPS = [
     "name": "Finger Millet (Ragi)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "નાગલી / રાગી / બાવટો",
+      "hi": "रागी / मड़ुआ",
+      "en": "Finger Millet / Ragi"
+    },
+    "scientificName": "Eleusine coracana",
+    "marketTypes": [
+      {
+        "typeName": "Commercial Brown Ragi (લાલ/કથ્થઈ રાગી)",
+        "varieties": [
+          "GPU-28",
+          "ML-365",
+          "MR-1",
+          "Indaf-8",
+          "VL-149",
+          "PR-202"
+        ],
+        "marketUse": "Ragi flour, ragi malt drinks, dosa mixes, porridge, biscuits, baby weaning foods",
+        "grainType": "Reddish-brown spherical grains, richest plant source of calcium (344 mg/100g)"
+      },
+      {
+        "typeName": "Gujarat Dangs & Tribal Nagli (ડાંગ નાગલી)",
+        "varieties": [
+          "GN-4 (Gujarat Nagli)",
+          "GN-5",
+          "GNN-6",
+          "Dangs Local"
+        ],
+        "marketUse": "Rotla, Nagli papad, traditional ethnic hill farming trade",
+        "grainType": "Locally adapted high-iron and mineral dense grains"
+      },
+      {
+        "typeName": "White Ragi (સફેદ રાગી)",
+        "varieties": [
+          "CO-14 (White)",
+          "KMR-340"
+        ],
+        "marketUse": "Bakery bread blending without darkening color, noodles, pasta",
+        "grainType": "Light creamish white seed coat with mild taste"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -141,6 +564,36 @@ export const MASTER_CROPS = [
     "name": "Foxtail Millet",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "કાંગ",
+      "hi": "कंगनी / राल",
+      "en": "Foxtail Millet / Kangni"
+    },
+    "scientificName": "Setaria italica",
+    "marketTypes": [
+      {
+        "typeName": "High-Yielding Grain Cultivars (કાંગની વેરાયટી)",
+        "varieties": [
+          "SiA-3085",
+          "SiA-3156",
+          "Suryanandi",
+          "HMT-100-1",
+          "Pratap Kangani-1",
+          "CO-7"
+        ],
+        "marketUse": "Millet rice substitute, upma, diabetic porridge, healthy snacks",
+        "grainType": "Golden-yellow or creamy small seeds with low glycemic index"
+      },
+      {
+        "typeName": "Birdseed & Forage Foxtail",
+        "varieties": [
+          "German Foxtail",
+          "Hungarian Foxtail"
+        ],
+        "marketUse": "Pet bird feed market, quick dry-matter hay production",
+        "grainType": "Glossy unhulled seed"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -148,6 +601,9 @@ export const MASTER_CROPS = [
     "name": "Proso Millet (Cheena)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -155,6 +611,27 @@ export const MASTER_CROPS = [
     "name": "Kodo Millet",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "કોદરી",
+      "hi": "कोदो",
+      "en": "Kodo Millet / Kodra"
+    },
+    "scientificName": "Paspalum scrobiculatum",
+    "marketTypes": [
+      {
+        "typeName": "Improved Food Kodri (કોદરી)",
+        "varieties": [
+          "GPUK-3",
+          "JK-48",
+          "RBK-155",
+          "DPS-9-1",
+          "TNAU-86",
+          "Gujarat Kodri Local"
+        ],
+        "marketUse": "Kodri khichdi (traditional Gujarati diet), diabetic rice alternative",
+        "grainType": "Hard brown husk enclosing light brown grain, exceptionally rich in antioxidants"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -162,6 +639,9 @@ export const MASTER_CROPS = [
     "name": "Barnyard Millet (Sawan)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -169,6 +649,9 @@ export const MASTER_CROPS = [
     "name": "Little Millet (Samai)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -176,6 +659,24 @@ export const MASTER_CROPS = [
     "name": "Browntop Millet",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "હરિકા / બ્રાઉનટોપ",
+      "hi": "कोराले / मकरा",
+      "en": "Browntop Millet / Korale"
+    },
+    "scientificName": "Urochloa ramosa",
+    "marketTypes": [
+      {
+        "typeName": "Super-Fiber Grain (બ્રાઉનટોપ)",
+        "varieties": [
+          "GPUBT-2",
+          "VHC-1",
+          "Karnataka Local Korale"
+        ],
+        "marketUse": "Therapeutic superfood, high-fiber flour blending (12.5% fiber), detoxification diets",
+        "grainType": "Olive green to brownish seed with robust drought tolerance"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -183,6 +684,33 @@ export const MASTER_CROPS = [
     "name": "Teff",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "ટેફ ધાન્ય",
+      "hi": "टेफ",
+      "en": "Teff"
+    },
+    "scientificName": "Eragrostis tef",
+    "marketTypes": [
+      {
+        "typeName": "Ivory & White Teff (સફેદ ટેફ)",
+        "varieties": [
+          "Quncho (DZ-Cr-387)",
+          "Magnam",
+          "White Ex-Ethiopia"
+        ],
+        "marketUse": "Injera flatbread, gluten-free gourmet baking, export health food market",
+        "grainType": "Smallest grain in the world (150 grains = 1 wheat kernel), mild sweet molasses flavor"
+      },
+      {
+        "typeName": "Brown & Red Teff (કથ્થઈ ટેફ)",
+        "varieties": [
+          "DZ-01-99",
+          "Brown Seed Selected"
+        ],
+        "marketUse": "Nutrient-dense breads, high iron and calcium supplement flours",
+        "grainType": "Robust earthy flavor, higher mineral concentration"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -190,6 +718,31 @@ export const MASTER_CROPS = [
     "name": "Fonio (Black & White)",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "ફોનિઓ",
+      "hi": "फोनियो",
+      "en": "Fonio"
+    },
+    "scientificName": "Digitaria exilis / D. iburua",
+    "marketTypes": [
+      {
+        "typeName": "White Fonio (Acha - સફેદ ફોનિઓ)",
+        "varieties": [
+          "Digitaria exilis Selection",
+          "Sirigu White"
+        ],
+        "marketUse": "African ancient supergrain, couscous-like fluffy side dish, gluten-free beer",
+        "grainType": "Tiny seed matures in only 60 to 70 days, low glycemic index"
+      },
+      {
+        "typeName": "Black Fonio (Iburu - કાળો ફોનિઓ)",
+        "varieties": [
+          "Digitaria iburua Selection"
+        ],
+        "marketUse": "Traditional brewing, porridges in arid sahel regions",
+        "grainType": "Dark brownish black seed with rich sulfur amino acids (methionine & cystine)"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -197,6 +750,31 @@ export const MASTER_CROPS = [
     "name": "Job's Tears",
     "category": "cereals",
     "subcategory": "Millets & Sorghum",
+    "localNames": {
+      "gu": "કાસઈ / અડલે",
+      "hi": "गारुड़ / कासई",
+      "en": "Job's Tears / Adlay"
+    },
+    "scientificName": "Coix lacryma-jobi",
+    "marketTypes": [
+      {
+        "typeName": "Edible Soft-Shell Adlay (ખાવાલાયક જોબ્સ ટિયર્સ)",
+        "varieties": [
+          "Coix lacryma-jobi var. ma-yuen",
+          "Northeast Indian Adlay"
+        ],
+        "marketUse": "Traditional Chinese medicine (Yiyi Ren), nourishing soups, herbal tea, gluten-free porridge",
+        "grainType": "Soft hull easily dehulled, pearl-white bead kernel with mild sweet nutty taste"
+      },
+      {
+        "typeName": "Ornamental Hard-Shell Bead Grass",
+        "varieties": [
+          "Wild Hard Shell Ecotypes"
+        ],
+        "marketUse": "Natural rosary beads, jewelry, musical instruments",
+        "grainType": "Enamel-like shiny porcelain hard shell"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -204,6 +782,42 @@ export const MASTER_CROPS = [
     "name": "Quinoa",
     "category": "cereals",
     "subcategory": "Pseudocereals",
+    "localNames": {
+      "gu": "ક્વિનોઆ",
+      "hi": "किनुआ",
+      "en": "Quinoa"
+    },
+    "scientificName": "Chenopodium quinoa",
+    "marketTypes": [
+      {
+        "typeName": "White / Golden Quinoa (સફેદ ક્વિનોઆ)",
+        "varieties": [
+          "Royal White",
+          "CSIR-NBRI Quinoa (Indian adapted)",
+          "Him Quinoa",
+          "Atlas"
+        ],
+        "marketUse": "Breakfast bowls, health salads, rice substitute, protein bars (complete plant protein)",
+        "grainType": "Fluffy light texture when cooked, mildest neutral flavor"
+      },
+      {
+        "typeName": "Red Quinoa (લાલ ક્વિનોઆ)",
+        "varieties": [
+          "Pasankalla",
+          "Cherry Vanilla"
+        ],
+        "marketUse": "Gourmet cold grain salads, artistic culinary dishes",
+        "grainType": "Holds distinct shape and firm crunch after boiling, rich in anthocyanins"
+      },
+      {
+        "typeName": "Black Quinoa (કાળો ક્વિનોઆ)",
+        "varieties": [
+          "Black Royal Quinoa"
+        ],
+        "marketUse": "Specialty high-end health market, antioxidant-rich diets",
+        "grainType": "Earthy sweet flavor, firm texture, highest antioxidant density"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -211,6 +825,34 @@ export const MASTER_CROPS = [
     "name": "Buckwheat",
     "category": "cereals",
     "subcategory": "Pseudocereals",
+    "localNames": {
+      "gu": "કુટ્ટુ / ફાફરો",
+      "hi": "कूटू",
+      "en": "Buckwheat"
+    },
+    "scientificName": "Fagopyrum esculentum",
+    "marketTypes": [
+      {
+        "typeName": "Common Sweet Buckwheat (સામાન્ય કૂટુ)",
+        "varieties": [
+          "Himpriya",
+          "Shimla B-1",
+          "PRB-1",
+          "Koto",
+          "Mancan"
+        ],
+        "marketUse": "Kuttu ka Atta for Navratri fasting rotis & puris, Japanese Soba noodles, Russian Kasha groats",
+        "grainType": "Triangular three-sided groats, nutty earthy flavor, high lysine"
+      },
+      {
+        "typeName": "Tartary Buckwheat (કડવો કૂટુ - રુટિન સભર)",
+        "varieties": [
+          "Fagopyrum tataricum Local Himalayan"
+        ],
+        "marketUse": "Medicinal buckwheat tea, high-rutin cardiovascular health supplements",
+        "grainType": "Smaller bitter grain, up to 100x higher rutin bioflavonoid content"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -218,6 +860,36 @@ export const MASTER_CROPS = [
     "name": "Amaranth (Rajgira/Ramdana)",
     "category": "cereals",
     "subcategory": "Pseudocereals",
+    "localNames": {
+      "gu": "રાજગરો",
+      "hi": "रामदाना / चौलाई",
+      "en": "Grain Amaranth / Rajgira"
+    },
+    "scientificName": "Amaranthus hypochondriacus / A. cruentus",
+    "marketTypes": [
+      {
+        "typeName": "High-Yielding Grain Rajgira (ગુજરાત રાજગરો)",
+        "varieties": [
+          "Gujarat Amaranth-1 (GA-1)",
+          "GA-2",
+          "GA-3",
+          "Annapurna",
+          "Suvarna",
+          "BGA-2"
+        ],
+        "marketUse": "Fasting food (Rajgira ladoo, chikki, puris, shira), popped amaranth snacks, breakfast cereal",
+        "grainType": "Tiny golden-yellow glossy spherical seeds, rich in squalene and lysine"
+      },
+      {
+        "typeName": "Red Plume Amaranth Grain",
+        "varieties": [
+          "Red Garnet",
+          "Burgundy Grain"
+        ],
+        "marketUse": "Dual purpose (tender microgreens/leafy vegetable + grain harvest)",
+        "grainType": "Deep burgundy panicles yielding cream colored seeds"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -225,6 +897,32 @@ export const MASTER_CROPS = [
     "name": "Chia",
     "category": "cereals",
     "subcategory": "Pseudocereals",
+    "localNames": {
+      "gu": "ચિયા સીડ્સ",
+      "hi": "ચિયા બીજ",
+      "en": "Chia Seeds"
+    },
+    "scientificName": "Salvia hispanica",
+    "marketTypes": [
+      {
+        "typeName": "Black Chia (કાળા ચિયા સીડ્સ)",
+        "varieties": [
+          "Standard Commercial Black",
+          "CSIR-CFTRI Indian Chia Line"
+        ],
+        "marketUse": "Omega-3 smoothies, chia pudding, weight-loss hydration drinks (masticating gel)",
+        "grainType": "Mottled dark brown/black seed, absorbs up to 12x water weight into mucilaginous gel"
+      },
+      {
+        "typeName": "White Chia (સફેદ ચિયા સીડ્સ)",
+        "varieties": [
+          "Salba White",
+          "Pure White Chia Selection"
+        ],
+        "marketUse": "Bakery goods, light-colored yogurt and drink formulations without black specks",
+        "grainType": "Recessive white seed with identical omega-3 fatty acid concentration"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -232,6 +930,55 @@ export const MASTER_CROPS = [
     "name": "Chickpea (Bengal Gram/Garbanzo)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "ચણા",
+      "hi": "चना / छोले",
+      "en": "Chickpea / Bengal Gram"
+    },
+    "scientificName": "Cicer arietinum",
+    "marketTypes": [
+      {
+        "typeName": "Desi Brown / Yellow Chickpea (દેશી પીળા ચણા / કાઠીયાવાડી)",
+        "varieties": [
+          "Gujarat Gram 1 (GG-1)",
+          "Gujarat Gram 2 (GG-2)",
+          "GJG-3 (Gujarat Junagadh Gram 3)",
+          "GJG-5",
+          "JAKI 9218",
+          "Digvijay",
+          "Vijay",
+          "Pusa 362",
+          "Radhey"
+        ],
+        "marketUse": "Dal mills (Chana Dal), Besan (gram flour), roasted chana, snacks, daily dal",
+        "grainType": "Medium angular grain, brownish-yellow seed coat, high protein (21-22%), 100-seed weight 18-24g"
+      },
+      {
+        "typeName": "Bold Dollar Kabuli Chickpea (ડોલર કાબુલી ચણા - એક્સપોર્ટ ક્વોલિટી)",
+        "varieties": [
+          "Dollar Chana (K-4)",
+          "Pusa 1003 (Pusa Chamatkar)",
+          "PKV Kabuli 2",
+          "PKV Kabuli 4",
+          "Phule G-0517",
+          "Virat",
+          "Kripa (Phule G 12107)"
+        ],
+        "marketUse": "Premium restaurant curries (Chhole Bhature), international export, canned garbanzo, high-end mandi trades",
+        "grainType": "Extra bold white/cream grain, smooth wrinkled coat, 100-seed weight 38-55g, 50-80% price premium"
+      },
+      {
+        "typeName": "Green Chickpea (પોપટા / લીલા ચણા / છોલીયા)",
+        "varieties": [
+          "Gujarat Green Gram 1 (GGG-1)",
+          "PKV Harita (AKG-9303)",
+          "Bimbadhar",
+          "Sadabahar"
+        ],
+        "marketUse": "Fresh vegetable markets (લીલા જીંજરા / પોપટા), roasted winter snacks (હોળો / ઊંધિયું), sweet green dal",
+        "grainType": "Emerald green grain retaining chlorophyll color upon maturity and drying"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -239,6 +986,39 @@ export const MASTER_CROPS = [
     "name": "Lentils (Masoor)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "મસૂર / મસૂર દાળ",
+      "hi": "मसूर",
+      "en": "Lentils"
+    },
+    "scientificName": "Lens culinaris",
+    "marketTypes": [
+      {
+        "typeName": "Bold-Seeded Red Lentil / Masoor (મોટી લાલ મસૂર - મલકા)",
+        "varieties": [
+          "Pusa Vaibhav (L-4161)",
+          "IPL-81 (Noor)",
+          "HUL-57",
+          "KLS-218",
+          "JL-3",
+          "DPL-62 (Sheri)"
+        ],
+        "marketUse": "Red split dal (મસૂર દાળ / Malkaa Masoor), export, high protein soup",
+        "grainType": "Bold lens-shaped grain (macrosperma), pink-red cotyledon under grayish-brown seed coat, 100-seed weight >3.0g"
+      },
+      {
+        "typeName": "Small-Seeded Brown / Black Masoor (નાની દેશી મસૂર - આખી મસૂર)",
+        "varieties": [
+          "Pant L-406",
+          "Pant L-4",
+          "PL-639",
+          "K-75",
+          "Asha (WBL-58)"
+        ],
+        "marketUse": "Whole black masoor cooked with gravy (આખી મસૂર), sprouted pulses",
+        "grainType": "Small compact seed (microsperma), dark speckled coat, rich in dietary fiber and iron"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -246,6 +1026,52 @@ export const MASTER_CROPS = [
     "name": "Pigeon Pea (Arhar/Tur)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "તુવેર",
+      "hi": "अरहर / तुअर",
+      "en": "Pigeon Pea / Red Gram"
+    },
+    "scientificName": "Cajanus cajan",
+    "marketTypes": [
+      {
+        "typeName": "White Seeded Premium Tur (સફેદ દેશી તુવેર - વાસદ દાળ સ્પેશિયલ)",
+        "varieties": [
+          "Gujarat Tur 1 (GT-1)",
+          "Gujarat Anand Tur 2 (GAT-2)",
+          "GT-101",
+          "GT-104",
+          "Maruti (ICP-8863)",
+          "BSMR-736",
+          "BSMR-853",
+          "Asha (ICPL-87119)"
+        ],
+        "marketUse": "World-renowned Vasad Tuver Dal (વાસદની દાળ), oily dal (તેલીયા તુવેર), highest recovery in dal mills",
+        "grainType": "Plump white-cream round grain, fast cooking, sweet taste, thin seed coat"
+      },
+      {
+        "typeName": "Red / Brown Seeded Medium Duration Tur (લાલ / બદામી તુવેર)",
+        "varieties": [
+          "BDN-711",
+          "BDN-708 (Amol)",
+          "Vaishali",
+          "ICPL-87 (Prabhat)",
+          "C-11",
+          "UPAS-120"
+        ],
+        "marketUse": "Mandi bulk trading, commercial dal processing, intercropping with cotton/soybean",
+        "grainType": "Brown/reddish coat, yellow cotyledons, tolerant to wilt and sterility mosaic disease"
+      },
+      {
+        "typeName": "Vegetable Pod Green Tur (લીલી શાકભાજીની તુવેર - ઊંધિયું સ્પેશિયલ)",
+        "varieties": [
+          "Gujarat Anand Vegetable Tur 1 (GAVT-1)",
+          "ICPL-87",
+          "T-Vishakha-1"
+        ],
+        "marketUse": "Fresh green pods for winter special recipes (કાઠિયાવાડી ઊંધિયું, લીલી તુવેરના ટોઠા, કચોરી)",
+        "grainType": "Long fleshy green pods, 5-6 bold sweet green seeds per pod"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -253,6 +1079,41 @@ export const MASTER_CROPS = [
     "name": "Mung Bean (Green Gram)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "મગ",
+      "hi": "मूंग",
+      "en": "Mung Bean / Green Gram"
+    },
+    "scientificName": "Vigna radiata",
+    "marketTypes": [
+      {
+        "typeName": "Kharif & Summer Bold Shiny Mung (ચમકદાર મોટા મગ)",
+        "varieties": [
+          "Gujarat Anand Mung 5 (GAM-5)",
+          "GM-4",
+          "GM-6",
+          "Meha (IPM 99-125)",
+          "Samrat (PDM-139)",
+          "Shikha (IPM 410-3)",
+          "Virat (IPM 205-7)",
+          "SML-668"
+        ],
+        "marketUse": "Whole green mung, split yellow dal (મગની દાળ), sprouted mung (મગના ફણગાવેલા કઠોળ), export",
+        "grainType": "Bold, bright glossy emerald green seed coat, non-shattering pods, synchronized maturity in 60-65 days"
+      },
+      {
+        "typeName": "Dull Green Medium Desi Mung (ઝીણા દેશી મગ)",
+        "varieties": [
+          "Kopergaon",
+          "Jawahar 721",
+          "T-44",
+          "Pusa Baisakhi",
+          "PJM-1"
+        ],
+        "marketUse": "Traditional cooking, khichdi, easily digestible dal for children and elders",
+        "grainType": "Medium to small dull green seed, rich earthy flavor"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -260,6 +1121,40 @@ export const MASTER_CROPS = [
     "name": "Urad Bean (Black Gram)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "અડદ",
+      "hi": "उड़द",
+      "en": "Black Gram"
+    },
+    "scientificName": "Vigna mungo",
+    "marketTypes": [
+      {
+        "typeName": "Bold Black Seeded Urad (કાળા મોટા અડદ / દાળ સ્પેશિયલ)",
+        "varieties": [
+          "Gujarat Anand Urad 1 (GAU-1)",
+          "GU-1",
+          "IPU 02-43",
+          "Pant U-31",
+          "T-9",
+          "Shekhar 2",
+          "Mash 114"
+        ],
+        "marketUse": "Urad dal (અડદની દાળ), papad making (અડદના પાપડ), Kathiyawadi dal, idli-dosa batter fermentation",
+        "grainType": "Bold cylindrical jet-black grain, prominent white hilum, high mucilage and starch for batter viscosity"
+      },
+      {
+        "typeName": "Short Duration Yellow Mosaic Resistant Urad (વાયરસ પ્રતિકારક ઉનાળુ અડદ)",
+        "varieties": [
+          "VBN 8",
+          "CO 6",
+          "Uttara",
+          "Prashant",
+          "KU 96-3"
+        ],
+        "marketUse": "Summer rotation crop between wheat and cotton, soil fertility enhancement",
+        "grainType": "Medium black seed, resistant to Yellow Mosaic Virus (YMV)"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -267,6 +1162,49 @@ export const MASTER_CROPS = [
     "name": "Cowpea (Black-eyed pea)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "ચોળી / ચોળા",
+      "hi": "लोबिया / चौलाई",
+      "en": "Cowpea / Black-Eyed Pea"
+    },
+    "scientificName": "Vigna unguiculata",
+    "marketTypes": [
+      {
+        "typeName": "White Grain with Black Eye (સફેદ ચોળા / બ્લેક-આઇડ પી)",
+        "varieties": [
+          "Gujarat Cowpea 4 (GC-4)",
+          "Gujarat Cowpea 5 (GC-5)",
+          "Anand Cowpea 1",
+          "Pusa Sukomal",
+          "Pusa Barsati",
+          "Pant Lobia 1"
+        ],
+        "marketUse": "Dry grain curries (ચોળાનું શાક), boiled pulse dishes, commercial canning",
+        "grainType": "Medium bold oval grain, chalky white with distinct black eye surrounding the hilum"
+      },
+      {
+        "typeName": "Vegetable Tender Long Pod Cowpea (શાકભાજીની લાંબી ચોળી - શીંગો)",
+        "varieties": [
+          "Pusa Komal",
+          "Kashi Kanchan",
+          "Kashi Unnati",
+          "Arka Garima",
+          "Gujarat Vegetable Cowpea 1 (GVCP-1)"
+        ],
+        "marketUse": "Long green tender vegetable pods sold daily in sabzi mandis",
+        "grainType": "30-45 cm long stringless green pods harvested every 3-4 days"
+      },
+      {
+        "typeName": "Red / Brown Seeded Cowpea (લાલ ચોળા / રોઝી લોબિયા)",
+        "varieties": [
+          "Pusa Rituraj",
+          "C-152",
+          "KBC-2"
+        ],
+        "marketUse": "Whole pulse cooking, drought-prone rainfed farming",
+        "grainType": "Mottled reddish-brown seed, high antioxidant content"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -274,6 +1212,35 @@ export const MASTER_CROPS = [
     "name": "Broad Bean (Fava)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "વાલ / બકલા",
+      "hi": "बाकला / सेम",
+      "en": "Broad Bean / Fava Bean"
+    },
+    "scientificName": "Vicia faba",
+    "marketTypes": [
+      {
+        "typeName": "Large Seeded Fava Bean (મોટા ચપટા વાલ / બકલા)",
+        "varieties": [
+          "Pusa Sumeet",
+          "Huasca",
+          "Aquadulce",
+          "Jawahar Faba 1"
+        ],
+        "marketUse": "Fresh shelled beans, roasted salted beans, Mediterranean food export",
+        "grainType": "Extra large flat broad seed, tan/pale green coat, highly nutritious"
+      },
+      {
+        "typeName": "Small / Feed Bean (નાના વાલ - પશુઆહાર અને દેશી)",
+        "varieties": [
+          "Major",
+          "Minor Faba",
+          "Vikrant"
+        ],
+        "marketUse": "Pulse soups, concentrated protein feed",
+        "grainType": "Compact seed, high biological nitrogen fixing capacity"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -281,6 +1248,40 @@ export const MASTER_CROPS = [
     "name": "Field Pea (Green/Yellow Peas)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "વટાણા",
+      "hi": "मटर",
+      "en": "Field Pea / Garden Pea"
+    },
+    "scientificName": "Pisum sativum",
+    "marketTypes": [
+      {
+        "typeName": "Sweet Garden Green Pea (મીઠા લીલા વટાણા - શાકભાજી સ્પેશિયલ)",
+        "varieties": [
+          "Arka Mayur",
+          "GS-10",
+          "Pusa Pragati",
+          "Azad Pea 3",
+          "Matar Ageta-6",
+          "Golden Pea"
+        ],
+        "marketUse": "Fresh vegetable markets, IQF frozen peas, dehydrated green peas",
+        "grainType": "Wrinkled seed coat, high sugar content (sweet taste), bright green pods"
+      },
+      {
+        "typeName": "Smooth Yellow Dry Field Pea (સૂકા પીળા વટાણા - રગડા પેટીસ સ્પેશિયલ)",
+        "varieties": [
+          "Aparna (HFP-4)",
+          "Dantivada Pea 1",
+          "HPS-1",
+          "Pant P-5",
+          "Rachna",
+          "Jayanti"
+        ],
+        "marketUse": "Street food Ragda (રગડા પેટીસ), dried pea split dal, snacks, wholesale mandi trade",
+        "grainType": "Round smooth spherical yellow seed, uniform size, drought tolerant dwarf plant"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -288,6 +1289,35 @@ export const MASTER_CROPS = [
     "name": "Lupin",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "લ્યુપિન / કડવી દાળ",
+      "hi": "ल्यूपिन",
+      "en": "Lupin / Lupine Bean"
+    },
+    "scientificName": "Lupinus albus / angustifolius",
+    "marketTypes": [
+      {
+        "typeName": "Sweet White Lupin (મીઠું લ્યુપિન - માનવ આહાર)",
+        "varieties": [
+          "Dieta",
+          "Albus Sweet",
+          "Bordako",
+          "Tanjil"
+        ],
+        "marketUse": "High-protein flour (35-40% protein), gluten-free baking, fermented plant foods",
+        "grainType": "Flat creamy-white square-oval seed, zero bitterness (low alkaloid <0.02%)"
+      },
+      {
+        "typeName": "Blue / Narrow-Leafed Lupin (પશુ આહાર લ્યુપિન)",
+        "varieties": [
+          "Mandelup",
+          "Coromup",
+          "Belara"
+        ],
+        "marketUse": "High protein cattle and dairy feed, green manure soil recharger",
+        "grainType": "Speckled seed, deep root system opening subsoil compaction"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -295,6 +1325,33 @@ export const MASTER_CROPS = [
     "name": "Bambara Groundnut",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "બામ્બારા નટ / આફ્રિકન મગફળી",
+      "hi": "बम्बारा मूँगफली",
+      "en": "Bambara Groundnut / Earth Pea"
+    },
+    "scientificName": "Vigna subterranea",
+    "marketTypes": [
+      {
+        "typeName": "Red & Mottled High-Iron Seed (લાલ અને છાંટણાવાળા)",
+        "varieties": [
+          "Uniswa Red",
+          "Mottled Cream",
+          "Songoka"
+        ],
+        "marketUse": "Boiled fresh snacks, high-protein flour, extreme drought-resistant legume",
+        "grainType": "Subterranean pod like peanut, round hard seed, rich in essential amino acids (methionine)"
+      },
+      {
+        "typeName": "Cream / White Eyed Seed (સફેદ બામ્બારા)",
+        "varieties": [
+          "Cream Local",
+          "Gweru White"
+        ],
+        "marketUse": "Porridge, snacks, culinary flour",
+        "grainType": "Cream colored round seed, high starch and balanced 20% protein"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -302,6 +1359,36 @@ export const MASTER_CROPS = [
     "name": "Lablab (Hyacinth Bean)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "પાપડી / સુરતી પાપડી / વાલોળ",
+      "hi": "सेम फली / लबलब",
+      "en": "Lablab / Hyacinth Bean"
+    },
+    "scientificName": "Lablab purpureus",
+    "marketTypes": [
+      {
+        "typeName": "Surti Flat Tender Papdi (વિશ્વવિખ્યાત સુરતી પાપડી - કાટીગામ સ્પેશિયલ)",
+        "varieties": [
+          "Gujarat Papdi 1 (GP-1)",
+          "Surti Papdi Local",
+          "Katargam Papdi",
+          "Anand Bean 1"
+        ],
+        "marketUse": "Iconic Surti Undhiyu (સુરતી ઊંધિયું), winter fresh pods, premium vegetable markets",
+        "grainType": "Short, flat, stringless, feather-light green pods with distinct buttery aroma and sweet seeds"
+      },
+      {
+        "typeName": "Walor / Long Bush Hyacinth Bean (વાલોળ શીંગો)",
+        "varieties": [
+          "Kashi Haritima",
+          "Arka Jay",
+          "Pusa Early Prolific",
+          "Deepali"
+        ],
+        "marketUse": "Vegetable curry pods, pole climber farming, multi-harvesting",
+        "grainType": "Long, broad green curved pods, prolific heavy yielding"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -309,6 +1396,35 @@ export const MASTER_CROPS = [
     "name": "Winged Bean",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "વિંગ્ડ બીન (ચાર પાંખવાળી શીંગ / ગોવા વાલ)",
+      "hi": "चौकोनी सेम / पंखों वाली सेम",
+      "en": "Winged Bean / Goa Bean"
+    },
+    "scientificName": "Psophocarpus tetragonolobus",
+    "marketTypes": [
+      {
+        "typeName": "Green Tender Vegetable Winged Bean (લીલી શાકભાજી જાત)",
+        "varieties": [
+          "AKWB-1",
+          "Reveille",
+          "Chimbu",
+          "Pusa Navrang"
+        ],
+        "marketUse": "Crispy stir-fry vegetable, leaves edible as spinach, tuberous roots eaten like potato",
+        "grainType": "4 distinct wavy frilly longitudinal wings along the square pod, harvested 15-20 days after flowering"
+      },
+      {
+        "typeName": "High-Protein Dry Grain Type (સૂકા દાણાની જાત)",
+        "varieties": [
+          "UPS-122",
+          "TPT-2",
+          "WB-2"
+        ],
+        "marketUse": "Soy-equivalent pulse, 30-38% protein and 15-18% edible oil",
+        "grainType": "Round shiny tan or brown seeds, exceptional nutritional profile"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -316,6 +1432,40 @@ export const MASTER_CROPS = [
     "name": "Cluster Bean (Guar)",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "ગુવાર / ગુવારફળી",
+      "hi": "ग्वार / ग्वार फली",
+      "en": "Cluster Bean / Guar"
+    },
+    "scientificName": "Cyamopsis tetragonoloba",
+    "marketTypes": [
+      {
+        "typeName": "Industrial High-Gum Seed Guar (ગમ ઉદ્યોગ માટેના બીયાં ગુવાર)",
+        "varieties": [
+          "RGC-936",
+          "HG-365",
+          "HG-563",
+          "RGC-1002",
+          "RGC-1017",
+          "Gujarat Guar 1 (GG-1)",
+          "Gujarat Guar 2 (GG-2)"
+        ],
+        "marketUse": "International export for Guar Gum (ગેલેક્ટોમેનન), oil drilling friction reducer, food stabilizer, textile sizing",
+        "grainType": "Hard greyish-white small round seed, gum content 28-33%, drought hardy desert crop"
+      },
+      {
+        "typeName": "Tender Sweet Vegetable Guar (શાકભાજીનો દેશી દેશાવરી ગુવાર)",
+        "varieties": [
+          "Pusa Navbahar",
+          "Pusa Domausami",
+          "Gujarat Vegetable Guar 1 (GVG-1)",
+          "Anand Vegetable Guar",
+          "Durgapura Safed"
+        ],
+        "marketUse": "Soft, stringless tender pods for fresh vegetable markets (દેશી મીઠો ગુવાર)",
+        "grainType": "Long straight flat clusters, low fiber when young, high culinary demand"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -323,6 +1473,38 @@ export const MASTER_CROPS = [
     "name": "Horse Gram",
     "category": "pulses",
     "subcategory": "Primary Pulses",
+    "localNames": {
+      "gu": "કુલથી / કળથી",
+      "hi": "कुलथी",
+      "en": "Horse Gram"
+    },
+    "scientificName": "Macrotyloma uniflorum",
+    "marketTypes": [
+      {
+        "typeName": "Brown Grain High-Medicinal Cultivar (બદામી કળથી - પથરી નિવારક)",
+        "varieties": [
+          "Gujarat Horse Gram 1 (GHG-1)",
+          "CRHG-4",
+          "Paiyur 2",
+          "AK-21",
+          "Birsa Kulthi 1",
+          "Dharwad Kulthi"
+        ],
+        "marketUse": "Ayurvedic decoctions (dissolves kidney stones - પથરી તોડવા માટેનો ઉકાળો), herbal pulse soups, horses and drought livestock feed",
+        "grainType": "Flat kidney-shaped small brown/black mottled seed, high antioxidant, enzyme inhibitor and calcium content"
+      },
+      {
+        "typeName": "Black & Mottled Rust-Tolerant Cultivar (કાળી કુલથી)",
+        "varieties": [
+          "Madhu",
+          "PHG-9",
+          "VL Gahat 8",
+          "VL Gahat 10"
+        ],
+        "marketUse": "Mountain and rainfed whole grain cooking, green cover crop for soil conservation",
+        "grainType": "Deep black hard seed coat, high resilience to nutrient-poor soils"
+      }
+    ],
     "status": "card_ready"
   },
   {
@@ -330,6 +1512,9 @@ export const MASTER_CROPS = [
     "name": "Soybean",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -337,6 +1522,9 @@ export const MASTER_CROPS = [
     "name": "Groundnut (Peanut)",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -344,6 +1532,9 @@ export const MASTER_CROPS = [
     "name": "Rapeseed/Mustard",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -351,6 +1542,9 @@ export const MASTER_CROPS = [
     "name": "Sunflower",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -358,6 +1552,9 @@ export const MASTER_CROPS = [
     "name": "Sesame (Til)",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -365,6 +1562,9 @@ export const MASTER_CROPS = [
     "name": "Safflower",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -372,6 +1572,9 @@ export const MASTER_CROPS = [
     "name": "Linseed (Flax)",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -379,6 +1582,9 @@ export const MASTER_CROPS = [
     "name": "Castor Bean",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -386,6 +1592,9 @@ export const MASTER_CROPS = [
     "name": "Niger Seed",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -393,6 +1602,9 @@ export const MASTER_CROPS = [
     "name": "Cottonseed",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -400,6 +1612,9 @@ export const MASTER_CROPS = [
     "name": "Oil Palm",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -407,6 +1622,9 @@ export const MASTER_CROPS = [
     "name": "Coconut",
     "category": "oilseeds",
     "subcategory": "Major Oilseeds",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -414,6 +1632,9 @@ export const MASTER_CROPS = [
     "name": "Potato",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -421,6 +1642,9 @@ export const MASTER_CROPS = [
     "name": "Sweet Potato",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -428,6 +1652,9 @@ export const MASTER_CROPS = [
     "name": "Cassava (Tapioca)",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -435,6 +1662,9 @@ export const MASTER_CROPS = [
     "name": "Yam",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -442,6 +1672,9 @@ export const MASTER_CROPS = [
     "name": "Taro (Colocasia)",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -449,6 +1682,9 @@ export const MASTER_CROPS = [
     "name": "Elephant Foot Yam",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -456,6 +1692,9 @@ export const MASTER_CROPS = [
     "name": "Arrowroot",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -463,6 +1702,9 @@ export const MASTER_CROPS = [
     "name": "Arracha",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -470,6 +1712,9 @@ export const MASTER_CROPS = [
     "name": "Jicama (Yam Bean)",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -477,6 +1722,9 @@ export const MASTER_CROPS = [
     "name": "Tiger Nut",
     "category": "tubers",
     "subcategory": "Starch Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -484,6 +1732,9 @@ export const MASTER_CROPS = [
     "name": "Cotton (Upland, Sea Island)",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -491,6 +1742,9 @@ export const MASTER_CROPS = [
     "name": "Jute",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -498,6 +1752,9 @@ export const MASTER_CROPS = [
     "name": "Hemp",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -505,6 +1762,9 @@ export const MASTER_CROPS = [
     "name": "Sisal",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -512,6 +1772,9 @@ export const MASTER_CROPS = [
     "name": "Abaca (Manila Hemp)",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -519,6 +1782,9 @@ export const MASTER_CROPS = [
     "name": "Coir",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -526,6 +1792,9 @@ export const MASTER_CROPS = [
     "name": "Kenaf",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -533,6 +1802,9 @@ export const MASTER_CROPS = [
     "name": "Flax Fiber",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -540,6 +1812,9 @@ export const MASTER_CROPS = [
     "name": "Sunn Hemp",
     "category": "fiber_industrial",
     "subcategory": "Fibers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -547,6 +1822,9 @@ export const MASTER_CROPS = [
     "name": "Sugarcane",
     "category": "fiber_industrial",
     "subcategory": "Sweeteners",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -554,6 +1832,9 @@ export const MASTER_CROPS = [
     "name": "Sugar Beet",
     "category": "fiber_industrial",
     "subcategory": "Sweeteners",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -561,6 +1842,9 @@ export const MASTER_CROPS = [
     "name": "Para Rubber (Natural Rubber)",
     "category": "fiber_industrial",
     "subcategory": "Industrial Latex & Resins",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -568,6 +1852,9 @@ export const MASTER_CROPS = [
     "name": "Tobacco",
     "category": "fiber_industrial",
     "subcategory": "Industrial Latex & Resins",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -575,6 +1862,9 @@ export const MASTER_CROPS = [
     "name": "Tea",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -582,6 +1872,9 @@ export const MASTER_CROPS = [
     "name": "Coffee (Arabica, Robusta)",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -589,6 +1882,9 @@ export const MASTER_CROPS = [
     "name": "Cocoa (Cacao)",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -596,6 +1892,9 @@ export const MASTER_CROPS = [
     "name": "Areca Nut (Betel Nut)",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -603,6 +1902,9 @@ export const MASTER_CROPS = [
     "name": "Betel Leaf",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -610,6 +1912,9 @@ export const MASTER_CROPS = [
     "name": "Hops (for brewing)",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -617,6 +1922,9 @@ export const MASTER_CROPS = [
     "name": "Yerba Mate",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -624,6 +1932,9 @@ export const MASTER_CROPS = [
     "name": "Kola Nut",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -631,6 +1942,9 @@ export const MASTER_CROPS = [
     "name": "Opium Poppy",
     "category": "plantation",
     "subcategory": "Plantation Crops",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -638,6 +1952,9 @@ export const MASTER_CROPS = [
     "name": "Cumin",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -645,6 +1962,9 @@ export const MASTER_CROPS = [
     "name": "Coriander",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -652,6 +1972,9 @@ export const MASTER_CROPS = [
     "name": "Fennel",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -659,6 +1982,9 @@ export const MASTER_CROPS = [
     "name": "Fenugreek",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -666,6 +1992,9 @@ export const MASTER_CROPS = [
     "name": "Aniseed",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -673,6 +2002,9 @@ export const MASTER_CROPS = [
     "name": "Caraway",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -680,6 +2012,9 @@ export const MASTER_CROPS = [
     "name": "Dill",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -687,6 +2022,9 @@ export const MASTER_CROPS = [
     "name": "Celery Seed",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -694,6 +2032,9 @@ export const MASTER_CROPS = [
     "name": "Mustard Seed",
     "category": "spices_herbs",
     "subcategory": "Seed Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -701,6 +2042,9 @@ export const MASTER_CROPS = [
     "name": "Turmeric",
     "category": "spices_herbs",
     "subcategory": "Rhizomes & Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -708,6 +2052,9 @@ export const MASTER_CROPS = [
     "name": "Ginger",
     "category": "spices_herbs",
     "subcategory": "Rhizomes & Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -715,6 +2062,9 @@ export const MASTER_CROPS = [
     "name": "Garlic",
     "category": "spices_herbs",
     "subcategory": "Rhizomes & Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -722,6 +2072,9 @@ export const MASTER_CROPS = [
     "name": "Horseradish",
     "category": "spices_herbs",
     "subcategory": "Rhizomes & Roots",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -729,6 +2082,9 @@ export const MASTER_CROPS = [
     "name": "Black/White Pepper",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -736,6 +2092,9 @@ export const MASTER_CROPS = [
     "name": "Cardamom (Small & Large)",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -743,6 +2102,9 @@ export const MASTER_CROPS = [
     "name": "Cinnamon",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -750,6 +2112,9 @@ export const MASTER_CROPS = [
     "name": "Clove",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -757,6 +2122,9 @@ export const MASTER_CROPS = [
     "name": "Nutmeg & Mace",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -764,6 +2132,9 @@ export const MASTER_CROPS = [
     "name": "Allspice",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -771,6 +2142,9 @@ export const MASTER_CROPS = [
     "name": "Vanilla",
     "category": "spices_herbs",
     "subcategory": "Tree & Vine Spices",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -778,6 +2152,9 @@ export const MASTER_CROPS = [
     "name": "Mint (Peppermint/Spearmint)",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -785,6 +2162,9 @@ export const MASTER_CROPS = [
     "name": "Basil",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -792,6 +2172,9 @@ export const MASTER_CROPS = [
     "name": "Oregano",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -799,6 +2182,9 @@ export const MASTER_CROPS = [
     "name": "Thyme",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -806,6 +2192,9 @@ export const MASTER_CROPS = [
     "name": "Rosemary",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -813,6 +2202,9 @@ export const MASTER_CROPS = [
     "name": "Sage",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -820,6 +2212,9 @@ export const MASTER_CROPS = [
     "name": "Parsley",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -827,6 +2222,9 @@ export const MASTER_CROPS = [
     "name": "Lemongrass",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -834,6 +2232,9 @@ export const MASTER_CROPS = [
     "name": "Citronella",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -841,6 +2242,9 @@ export const MASTER_CROPS = [
     "name": "Palmarosa",
     "category": "spices_herbs",
     "subcategory": "Herbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -848,6 +2252,9 @@ export const MASTER_CROPS = [
     "name": "Tomato",
     "category": "vegetables",
     "subcategory": "Solanaceous",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -855,6 +2262,9 @@ export const MASTER_CROPS = [
     "name": "Eggplant (Brinjal)",
     "category": "vegetables",
     "subcategory": "Solanaceous",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -862,6 +2272,9 @@ export const MASTER_CROPS = [
     "name": "Chili Pepper (Bell pepper, Cayenne)",
     "category": "vegetables",
     "subcategory": "Solanaceous",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -869,6 +2282,9 @@ export const MASTER_CROPS = [
     "name": "Cabbage",
     "category": "vegetables",
     "subcategory": "Cruciferous (Cole)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -876,6 +2292,9 @@ export const MASTER_CROPS = [
     "name": "Cauliflower",
     "category": "vegetables",
     "subcategory": "Cruciferous (Cole)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -883,6 +2302,9 @@ export const MASTER_CROPS = [
     "name": "Broccoli",
     "category": "vegetables",
     "subcategory": "Cruciferous (Cole)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -890,6 +2312,9 @@ export const MASTER_CROPS = [
     "name": "Brussels Sprouts",
     "category": "vegetables",
     "subcategory": "Cruciferous (Cole)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -897,6 +2322,9 @@ export const MASTER_CROPS = [
     "name": "Kale",
     "category": "vegetables",
     "subcategory": "Cruciferous (Cole)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -904,6 +2332,9 @@ export const MASTER_CROPS = [
     "name": "Kohlrabi",
     "category": "vegetables",
     "subcategory": "Cruciferous (Cole)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -911,6 +2342,9 @@ export const MASTER_CROPS = [
     "name": "Cucumber",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -918,6 +2352,9 @@ export const MASTER_CROPS = [
     "name": "Pumpkin",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -925,6 +2362,9 @@ export const MASTER_CROPS = [
     "name": "Bottle Gourd",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -932,6 +2372,9 @@ export const MASTER_CROPS = [
     "name": "Bitter Gourd",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -939,6 +2382,9 @@ export const MASTER_CROPS = [
     "name": "Ridge Gourd",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -946,6 +2392,9 @@ export const MASTER_CROPS = [
     "name": "Snake Gourd",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -953,6 +2402,9 @@ export const MASTER_CROPS = [
     "name": "Sponge Gourd",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -960,6 +2412,9 @@ export const MASTER_CROPS = [
     "name": "Ash Gourd",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -967,6 +2422,9 @@ export const MASTER_CROPS = [
     "name": "Squash/Zucchini",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -974,6 +2432,9 @@ export const MASTER_CROPS = [
     "name": "Chayote",
     "category": "vegetables",
     "subcategory": "Cucurbits (Gourds)",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -981,6 +2442,9 @@ export const MASTER_CROPS = [
     "name": "Spinach",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -988,6 +2452,9 @@ export const MASTER_CROPS = [
     "name": "Lettuce",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -995,6 +2462,9 @@ export const MASTER_CROPS = [
     "name": "Amaranth Leaves",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1002,6 +2472,9 @@ export const MASTER_CROPS = [
     "name": "Fenugreek Leaves",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1009,6 +2482,9 @@ export const MASTER_CROPS = [
     "name": "Bok Choy",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1016,6 +2492,9 @@ export const MASTER_CROPS = [
     "name": "Swiss Chard",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1023,6 +2502,9 @@ export const MASTER_CROPS = [
     "name": "Watercress",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1030,6 +2512,9 @@ export const MASTER_CROPS = [
     "name": "Celery",
     "category": "vegetables",
     "subcategory": "Leafy Greens",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1037,6 +2522,9 @@ export const MASTER_CROPS = [
     "name": "Onion",
     "category": "vegetables",
     "subcategory": "Allium / Bulbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1044,6 +2532,9 @@ export const MASTER_CROPS = [
     "name": "Shallots",
     "category": "vegetables",
     "subcategory": "Allium / Bulbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1051,6 +2542,9 @@ export const MASTER_CROPS = [
     "name": "Leek",
     "category": "vegetables",
     "subcategory": "Allium / Bulbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1058,6 +2552,9 @@ export const MASTER_CROPS = [
     "name": "Scallion (Green Onion)",
     "category": "vegetables",
     "subcategory": "Allium / Bulbs",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1065,6 +2562,9 @@ export const MASTER_CROPS = [
     "name": "Carrot",
     "category": "vegetables",
     "subcategory": "Root Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1072,6 +2572,9 @@ export const MASTER_CROPS = [
     "name": "Radish",
     "category": "vegetables",
     "subcategory": "Root Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1079,6 +2582,9 @@ export const MASTER_CROPS = [
     "name": "Turnip",
     "category": "vegetables",
     "subcategory": "Root Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1086,6 +2592,9 @@ export const MASTER_CROPS = [
     "name": "Beetroot",
     "category": "vegetables",
     "subcategory": "Root Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1093,6 +2602,9 @@ export const MASTER_CROPS = [
     "name": "Parsnip",
     "category": "vegetables",
     "subcategory": "Root Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1100,6 +2612,9 @@ export const MASTER_CROPS = [
     "name": "Rutabaga",
     "category": "vegetables",
     "subcategory": "Root Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1107,6 +2622,9 @@ export const MASTER_CROPS = [
     "name": "Okra (Lady's Finger)",
     "category": "vegetables",
     "subcategory": "Other Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1114,6 +2632,9 @@ export const MASTER_CROPS = [
     "name": "Asparagus",
     "category": "vegetables",
     "subcategory": "Other Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1121,6 +2642,9 @@ export const MASTER_CROPS = [
     "name": "Globe Artichoke",
     "category": "vegetables",
     "subcategory": "Other Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1128,6 +2652,9 @@ export const MASTER_CROPS = [
     "name": "Sweet Corn",
     "category": "vegetables",
     "subcategory": "Other Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1135,6 +2662,9 @@ export const MASTER_CROPS = [
     "name": "Drumstick (Moringa)",
     "category": "vegetables",
     "subcategory": "Other Vegetables",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1142,6 +2672,9 @@ export const MASTER_CROPS = [
     "name": "Apple",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1149,6 +2682,9 @@ export const MASTER_CROPS = [
     "name": "Pear",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1156,6 +2692,9 @@ export const MASTER_CROPS = [
     "name": "Peach",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1163,6 +2702,9 @@ export const MASTER_CROPS = [
     "name": "Plum",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1170,6 +2712,9 @@ export const MASTER_CROPS = [
     "name": "Apricot",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1177,6 +2722,9 @@ export const MASTER_CROPS = [
     "name": "Cherry",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1184,6 +2732,9 @@ export const MASTER_CROPS = [
     "name": "Nectarine",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1191,6 +2742,9 @@ export const MASTER_CROPS = [
     "name": "Quince",
     "category": "fruits_nuts",
     "subcategory": "Pome & Stone Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1198,6 +2752,9 @@ export const MASTER_CROPS = [
     "name": "Orange",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1205,6 +2762,9 @@ export const MASTER_CROPS = [
     "name": "Lemon",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1212,6 +2772,9 @@ export const MASTER_CROPS = [
     "name": "Lime",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1219,6 +2782,9 @@ export const MASTER_CROPS = [
     "name": "Grapefruit",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1226,6 +2792,9 @@ export const MASTER_CROPS = [
     "name": "Mandarins/Tangerines",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1233,6 +2802,9 @@ export const MASTER_CROPS = [
     "name": "Pomelo",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1240,6 +2812,9 @@ export const MASTER_CROPS = [
     "name": "Citron",
     "category": "fruits_nuts",
     "subcategory": "Citrus",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1247,6 +2822,9 @@ export const MASTER_CROPS = [
     "name": "Mango",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1254,6 +2832,9 @@ export const MASTER_CROPS = [
     "name": "Banana",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1261,6 +2842,9 @@ export const MASTER_CROPS = [
     "name": "Plantain",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1268,6 +2852,9 @@ export const MASTER_CROPS = [
     "name": "Pineapple",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1275,6 +2862,9 @@ export const MASTER_CROPS = [
     "name": "Papaya",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1282,6 +2872,9 @@ export const MASTER_CROPS = [
     "name": "Guava",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1289,6 +2882,9 @@ export const MASTER_CROPS = [
     "name": "Pomegranate",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1296,6 +2892,9 @@ export const MASTER_CROPS = [
     "name": "Lychee",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1303,6 +2902,9 @@ export const MASTER_CROPS = [
     "name": "Avocado",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1310,6 +2912,9 @@ export const MASTER_CROPS = [
     "name": "Kiwi",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1317,6 +2922,9 @@ export const MASTER_CROPS = [
     "name": "Dragon Fruit",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1324,6 +2932,9 @@ export const MASTER_CROPS = [
     "name": "Passion Fruit",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1331,6 +2942,9 @@ export const MASTER_CROPS = [
     "name": "Mangosteen",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1338,6 +2952,9 @@ export const MASTER_CROPS = [
     "name": "Rambutan",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1345,6 +2962,9 @@ export const MASTER_CROPS = [
     "name": "Durian",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1352,6 +2972,9 @@ export const MASTER_CROPS = [
     "name": "Jackfruit",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1359,6 +2982,9 @@ export const MASTER_CROPS = [
     "name": "Breadfruit",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1366,6 +2992,9 @@ export const MASTER_CROPS = [
     "name": "Fig",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1373,6 +3002,9 @@ export const MASTER_CROPS = [
     "name": "Date Palm",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1380,6 +3012,9 @@ export const MASTER_CROPS = [
     "name": "Persimmon",
     "category": "fruits_nuts",
     "subcategory": "Tropical & Exotic",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1387,6 +3022,9 @@ export const MASTER_CROPS = [
     "name": "Grapes (Wine & Table)",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1394,6 +3032,9 @@ export const MASTER_CROPS = [
     "name": "Strawberry",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1401,6 +3042,9 @@ export const MASTER_CROPS = [
     "name": "Blueberry",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1408,6 +3052,9 @@ export const MASTER_CROPS = [
     "name": "Raspberry",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1415,6 +3062,9 @@ export const MASTER_CROPS = [
     "name": "Blackberry",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1422,6 +3072,9 @@ export const MASTER_CROPS = [
     "name": "Cranberry",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1429,6 +3082,9 @@ export const MASTER_CROPS = [
     "name": "Gooseberry",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1436,6 +3092,9 @@ export const MASTER_CROPS = [
     "name": "Currant",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1443,6 +3102,9 @@ export const MASTER_CROPS = [
     "name": "Watermelon",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1450,6 +3112,9 @@ export const MASTER_CROPS = [
     "name": "Muskmelon (Cantaloupe)",
     "category": "fruits_nuts",
     "subcategory": "Berries & Vine Fruits",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1457,6 +3122,9 @@ export const MASTER_CROPS = [
     "name": "Almond",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1464,6 +3132,9 @@ export const MASTER_CROPS = [
     "name": "Walnut",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1471,6 +3142,9 @@ export const MASTER_CROPS = [
     "name": "Cashew",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1478,6 +3152,9 @@ export const MASTER_CROPS = [
     "name": "Pistachio",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1485,6 +3162,9 @@ export const MASTER_CROPS = [
     "name": "Hazelnut",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1492,6 +3172,9 @@ export const MASTER_CROPS = [
     "name": "Chestnut",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1499,6 +3182,9 @@ export const MASTER_CROPS = [
     "name": "Pecan",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1506,6 +3192,9 @@ export const MASTER_CROPS = [
     "name": "Macadamia",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1513,6 +3202,9 @@ export const MASTER_CROPS = [
     "name": "Brazil Nut",
     "category": "fruits_nuts",
     "subcategory": "Tree Nuts",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1520,6 +3212,9 @@ export const MASTER_CROPS = [
     "name": "Alfalfa (Lucerne)",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1527,6 +3222,9 @@ export const MASTER_CROPS = [
     "name": "Berseem (Egyptian Clover)",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1534,6 +3232,9 @@ export const MASTER_CROPS = [
     "name": "Napier Grass (Elephant Grass)",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1541,6 +3242,9 @@ export const MASTER_CROPS = [
     "name": "Sorghum Fodder",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1548,6 +3252,9 @@ export const MASTER_CROPS = [
     "name": "Maize Fodder",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1555,6 +3262,9 @@ export const MASTER_CROPS = [
     "name": "Sudan Grass",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1562,6 +3272,9 @@ export const MASTER_CROPS = [
     "name": "Oats Fodder",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1569,6 +3282,9 @@ export const MASTER_CROPS = [
     "name": "Timothy Grass",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1576,6 +3292,9 @@ export const MASTER_CROPS = [
     "name": "Clover (Red, White)",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1583,6 +3302,9 @@ export const MASTER_CROPS = [
     "name": "Ryegrass",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1590,6 +3312,9 @@ export const MASTER_CROPS = [
     "name": "Fescue",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1597,6 +3322,9 @@ export const MASTER_CROPS = [
     "name": "Guinea Grass",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1604,6 +3332,9 @@ export const MASTER_CROPS = [
     "name": "Stylo",
     "category": "fodder",
     "subcategory": "Livestock Forage & Feed",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1611,6 +3342,9 @@ export const MASTER_CROPS = [
     "name": "Rose",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1618,6 +3352,9 @@ export const MASTER_CROPS = [
     "name": "Marigold",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1625,6 +3362,9 @@ export const MASTER_CROPS = [
     "name": "Jasmine",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1632,6 +3372,9 @@ export const MASTER_CROPS = [
     "name": "Chrysanthemum",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1639,6 +3382,9 @@ export const MASTER_CROPS = [
     "name": "Orchid (Dendrobium)",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1646,6 +3392,9 @@ export const MASTER_CROPS = [
     "name": "Carnation",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1653,6 +3402,9 @@ export const MASTER_CROPS = [
     "name": "Gerbera",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1660,6 +3412,9 @@ export const MASTER_CROPS = [
     "name": "Anthurium",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1667,6 +3422,9 @@ export const MASTER_CROPS = [
     "name": "Gladiolus",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1674,6 +3432,9 @@ export const MASTER_CROPS = [
     "name": "Tuberose",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1681,6 +3442,9 @@ export const MASTER_CROPS = [
     "name": "Lavender",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1688,6 +3452,9 @@ export const MASTER_CROPS = [
     "name": "Tulip",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1695,6 +3462,9 @@ export const MASTER_CROPS = [
     "name": "Lily",
     "category": "floriculture",
     "subcategory": "Commercial Flowers",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1702,6 +3472,9 @@ export const MASTER_CROPS = [
     "name": "Aloe Vera",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1709,6 +3482,9 @@ export const MASTER_CROPS = [
     "name": "Ashwagandha (Indian Ginseng)",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1716,6 +3492,9 @@ export const MASTER_CROPS = [
     "name": "Sarpagandha",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1723,6 +3502,9 @@ export const MASTER_CROPS = [
     "name": "Artemisia (Sweet Wormwood)",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1730,6 +3512,9 @@ export const MASTER_CROPS = [
     "name": "Isabgol (Psyllium Husk)",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1737,6 +3522,9 @@ export const MASTER_CROPS = [
     "name": "Neem",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1744,6 +3532,9 @@ export const MASTER_CROPS = [
     "name": "Jatropha (Biofuel)",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1751,6 +3542,9 @@ export const MASTER_CROPS = [
     "name": "Pongamia (Karanja)",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   },
   {
@@ -1758,20 +3552,35 @@ export const MASTER_CROPS = [
     "name": "Stevia (Natural Sweetener)",
     "category": "medicinal_biofuel",
     "subcategory": "Medicinal & Biofuel",
+    "localNames": null,
+    "scientificName": null,
+    "marketTypes": null,
     "status": "card_ready"
   }
 ];
 
-const STORAGE_KEY = 'khet_kharcha_user_crop_library';
+const STORAGE_KEY = 'khet_kharcha_user_crop_library_v4';
 
 export const getLibraryCrops = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Prefer user's customized marketTypes and saved practices
+        return MASTER_CROPS.map(mc => {
+          const userCrop = parsed.find(p => p.id === mc.id || p.name === mc.name);
+          if (!userCrop) return mc;
+          return {
+            ...mc,
+            ...userCrop,
+            marketTypes: (userCrop.marketTypes && userCrop.marketTypes.length > 0)
+              ? userCrop.marketTypes
+              : mc.marketTypes
+          };
+        });
+      }
     }
-    // Default to the full master catalog
     localStorage.setItem(STORAGE_KEY, JSON.stringify(MASTER_CROPS));
     return MASTER_CROPS;
   } catch (e) {
@@ -1788,4 +3597,4 @@ export const saveLibraryCrops = (crops) => {
   }
 };
 
-export const CROP_LIBRARY = getLibraryCrops();
+export const CROP_LIBRARY = MASTER_CROPS;

@@ -15,6 +15,7 @@ import FarmDetailPage from './pages/farms/FarmDetailPage.jsx';
 import AddFarmPage from './pages/farms/AddFarmPage.jsx';
 import CurrentStatePage from './pages/currentState/CurrentStatePage.jsx';
 import LibraryPage from './pages/library/LibraryPage.jsx';
+import FertilizersPage from './pages/fertilizers/FertilizersPage.jsx';
 import AddExpensePage from './pages/expenses/AddExpensePage.jsx';
 import ReportsPage from './pages/reports/ReportsPage.jsx';
 import PartnerSettlementPage from './pages/partners/PartnerSettlementPage.jsx';
@@ -105,6 +106,12 @@ export default function App() {
         <Route path="/library" element={
           <ProtectedRoute>
             <LibraryPage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/fertilizers" element={
+          <ProtectedRoute>
+            <FertilizersPage />
           </ProtectedRoute>
         } />
         

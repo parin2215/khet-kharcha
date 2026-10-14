@@ -15,7 +15,8 @@ import {
   User, 
   Users,
   Activity,
-  BookOpen
+  BookOpen,
+  FlaskConical
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore.js';
 import { useSettingsStore } from '../store/useSettingsStore.js';
@@ -64,6 +65,7 @@ export default function Layout({ children }) {
     { to: '/farms', label: t('navigation.farms'), icon: Sprout },
     { to: '/current-state', label: 'Current State', icon: Activity },
     { to: '/library', label: 'Library', icon: BookOpen },
+    { to: '/fertilizers', label: 'Fertilizers', icon: FlaskConical },
     { to: '/partners', label: t('navigation.partners') || 'Partners', icon: Users },
     { to: '/bills', label: t('navigation.bills'), icon: Receipt },
     { to: '/reminders', label: t('navigation.reminders'), icon: Bell },
@@ -76,6 +78,7 @@ export default function Layout({ children }) {
     if (path.startsWith('/dashboard')) return t('navigation.dashboard');
     if (path.startsWith('/current-state')) return 'Current State - Ongoing Crops';
     if (path.startsWith('/library')) return 'Crop Knowledge Library & Agronomy Guides';
+    if (path.startsWith('/fertilizers')) return 'Fertilizers & Soil Health Guide (ખાતર માર્ગદર્શિકા)';
     if (path.startsWith('/farms/new')) return 'Add Farm';
     if (path.startsWith('/farms/')) return 'Farm Details & Historical Analytics';
     if (path.startsWith('/farms')) return t('navigation.farms');

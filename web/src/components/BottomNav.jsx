@@ -15,7 +15,8 @@ import {
   LogOut, 
   ChevronRight,
   Activity,
-  BookOpen
+  BookOpen,
+  FlaskConical
 } from 'lucide-react';
 
 const LABELS = {
@@ -197,6 +198,18 @@ export default function BottomNav() {
                 <div className="flex items-center gap-3">
                   <BookOpen className="w-5 h-5 text-emerald-600" />
                   <span className="text-xs font-bold text-stone-900">Crop Library & Agronomy Guides</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-stone-400" />
+              </button>
+
+              {/* Fertilizers Guide */}
+              <button
+                onClick={() => handleTabClick('/fertilizers', 'fertilizers')}
+                className="w-full h-[52px] flex items-center justify-between border-b border-stone-100 hover:bg-emerald-50 px-2 rounded-xl transition active:bg-emerald-100 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <FlaskConical className="w-5 h-5 text-emerald-600" />
+                  <span className="text-xs font-bold text-stone-900">Fertilizers & Soil Health (ખાતર માર્ગદર્શિકા)</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-stone-400" />
               </button>
