@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid, ComposedChart, Legend, Area } from 'recharts';
 import { formatINR, formatDate } from '../../../../shared/utils/helpers.js';
-import { runMigration } from '../../utils/runMigration.js';
+
 import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js';
 import AmountDisplay from '../../components/AmountDisplay.jsx';
 import MonthSelector from '../../components/MonthSelector.jsx';
@@ -266,20 +266,7 @@ export default function DashboardPage() {
             <AmountDisplay amount={totalIncome} className="text-lg font-extrabold text-stone-700" />
           </div>
 
-          {/* Temporary Migration Button */}
-          <button 
-            onClick={async () => {
-              try {
-                await runMigration();
-                alert("Migration completed successfully!");
-              } catch (err) {
-                alert("Migration failed: " + err.message);
-              }
-            }}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl text-xs"
-          >
-            Run DB Migration
-          </button>
+          
 
           <div className={`bg-white border rounded-2xl p-4 shadow-sm flex flex-col justify-between hover:shadow transition ${netProfit >= 0 ? 'border-emerald-200/50' : 'border-red-200/50'}`}>
             <span className={`text-[10px] font-bold uppercase block mb-1 ${netProfit >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>Net Profit / Loss</span>
