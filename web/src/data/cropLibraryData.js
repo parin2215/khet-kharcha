@@ -1507,356 +1507,1362 @@ export const MASTER_CROPS = [
     ],
     "status": "card_ready"
   },
-  {
-    "id": "crop_37_soybean",
-    "name": "Soybean",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_38_groundnut_peanut",
-    "name": "Groundnut (Peanut)",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_39_rapeseed_mustard",
-    "name": "Rapeseed/Mustard",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_40_sunflower",
-    "name": "Sunflower",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_41_sesame_til",
-    "name": "Sesame (Til)",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_42_safflower",
-    "name": "Safflower",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_43_linseed_flax",
-    "name": "Linseed (Flax)",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_44_castor_bean",
-    "name": "Castor Bean",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_45_niger_seed",
-    "name": "Niger Seed",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_46_cottonseed",
-    "name": "Cottonseed",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_47_oil_palm",
-    "name": "Oil Palm",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_48_coconut",
-    "name": "Coconut",
-    "category": "oilseeds",
-    "subcategory": "Major Oilseeds",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_49_potato",
-    "name": "Potato",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_50_sweet_potato",
-    "name": "Sweet Potato",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_51_cassava_tapioca",
-    "name": "Cassava (Tapioca)",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_52_yam",
-    "name": "Yam",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_53_taro_colocasia",
-    "name": "Taro (Colocasia)",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_54_elephant_foot_yam",
-    "name": "Elephant Foot Yam",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_55_arrowroot",
-    "name": "Arrowroot",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_56_arracha",
-    "name": "Arracha",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_57_jicama_yam_bean",
-    "name": "Jicama (Yam Bean)",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_58_tiger_nut",
-    "name": "Tiger Nut",
-    "category": "tubers",
-    "subcategory": "Starch Roots",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_59_cotton_upland_sea_island",
-    "name": "Cotton (Upland, Sea Island)",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_60_jute",
-    "name": "Jute",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_61_hemp",
-    "name": "Hemp",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_62_sisal",
-    "name": "Sisal",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_63_abaca_manila_hemp",
-    "name": "Abaca (Manila Hemp)",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_64_coir",
-    "name": "Coir",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_65_kenaf",
-    "name": "Kenaf",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_66_flax_fiber",
-    "name": "Flax Fiber",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_67_sunn_hemp",
-    "name": "Sunn Hemp",
-    "category": "fiber_industrial",
-    "subcategory": "Fibers",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_68_sugarcane",
-    "name": "Sugarcane",
-    "category": "fiber_industrial",
-    "subcategory": "Sweeteners",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_69_sugar_beet",
-    "name": "Sugar Beet",
-    "category": "fiber_industrial",
-    "subcategory": "Sweeteners",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_70_para_rubber_natural_rubber",
-    "name": "Para Rubber (Natural Rubber)",
-    "category": "fiber_industrial",
-    "subcategory": "Industrial Latex & Resins",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
-  {
-    "id": "crop_71_tobacco",
-    "name": "Tobacco",
-    "category": "fiber_industrial",
-    "subcategory": "Industrial Latex & Resins",
-    "localNames": null,
-    "scientificName": null,
-    "marketTypes": null,
-    "status": "card_ready"
-  },
+    {
+      "id": "crop_37_soybean",
+      "name": "Soybean",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "સોયાબીન",
+        "hi": "सोयाबीन",
+        "en": "Soybean"
+      },
+      "scientificName": "Glycine max",
+      "marketTypes": [
+        {
+          "typeName": "Medium Maturity High-Yielding Standard (મધ્યમ ગાળાની મુખ્ય જાતો - ૯૫ થી ૧૦૫ દિવસ)",
+          "varieties": [
+            "JS 335 (સૌથી વધુ વવાયેલ રાષ્ટ્રીય જાત)",
+            "JS 20-29",
+            "JS 20-34",
+            "JS 20-69",
+            "Phule Sangam (KDS 726 - રેકોર્ડ ઉત્પાદન)",
+            "Phule Kimaya (KDS 753)"
+          ],
+          "marketUse": "Commercial oil extraction (18-20% oil), solvent extraction plants, high-protein de-oiled cake (DOC) for cattle/poultry feed",
+          "grainType": "Medium cream/yellow round seeds with black/brown hilum, uniform size, non-shattering pods"
+        },
+        {
+          "typeName": "Early Maturing Drought-Escape (વહેલી પાકતી જાતો - ૮૫ થી ૯૦ દિવસ)",
+          "varieties": [
+            "JS 95-60 (અતિ લોકપ્રિય વહેલી જાત)",
+            "JS 93-05",
+            "NRC 37 (Ahilya 2)",
+            "NRC 127",
+            "MACS 1407"
+          ],
+          "marketUse": "Short rainfall zones, catch cropping, enables timely rabi sowing of wheat or gram",
+          "grainType": "Slightly smaller golden-yellow grains, quick maturity, moderate shatter resistance"
+        },
+        {
+          "typeName": "Bold Seeded Food & Soymilk Grade (મોટા દાણા - ખાદ્ય, સોયા પનીર/ટોફુ અને દૂધ)",
+          "varieties": [
+            "NRC 142 (Lipoxygenase-2 free - કડવાશ મુક્ત)",
+            "NRC 138",
+            "Himsoya",
+            "Karune (Green vegetable edamame)",
+            "JS 20-98"
+          ],
+          "marketUse": "Direct culinary food processing, soymilk, tofu, edamame snacks, health flour blending",
+          "grainType": "Extra-large plump cream grains, low beany odor, high protein (41-43%)"
+        },
+        {
+          "typeName": "Disease Resistant & Charcoal Rot Tolerant (રોગ-જીવાત પ્રતિરોધક સુધારેલી જાતો)",
+          "varieties": [
+            "RVS 2001-4 (Raj Vijay)",
+            "DSb 21",
+            "NRC 7",
+            "AMS 100-39 (PDKV)",
+            "SL 958"
+          ],
+          "marketUse": "High rainfall or humid heavy black soils prone to collar rot, yellow mosaic virus and girdle beetle",
+          "grainType": "Sturdy yellow grains, thick pod shell preventing field sprouting"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_38_groundnut_peanut",
+      "name": "Groundnut (Peanut)",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "મગફળી (માંડવી / સીંગ)",
+        "hi": "मूंगफली / दाना",
+        "en": "Groundnut / Peanut"
+      },
+      "scientificName": "Arachis hypogaea",
+      "marketTypes": [
+        {
+          "typeName": "Spanish Bunch Type - Erect / Small Pods (સ્પૅનિશ ગુચ્છાદાર / ઊભડી મગફળી - ૯૫ થી ૧૦૫ દિવસ)",
+          "varieties": [
+            "GG 2 (ગુજરાત જૂનાગઢ મગફળી ૨)",
+            "GG 7 (ઉનાળુ અને ખરીફ લોકપ્રિય)",
+            "GG 5",
+            "GJG 9 (જૂનાગઢ મગફળી ૯)",
+            "TAG 24 (ટ્રોમ્બે અકોલા)",
+            "TG 37A",
+            "JL 24 (Phule Pragati)",
+            "Kadiri 6 (K 6)",
+            "Kadiri 9",
+            "DH 86"
+          ],
+          "marketUse": "Edible roasting, salted peanuts, short kharif & summer crop, high oil crushing (49-51%)",
+          "grainType": "Compact 2-seeded cylindrical pods, light pink kernel, clustered tightly around the root collar"
+        },
+        {
+          "typeName": "Semi-Spreading Main Season (અર્ધ-વેલડી મગફળી - ૧૧૦ થી ૧૨૦ દિવસ)",
+          "varieties": [
+            "GG 20 (જી-૨૦ - સૌરાષ્ટ્રની રાજકન્યા જાત)",
+            "GJG 22 (સુધારેલી નવી જાત)",
+            "GG 8",
+            "Somnath (TGS 1)",
+            "Girnar 2",
+            "Girnar 3 (High Oleic)",
+            "GG 16"
+          ],
+          "marketUse": "The primary backbone of Saurashtra APMC mandis and oil mill crushing (સીંગતેલ), excellent green dry fodder (ભૂસું/ગોતર)",
+          "grainType": "Medium bold uniform pods, high shelling turnover (70-73%), deep pink seeds, high test weight"
+        },
+        {
+          "typeName": "Virginia Runner / Bold Spreading (જાડા દાણા - વેલડી મગફળી - ૧૨૦ થી ૧૩૫ દિવસ)",
+          "varieties": [
+            "GG 11 (વેલડી મુખ્ય જાત)",
+            "GG 13",
+            "GJG 17",
+            "GJG 32",
+            "Mallika",
+            "Western 44"
+          ],
+          "marketUse": "Chikki manufacturing, peanut butter, confectionery paste, high drought tolerance in low rain",
+          "grainType": "Long trailing vines, large curved 2-to-3 seeded pods, thick netted shell, high dormancy"
+        },
+        {
+          "typeName": "High-Oleic Confectionery Export Quality (હાઈ ઓલિક બોલ્ડ દાણા - એક્સપોર્ટ ક્વોલિટી)",
+          "varieties": [
+            "Girnar 4 (૮૦% ઓલિક એસિડ - સુપર હેલ્ધી)",
+            "Girnar 5",
+            "TG 51",
+            "TLG 45 (જમ્બો દાણા)",
+            "TCGS 888",
+            "ICGV 00350"
+          ],
+          "marketUse": "Export to European Union, Middle East, snacks and breakfast cereals with long shelf life without rancidity",
+          "grainType": "Extra-large jumbo pink seeds (count 40-50 per ounce), very low aflatoxin susceptibility, premium mandi rate"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_39_rapeseed_mustard",
+      "name": "Rapeseed/Mustard",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "રાયડો / સરસવ / રાઈ",
+        "hi": "सरसों / राई / तोरिया",
+        "en": "Rapeseed / Mustard"
+      },
+      "scientificName": "Brassica juncea / Brassica campestris",
+      "marketTypes": [
+        {
+          "typeName": "Gujarat Mustard Hybrids & High Yielding (ગુજરાત રાયડો - સરદારકૃષિનગર યુનિવર્સિટી જાતો)",
+          "varieties": [
+            "Gujarat Mustard 2 (GM 2)",
+            "Gujarat Mustard 3 (GM 3 - અતિ લોકપ્રિય ઉત્તર ગુજરાત અને સૌરાષ્ટ્ર)",
+            "GDM 4 (કાંટાળી શીંગો - ભૂંડ અને પક્ષીઓના નુકસાન સામે સુરક્ષિત)",
+            "GM 6 (કચ્છ અને અર્ધશુષ્ક વિસ્તાર માટે શ્રેષ્ઠ)"
+          ],
+          "marketUse": "Edible kachchi ghani mustard oil (39-42% oil), high pungency allyl isothiocyanate, cattle cake (ખોળ)",
+          "grainType": "Uniform medium reddish-brown to dark seeds, dense siliqua pods, strong shattering resistance"
+        },
+        {
+          "typeName": "Bold Seeded Indian Mustard (બોલ્ડ સરસવ - વરુણા, પુસા અને પાયોનિયર શ્રેણી)",
+          "varieties": [
+            "Varuna (T 59 - રાષ્ટ્રીય સ્ટાન્ડર્ડ)",
+            "Pusa Bold",
+            "Bio 902 (Pusa Jaikisan)",
+            "Kranti (PR 15)",
+            "RH 749",
+            "RH 725",
+            "Giriraj (DRMRIJ 31)",
+            "Pioneer 45S46 (Private Hybrid)"
+          ],
+          "marketUse": "Maximum oil extraction, heavy mandi weight, tall branched canopy with high pod density",
+          "grainType": "Bold spherical dark brown to black seeds, high 1000-seed weight (5.5 - 6.5 g), high oil yield"
+        },
+        {
+          "typeName": "Yellow Mustard / Sarson (પીળી સરસવ - મસાલા, અથાણાં અને પારદર્શક તેલ)",
+          "varieties": [
+            "Pusa Gold",
+            "YST 151",
+            "Pitambari",
+            "Narendra Rai 1",
+            "NRCYS 05-02"
+          ],
+          "marketUse": "Clean golden cooking oil without dark discoloration, pickle processing (અથાણાંનો સંભાર), table mustard paste",
+          "grainType": "Bright glossy golden-yellow round seeds, milder pungency, high oil content (43-45%)"
+        },
+        {
+          "typeName": "Toria & Early Rapeseed (વહેલી પાકતી તોરિયા - ૭૫ થી ૮૫ દિવસ)",
+          "varieties": [
+            "TL 15",
+            "PT 303",
+            "Bhawani",
+            "Panchali",
+            "Tapeshwari"
+          ],
+          "marketUse": "Catch crop harvested early between Kharif paddy/cotton and late Rabi wheat/vegetables",
+          "grainType": "Small smooth brown seeds, short plant stature, quick branching"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_40_sunflower",
+      "name": "Sunflower",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "સૂર્યમુખી",
+        "hi": "सूरजमुखी",
+        "en": "Sunflower"
+      },
+      "scientificName": "Helianthus annuus",
+      "marketTypes": [
+        {
+          "typeName": "High Oil Crushing Hybrids (વ્યાપારી તેલ ઉત્પાદન હાઇબ્રિડ - ૯૦ થી ૧૦૦ દિવસ)",
+          "varieties": [
+            "KBSH 41 (બેંગ્લોર હાઇબ્રિડ)",
+            "KBSH 44",
+            "KBSH 53",
+            "DRSH 1 (ICAR IIOR હાઇબ્રિડ)",
+            "Sunbred 275",
+            "PAC 361",
+            "Phule Bhaskar"
+          ],
+          "marketUse": "Refined heart-healthy cooking oil (high Linoleic acid & Vitamin E), premium poultry feed cake",
+          "grainType": "Black striped medium elongated seeds (achenes), thin hull, 40-44% oil recovery, high seed setting"
+        },
+        {
+          "typeName": "Confectionery, Birdfeed & Large Seeded (મોટા દાણા - નાસ્તો, બેકરી અને બર્ડફીડ)",
+          "varieties": [
+            "Modern (Morden - પ્રારંભિક મુક્ત પરાગિત જાત)",
+            "Badami Sunflower",
+            "Giant Russian",
+            "Mammoth Grey Stripe"
+          ],
+          "marketUse": "Toasted and salted snack seeds, confectionery toppings, breakfast muesli, export birdfeed",
+          "grainType": "Extra-large broad grey and white striped seeds, high kernel-to-hull ratio, lower oil but high protein"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_41_sesame_til",
+      "name": "Sesame (Til)",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "તલ (સફેદ, કાળા અને લાલ તલ)",
+        "hi": "तिल (सफेद, काला, लाल)",
+        "en": "Sesame / Gingelly"
+      },
+      "scientificName": "Sesamum indicum",
+      "marketTypes": [
+        {
+          "typeName": "Pure Pearl White Commercial Sesame (સફેદ તલ - નિકાસ ગુણવત્તા - ખરીફ અને ઉનાળુ)",
+          "varieties": [
+            "Gujarat Til 1 (GT 1 - જૂનાગઢ)",
+            "Gujarat Til 2 (GT 2 - ઉનાળુ ખેતી માટે શ્રેષ્ઠ)",
+            "Gujarat Til 3 (GT 3)",
+            "Gujarat Til 4 (GT 4)",
+            "Gujarat Til 5 (GT 5 - સુધારેલી ઊંચી ઉપજ)",
+            "RT 351",
+            "TKG 22",
+            "Swetha"
+          ],
+          "marketUse": "Sesame chikki, sweets, tahini, burger buns, confectionery, high premium export to Japan, Korea, Europe",
+          "grainType": "Brilliant pearl-white flat oval seeds, 49-53% sweet edible oil, excellent crunch"
+        },
+        {
+          "typeName": "Jet Black Medicinal & Pooja Sesame (કાળા તલ - ઔષધીય અને પૂજા અર્ચના)",
+          "varieties": [
+            "Gujarat Til 10 (GT 10 - જૂનાગઢ સ્પેશિયલ કાળા તલ)",
+            "Kalathil",
+            "TKG 55",
+            "RT 346",
+            "Prachi"
+          ],
+          "marketUse": "Ayurvedic medicines, hair oils, therapeutic tonics, holy religious pooja rituals, high price per quintal",
+          "grainType": "Deep jet-black shiny seed coat, rich in natural antioxidants (sesamin and sesamolin), distinct earthy aroma"
+        },
+        {
+          "typeName": "Reddish & Brown Crushing Sesame (લાલ/કથ્થાઈ તલ - પરંપરાગત ઘાણી તેલ)",
+          "varieties": [
+            "Purva 1",
+            "TMV 3",
+            "TMV 7",
+            "VRI 1"
+          ],
+          "marketUse": "Traditional South Indian gingelly oil, cold-pressed raw sesame oil, Ayurvedic massage oils",
+          "grainType": "Reddish-brown seeds, high pungent aroma, high oil extraction percentage"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_42_safflower",
+      "name": "Safflower",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "કુસુમ / કરડી",
+        "hi": "कुसुम / करडी",
+        "en": "Safflower"
+      },
+      "scientificName": "Carthamus tinctorius",
+      "marketTypes": [
+        {
+          "typeName": "Spiny High-Linoleic Edible Oil (કાંટાળી કુસુમ - ઉચ્ચ લિનોલીઇક હૃદયલક્ષી તેલ)",
+          "varieties": [
+            "A-1 (Annigeri 1)",
+            "NARI-6 (નિમ્બકર ઇન્સ્ટિટ્યૂટ)",
+            "PBNS-12",
+            "Bhima",
+            "Phule Kusuma",
+            "Sharda"
+          ],
+          "marketUse": "Premium cooking oil for reducing blood cholesterol, drought-proof rabi crop in residual moisture",
+          "grainType": "White pyramidal angular seeds (achenes), spiny involucral bracts preventing grazing by cattle/wild boar, 30-34% oil"
+        },
+        {
+          "typeName": "Spineless & Floret Petal Dye Type (કાંટા વગરની કુસુમ - કુદરતી કેસર રંગ અને હર્બલ ટી)",
+          "varieties": [
+            "NARI-NH-1 (Spineless Hybrid)",
+            "DSH-129",
+            "JSF-1",
+            "NARI-Poornima"
+          ],
+          "marketUse": "Harvesting dried red/orange florets as false saffron (Kusum Phool), herbal infusions, natural textile coloring, high oleic oil",
+          "grainType": "Smooth non-spiny leaves for easy manual picking, bright crimson florets, medium white seeds"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_43_linseed_flax",
+      "name": "Linseed (Flax)",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "અળસી",
+        "hi": "अलसी / तीसी",
+        "en": "Linseed / Flaxseed"
+      },
+      "scientificName": "Linum usitatissimum",
+      "marketTypes": [
+        {
+          "typeName": "Food Grade Omega-3 Flaxseed (ખાદ્ય અળસી - મુખવાસ, પોષણ અને સુપરફૂડ)",
+          "varieties": [
+            "Gaurav",
+            "Padmini",
+            "JLS 27",
+            "RLC 92",
+            "Deepika",
+            "Tiara"
+          ],
+          "marketUse": "Roasted mukhwas with lemon-salt, dietary Omega-3 supplements (Alpha-Linolenic Acid), bakery breads, dietary fiber",
+          "grainType": "Glossy golden-brown flattened oval seeds with sharp beak, crisp crunchy texture, pleasant nutty taste"
+        },
+        {
+          "typeName": "Industrial & Technical Fast-Drying Oil (ઔદ્યોગિક અળસી - પેઇન્ટ, વાર્નિશ અને પોલિશ)",
+          "varieties": [
+            "Neelam",
+            "Sharda",
+            "Meera",
+            "Shikha",
+            "T 397"
+          ],
+          "marketUse": "Quick-drying boiled linseed oil for wood varnish, oil paints, printing inks, linoleum flooring, dual-purpose linen fiber",
+          "grainType": "High iodine number oil (175-195), dark brown firm seeds, high resistance to powdery mildew"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_44_castor_bean",
+      "name": "Castor Bean",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "દિવેલા (એરંડા)",
+        "hi": "अरंडी (रेड़ी)",
+        "en": "Castor Bean"
+      },
+      "scientificName": "Ricinus communis",
+      "marketTypes": [
+        {
+          "typeName": "Gujarat Commercial High-Yielding Hybrids (ગુજરાત હાઇબ્રિડ એરંડા - વિશ્વ પ્રસિદ્ધ જાતો)",
+          "varieties": [
+            "Gujarat Castor Hybrid 7 (GCH 7 - ઉત્તર ગુજરાત, સૌરાષ્ટ્ર અને કચ્છનો રાજા)",
+            "GCH 9 (સરદારકૃષિનગર યુનિવર્સિટી નવી હાઇબ્રિડ જાત)",
+            "GCH 11 (સુધારેલી ઉચ્ચ ઉત્પાદક જાત)",
+            "GCH 4 (ઐતિહાસિક વિશ્વપ્રસિદ્ધ હાઇબ્રિડ)",
+            "GCH 8 (સુકારો પ્રતિરોધક)",
+            "DCH 519"
+          ],
+          "marketUse": "Aviation turbine lubricants, hydraulic fluids, Nylon-11 engineering polymers, castor oil export (Gujarat leads >80% world supply)",
+          "grainType": "Large mottled shiny seeds with prominent caruncle, 48-52% ricinoleic acid non-edible oil, dense spiny spikes"
+        },
+        {
+          "typeName": "Wilt & Root-Rot Tolerant Lines (સુકારો અને જમીનજન્ય મૂળના કોહવારા સામે પ્રતિરોધક જાતો)",
+          "varieties": [
+            "GCH 2",
+            "GC 3 (ગુજરાત એરંડા ૩ - વેરાઇટી)",
+            "DCH 177",
+            "YRCH 1",
+            "Pragati (PCS 124)"
+          ],
+          "marketUse": "Recommended for wilt-sick soils and heavy textured lands prone to Macrophomina and Fusarium root wilt",
+          "grainType": "Uniform grey-brown patterned seeds, strong root system with vigorous tertiary branching"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_45_niger_seed",
+      "name": "Niger Seed",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "ખુરાસણી (રામતિલ)",
+        "hi": "रामतिल / खुरासनी",
+        "en": "Niger Seed"
+      },
+      "scientificName": "Guizotia abyssinica",
+      "marketTypes": [
+        {
+          "typeName": "Rainfed Tribal Hill & Plateau Varieties (ચોમાસુ ડુંગરાળ અને પહાડી જાતો - શૂન્ય ખર્ચ ખેતી)",
+          "varieties": [
+            "Gujarat Niger 1 (GN 1 - નવસારી કૃષિ યુનિવર્સિટી)",
+            "IGPN 2004-1 (પૂજા)",
+            "Birsa Niger 1",
+            "Utkal Niger 150",
+            "Deomali",
+            "KGN 2"
+          ],
+          "marketUse": "Traditional cold-pressed tribal edible oil, dry roasted spicy chutney (ખુરાસણીની ચટણી), wild songbird feed export to USA and Europe",
+          "grainType": "Small elongated shiny jet-black seeds, high oil content (38-42%), prolific yellow daisy-like flowers attracting bees"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_46_cottonseed",
+      "name": "Cottonseed",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "કપાસિયા (રૂ / કપાસનું બિયારણ)",
+        "hi": "बिनौला / कपास के बीज",
+        "en": "Cottonseed"
+      },
+      "scientificName": "Gossypium hirsutum / Gossypium herbaceum",
+      "marketTypes": [
+        {
+          "typeName": "Transgenic Bt Hybrid Cottonseed (બીટી કપાસિયા - રિફાઇન્ડ તેલ અને ખોળનો મુખ્ય સ્ત્રોત)",
+          "varieties": [
+            "RCH 2 Bt",
+            "Bollgard II Hybrids",
+            "Gujarat Cotton Hybrid 8 (G.Cot.Hy 8)",
+            "G.Cot 10",
+            "Ajit 155",
+            "Kaveri Jadu",
+            "ATM Bt"
+          ],
+          "marketUse": "Refined edible cottonseed oil (ગુજરાતનું મુખ્ય રસોઈ તેલ), high-protein cottonseed oil cake (કપાસિયા ખોળ) for milch dairy cattle",
+          "grainType": "Fuzzy dark seeds with linters requiring mechanical delinting, 18-22% edible oil, 38-42% protein rich meal"
+        },
+        {
+          "typeName": "Desi Herbaceum / Arboreum Non-Bt (દેશી કપાસિયા - ભાલ અને કાનમ કપાસ)",
+          "varieties": [
+            "G.Cot 13 (કાનમ ટ્રેક્ટ)",
+            "G.Cot 21",
+            "Wagad Cotton (ભાલ કપાસ)",
+            "V 797",
+            "Jayadhar"
+          ],
+          "marketUse": "Rainfed drought-hardy ecology, organic cotton value chain, traditional whole boiled cottonseed cattle feed",
+          "grainType": "Smaller dense seeds, thick seed coat, very high natural drought and salinity resilience"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_47_oil_palm",
+      "name": "Oil Palm",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "પામ ઓઇલ (તેલી તાળ)",
+        "hi": "ऑयल पाम / ताड़ का पेड़",
+        "en": "Oil Palm"
+      },
+      "scientificName": "Elaeis guineensis",
+      "marketTypes": [
+        {
+          "typeName": "Tenera Hybrid High Oil Bunches (ટેનેરા હાઇબ્રિડ - ડુરા x પિસિફેરા ક્રોસ)",
+          "varieties": [
+            "Palode Tenera (ICAR IIOPR પેકેજ)",
+            "Godrej Gold Tenera",
+            "ASD Costa Rica Tenera",
+            "Deli x AVROS",
+            "Calabar Hybrids"
+          ],
+          "marketUse": "World's most productive oil crop (4-5 tonnes edible oil/hectare), crude palm oil (CPO) for cooking, palm kernel oil for soaps and bio-lubricants",
+          "grainType": "Fresh Fruit Bunches (FFB) weighing 15-25 kg with fibrous fleshy orange mesocarp (45-50% oil) surrounding hard kernel nut"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_48_coconut",
+      "name": "Coconut",
+      "category": "oilseeds",
+      "subcategory": "Major Oilseeds",
+      "localNames": {
+        "gu": "નાળિયેર (શ્રીફળ / ત્રોફો)",
+        "hi": "नारियल / गरी",
+        "en": "Coconut"
+      },
+      "scientificName": "Cocos nucifera",
+      "marketTypes": [
+        {
+          "typeName": "Coastal Tall Commercial Copra & Oil (દરિયાકાંઠાની ઊંચી જાતો - કોપરા અને તેલ)",
+          "varieties": [
+            "West Coast Tall (WCT - પશ્ચિમ કિનારો)",
+            "Pratap (પ્રતાપ - મહારાષ્ટ્ર અને દક્ષિણ ગુજરાત)",
+            "East Coast Tall (ECT)",
+            "Gujarat Coconut 1 (સૌરાષ્ટ્ર કોસ્ટલ રિસર્ચ સ્ટેશન મહુવા)",
+            "Tiptur Tall"
+          ],
+          "marketUse": "Dry copra making, virgin coconut oil, edible hair and body oil, religious holy offerings, coir fiber extraction",
+          "grainType": "Large round to oval green/brown nuts, thick fibrous husk, thick solid white endosperm (meat) with 65-68% oil"
+        },
+        {
+          "typeName": "Dwarf Varieties for Sweet Tender Water (વામન જાતો - મીઠું નાળિયેર પાણી / ત્રોફા)",
+          "varieties": [
+            "Chowghat Orange Dwarf (COD)",
+            "Chowghat Green Dwarf (CGD)",
+            "Malayan Yellow Dwarf (MYD)",
+            "Kalpa Jyothi"
+          ],
+          "marketUse": "Commercial fresh tender water roadside stalls (350-500 ml sweet isotonic mineral water per nut), early bearing in 3-4 years",
+          "grainType": "Medium golden-orange or bright green nuts, thin husk, high water volume with delicious sweetness"
+        },
+        {
+          "typeName": "High-Yielding Tall x Dwarf Hybrids (હાઇબ્રિડ ટી x ડી - ડબલ ઉપયોગ)",
+          "varieties": [
+            "Kera Sankara (WCT x COD)",
+            "Chandralaksha (Laccadive Ordinary x COD)",
+            "VHC 1",
+            "Godavari Ganga"
+          ],
+          "marketUse": "Heavy commercial yield (120-160 nuts/palm/year), commercial copra drying, packaged tender coconut water",
+          "grainType": "Medium uniform nuts, rapid growth, heavy bearing bunches with thick kernel and good water volume"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_49_potato",
+      "name": "Potato",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "બટાટા (બટાકા)",
+        "hi": "आलू",
+        "en": "Potato"
+      },
+      "scientificName": "Solanum tuberosum",
+      "marketTypes": [
+        {
+          "typeName": "Table & Ware Potato - Main Round/Oval (શાકભાજી માટેના સામાન્ય બટાટા - ૮૦ થી ૯૦ દિવસ)",
+          "varieties": [
+            "Kufri Pukhraj (કુફરી પુખરાજ - ડીસા અને ઉત્તર ગુજરાતની શાન)",
+            "Kufri Jyoti (સાર્વત્રિક અનુકૂળ)",
+            "Kufri Lauvkar (વહેલી પાકતી જાત - ૭૫ દિવસ)",
+            "Kufri Badshah (કુફરી બાદશાહ - મોડી પાકતી ઊંચી ઉપજ)",
+            "Kufri Bahar (3797)"
+          ],
+          "marketUse": "Daily kitchen cooking, boiled mashed potato, sabzi, cold-storage bulk mandi trade across Gujarat and India",
+          "grainType": "Large oval to slightly flat tubers, smooth creamy-yellow skin, shallow eyes, pale yellow flesh"
+        },
+        {
+          "typeName": "Processing & Chip-grade Potato (ચિપ્સ, વેફર્સ અને ફ્રેન્ચ ફ્રાઈસ સ્પેશિયલ)",
+          "varieties": [
+            "Kufri Chipsona 1 (કુફરી ચિપ્સોના ૧ - ઉચ્ચ ડ્રાય મેટર)",
+            "Kufri Chipsona 3 (શ્રેષ્ઠ ચિપ્સિંગ ગુણવત્તા)",
+            "Kufri Chipsona 4",
+            "Kufri Frysona (ફ્રેન્ચ ફ્રાઈસ સ્પેશિયલ)",
+            "Lady Rosetta (રેડ સ્કીન - બાલાજી અને લેય્સ કોન્ટ્રાક્ટ)"
+          ],
+          "marketUse": "Contract commercial farming for Balaji Wafers, PepsiCo Lay's, ITC, McCain; high dry matter (>21%), low reducing sugars (<0.1%) preventing brown burnt color during deep frying",
+          "grainType": "Uniform round/oblong tubers, firm white to cream flesh, shallow eyes, minimal water retention"
+        },
+        {
+          "typeName": "Red-Skinned Table Potato (લાલ છાલવાળા બટાટા - ઉત્કૃષ્ટ સંગ્રહ શક્તિ)",
+          "varieties": [
+            "Kufri Lalima",
+            "Kufri Sindhuri (કુફરી સિંદૂરી)",
+            "Kufri Arun",
+            "Kufri Manik (લાલ ગર્ભ એન્ટીઓક્સીડેન્ટ)"
+          ],
+          "marketUse": "High keeping quality and storage resistance, preferred in Eastern India, Bihar, Bengal and export to Gulf/Nepal",
+          "grainType": "Attractive shiny red/crimson skin, medium-deep eyes, dense yellow flesh, strong field dormancy"
+        },
+        {
+          "typeName": "Heat-Tolerant Early Autumn Potato (ગરમી સહન કરતી વહેલી જાતો)",
+          "varieties": [
+            "Kufri Surya (કુફરી સૂર્યા - ઊંચા તાપમાને પણ ગાંઠ બંધાય છે)",
+            "Kufri Lima",
+            "Kufri Kiran"
+          ],
+          "marketUse": "Early autumn planting (September-October) capturing highest pre-season Diwali festival market rates",
+          "grainType": "Oblong medium tubers, smooth skin, excellent tolerance to night temperatures above 20°C"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_50_sweet_potato",
+      "name": "Sweet Potato",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "શક્કરિયાં",
+        "hi": "शकरकंद",
+        "en": "Sweet Potato"
+      },
+      "scientificName": "Ipomoea batatas",
+      "marketTypes": [
+        {
+          "typeName": "White / Cream Flesh Starch Roots (સફેદ / ક્રીમ ગર્ભ - પરંપરાગત મીઠા કંદ અને ફરાળી)",
+          "varieties": [
+            "Gujarat Sweet Potato 1 (GSP 1 - આણંદ કૃષિ યુનિવર્સિટી)",
+            "Sree Bhadra",
+            "Sree Vardhini",
+            "Kalmegh",
+            "Co 3",
+            "Local Desi Shakariya"
+          ],
+          "marketUse": "Boiled table snack, upvas fasting food (ફરાળી પેટીસ, શીરો, સૂકીભાજી), industrial starch, livestock green forage",
+          "grainType": "Fusiform spindle-shaped roots, pink/purple skin, dense firm cream-white flesh, sweet aromatic taste"
+        },
+        {
+          "typeName": "Orange-Fleshed Biofortified Beta-Carotene (કેસરી ગર્ભ - વિટામિન 'A' સુપરફૂડ)",
+          "varieties": [
+            "Bhu Sona (૧૨૦-૧૪૦ ppm બીટા-કેરોટિન સમૃદ્ધ)",
+            "Bhu Kanti",
+            "Sree Kanaka",
+            "ST 14",
+            "Kamala Sundari"
+          ],
+          "marketUse": "Nutritional security, baby food purees, healthy bakery flour, anti-blindness health campaigns, premium urban sales",
+          "grainType": "Bright golden-orange moist flesh, copper skin, high sugar content, velvety smooth texture upon baking"
+        },
+        {
+          "typeName": "Purple-Fleshed Antioxidant Anthocyanin (જાંબલી શક્કરિયાં - કેન્સરરોધી એન્ટીઓક્સીડેન્ટ)",
+          "varieties": [
+            "Bhu Krishna (ભૂ કૃષ્ણા - ગાઢ જાંબલી રંગ)",
+            "Sree Arun"
+          ],
+          "marketUse": "Specialty functional health food, natural food dye, low GI resistant starch, modern gourmet culinary dishes",
+          "grainType": "Vivid dark purple skin and interior flesh, rich in natural anthocyanins and dietary fiber"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_51_cassava_tapioca",
+      "name": "Cassava (Tapioca)",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "કસાવા (સાબુદાણાનો કંદ / ટેપિયોકા)",
+        "hi": "कसावा / साबूदाना कंद / टैपिओका",
+        "en": "Cassava / Tapioca"
+      },
+      "scientificName": "Manihot esculenta",
+      "marketTypes": [
+        {
+          "typeName": "Industrial Starch & Sago Processing (સાબુદાણા અને ઔદ્યોગિક સ્ટાર્ચ ઉત્પાદન)",
+          "varieties": [
+            "H-226 (હાઇબ્રિડ ૨૨૬ - સેલમ સાબુદાણા ઇન્ડસ્ટ્રી)",
+            "H-165",
+            "Sree Jaya",
+            "Sree Vijaya",
+            "Co (Tp) 4",
+            "Co (Tp) 5"
+          ],
+          "marketUse": "Raw material for Sago (સાબુદાણા) processing mills, textile sizing, paper manufacturing, adhesive starch, bioethanol",
+          "grainType": "Heavy cylindrical roots (1.5-3 kg each), thick brown woody bark, snow-white core with 30-34% extractable starch"
+        },
+        {
+          "typeName": "Sweet Table Culinary Varieties (રસોઈ અને વેફર્સ માટે ખાદ્ય કસાવા)",
+          "varieties": [
+            "M-4 (મીઠો કસાવા - ઝીરો કડવાશ)",
+            "Sree Prakash",
+            "Sree Padmanabha",
+            "Sree Rekha"
+          ],
+          "marketUse": "Boiled table dish, spicy cassava chips (ટેપિયોકા વેફર્સ), roasted snacks, traditional south coastal cuisine",
+          "grainType": "Low cyanogenic glucosides (HCN < 50 ppm), soft floury texture when boiled, delicate mild nutty taste"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_52_yam",
+      "name": "Yam",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "રતાળુ (કંદ / ઊંધિયું સ્પેશિયલ)",
+        "hi": "रतालू / याम / खम्हालू",
+        "en": "Greater Yam / Asiatic Yam"
+      },
+      "scientificName": "Dioscorea alata / Dioscorea rotundata",
+      "marketTypes": [
+        {
+          "typeName": "Traditional White Flesh Culinary Yam (સફેદ રતાળુ - કાઠિયાવાડી અને સુરતી ઊંધિયું સ્પેશિયલ)",
+          "varieties": [
+            "Sree Keerthi (ICAR CTCRI)",
+            "Sree Roopa",
+            "Sree Shilpa",
+            "Local Surti Ratalu (સુરતી દેશી રતાળુ)",
+            "Navsari Selection"
+          ],
+          "marketUse": "Crucial authentic vegetable for Gujarati Undhiyu (ઊંધિયું), wedding catering curries, fried ratalu chips, festive cooking",
+          "grainType": "Large club-shaped or cylindrical tubers, rough fibrous dark brown skin, firm dense white flesh with mucilage"
+        },
+        {
+          "typeName": "Vivid Purple Flesh Dioscorea Yam (જાંબલી રતાળુ / જાંબલી કંદ - વિશિષ્ટ સ્વાદ)",
+          "varieties": [
+            "Sree Neelima",
+            "Sree Swathy",
+            "Local Desi Purple Yam"
+          ],
+          "marketUse": "Exotic purple vegetable dishes, royal banquets, sweet candied yam halwa, specialty winter vegetable markets",
+          "grainType": "Dark purple-patterned skin, deep purple to magenta interior rings, high anthocyanin and mineral content"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_53_taro_colocasia",
+      "name": "Taro (Colocasia)",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "અળવી (પત્તરાં અને અળવીની ગાંઠ)",
+        "hi": "अरबी / घुइयां / अरुई",
+        "en": "Taro / Colocasia / Eddoe"
+      },
+      "scientificName": "Colocasia esculenta",
+      "marketTypes": [
+        {
+          "typeName": "Dual-Purpose Leaf & Corm Taro (પત્તરાં અને ગાંઠ ડબલ ઉપયોગી - પાત્રા સ્પેશિયલ)",
+          "varieties": [
+            "Gujarat Taro 1 (GT 1 - આણંદ કૃષિ યુનિવર્સિટી ભલામણ)",
+            "Sree Rashmi",
+            "Sree Pallavi",
+            "Local Patra Alvi (પાત્રાના અળવી)"
+          ],
+          "marketUse": "Broad non-itching leaves used for Gujarati Patra (પાત્રા / વડી), succulent petiole stalks used in dals, mother corms boiled as root vegetable",
+          "grainType": "Broad heart-shaped waxy green leaves with purplish petiole joint, low acridity, clustered medium brown corms"
+        },
+        {
+          "typeName": "Corm-Centric Eddoe Table Taro (અળવીની બજારુ ગાંઠ - બટાટા વિકલ્પ શાકભાજી)",
+          "varieties": [
+            "Muktakeshi (મુક્તાકેશી - ગળામાં ખંજવાળ વગરની શ્રેષ્ઠ જાત)",
+            "Narendra Arbi 1",
+            "Panjab Arvi 1",
+            "Telia Arbi"
+          ],
+          "marketUse": "Fried arbi fry, dahi arbi sabzi, upvas fasting snack, high starch culinary vegetable",
+          "grainType": "Prolific small cylindrical to egg-shaped daughter corms, smooth ringed brown skin, dense white non-acrid flesh"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_54_elephant_foot_yam",
+      "name": "Elephant Foot Yam",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "સૂરણ (જીમીકંદ / કંદમૂળ)",
+        "hi": "सूरन / जिमीकंद / ओल",
+        "en": "Elephant Foot Yam"
+      },
+      "scientificName": "Amorphophallus paeoniifolius",
+      "marketTypes": [
+        {
+          "typeName": "Acrid-Free Non-Itch Commercial Hybrids (મીઠું સૂરણ - ગળામાં ખંજવાળ મુક્ત વાણિજ્યિક જાતો)",
+          "varieties": [
+            "Gajendra (ગજેન્દ્ર - દેશભરમાં નંબર ૧ લોકપ્રિય જાત)",
+            "Sree Padma (ICAR CTCRI)",
+            "Bidhan Kusum",
+            "NDA 9"
+          ],
+          "marketUse": "Gujarati Suran nu Shaak, suran fries, Diwali festival mandatory feast, Ayurvedic therapy for piles, constipation and gut health",
+          "grainType": "Depressed globose corms weighing 3 to 8 kg, warted grey-brown skin, pale yellow to pinkish flesh, zero throat irritation"
+        },
+        {
+          "typeName": "Traditional Desi Long-Shelf Yam (દેશી સૂરણ - ઔષધીય અને અથાણાં)",
+          "varieties": [
+            "Local Desi Santrampur",
+            "Kovvur Local",
+            "Chanchal"
+          ],
+          "marketUse": "Spicy mustard suran pickles (સૂરણનું અથાણું), folk medicine, outstanding keeping quality up to 6 months without rotting",
+          "grainType": "Very dense hard corm, moderate calcium oxalate raphides (requiring tamarind/kokum during cooking), strong medicinal value"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_55_arrowroot",
+      "name": "Arrowroot",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "તવખીર (અરોરૂટ કંદ)",
+        "hi": "अरारोट / तिखुर",
+        "en": "West Indian / East Indian Arrowroot"
+      },
+      "scientificName": "Maranta arundinacea / Curcuma angustifolia",
+      "marketTypes": [
+        {
+          "typeName": "Medicinal & Infant Food Pure White Starch (શુદ્ધ તવખીર પાવડર અને બેબી ફૂડ)",
+          "varieties": [
+            "Sree Raksha (CTCRI)",
+            "Tikhur Local",
+            "Kerala White Selection"
+          ],
+          "marketUse": "Premium therapeutic Tavkhir starch (તવખીર પાવડર) used for soothing gastric ulcers, infant digestive porridge, invalid diets, clear dessert jellies",
+          "grainType": "Fleshy curved spindle rhizomes with papery overlapping scales, brilliant snow-white core with 20-24% ultra-fine starch"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_56_arracha",
+      "name": "Arracha",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "અરાકાચા (પીળા ગાજર જેવું કંદ)",
+        "hi": "अराकाचा",
+        "en": "Arracacha / Peruvian Carrot"
+      },
+      "scientificName": "Arracacia xanthorrhiza",
+      "marketTypes": [
+        {
+          "typeName": "Yellow Culinary Carrot-Potato Hybrid Root (પીળું સ્ટાર્ચ રુટ - સૂપ અને ક્યુલિનરી)",
+          "varieties": [
+            "Yellow Andean",
+            "White Root Cultivar"
+          ],
+          "marketUse": "Gourmet culinary soups, baby food purees, roasted vegetable medleys, delicate combination of celery and roasted chestnut flavor",
+          "grainType": "Clustered tuberous rootstock resembling plump parsnips or pale carrots, fine starch granules that cook rapidly"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_57_jicama_yam_bean",
+      "name": "Jicama (Yam Bean)",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "શંકરકંદ (યામ બીન / પાણી કંદ)",
+        "hi": "मिश्रीकंद / केसरू / याम बीन",
+        "en": "Jicama / Yam Bean / Mexican Turnip"
+      },
+      "scientificName": "Pachyrhizus erosus",
+      "marketTypes": [
+        {
+          "typeName": "Crisp Juicy Salad Turnip Type (સલાડ અને કાચું ખાવા યોગ્ય ક્રિસ્પી કંદ)",
+          "varieties": [
+            "Rajendra Mishrikand 1 (RM 1 - રાજેન્દ્ર કૃષિ યુનિવર્સિટી)",
+            "Local Bihar Mishrikand"
+          ],
+          "marketUse": "Crisp raw refreshing salad slices with lime and chili, stir-fries, low calorie diabetic fruit-snack (rich in inulin prebiotic)",
+          "grainType": "Turnip-shaped globose brown root, crisp translucent watery white flesh with sweet apple-turnip crunch (does not turn brown on cutting)"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_58_tiger_nut",
+      "name": "Tiger Nut",
+      "category": "tubers",
+      "subcategory": "Starch Roots",
+      "localNames": {
+        "gu": "ચીબડી કંદ (ટાઇગર નટ / મોથ કંદ)",
+        "hi": "कशेरू / टाइगर नट / चुफा",
+        "en": "Tiger Nut / Chufa / Earth Almond"
+      },
+      "scientificName": "Cyperus esculentus var. sativus",
+      "marketTypes": [
+        {
+          "typeName": "Edible Sweet Earth Almond (ખાદ્ય મીઠા કંદ - હોર્ચાટા ડ્રિંક અને સુપરફૂડ)",
+          "varieties": [
+            "Long Tuber Chufa",
+            "Round Tuber Chufa"
+          ],
+          "marketUse": "Horchata de Chufa (non-dairy nut milk), gluten-free tiger nut flour, raw snacking, high fiber prebiotic resistant starch",
+          "grainType": "Small wrinkled marble-sized underground tubers with dark striations, sweet nutty creamy taste"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_59_cotton_upland_sea_island",
+      "name": "Cotton (Upland, Sea Island)",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "કપાસ (રૂ / સફેદ સોનું)",
+        "hi": "कपास (रुई)",
+        "en": "Cotton (Upland & Sea Island)"
+      },
+      "scientificName": "Gossypium hirsutum / Gossypium barbadense",
+      "marketTypes": [
+        {
+          "typeName": "Long Staple Transgenic Bt Hybrids (લાંબા તારવાળા બીટી કપાસ હાઇબ્રિડ - ૧૫૦ થી ૧૮૦ દિવસ)",
+          "varieties": [
+            "RCH 2 Bt (રાશિ ૨ - ઐતિહાસિક લોકપ્રિય)",
+            "Bollgard II Hybrids",
+            "Gujarat Cotton Hybrid 8 (G.Cot.Hy 8 - આણંદ/જૂનાગઢ)",
+            "Ajit 155",
+            "Kaveri Jadu",
+            "ATM Bt",
+            "Jai Bt"
+          ],
+          "marketUse": "Textile spinning mills, medium-to-fine yarn (30s to 50s count), garment manufacturing, raw cotton bales export to Bangladesh & Vietnam",
+          "fiberType": "28 to 32 mm long staple, strong tensile strength (28-30 g/tex), micronaire 3.8-4.5, high ginning outturn (34-37%)"
+        },
+        {
+          "typeName": "Extra-Long Staple (ELS) / Sea Island Type (અતિ લાંબા રેશમી તાર - સુવિન અને બારબાડેન્સ)",
+          "varieties": [
+            "Suvin (સુવિન - ભારતનો સર્વોચ્ચ ગુણવત્તાયુક્ત રેશમી કપાસ)",
+            "DCH 32",
+            "MCU 5",
+            "Sujata"
+          ],
+          "marketUse": "Luxury high-count fabrics (80s to 120s count), superfine formal shirts, handkerchiefs, export premium competing with Egyptian Giza cotton",
+          "fiberType": "Extra-long staple (36-40 mm), creamy white silk luster, exceptional fineness (micronaire 3.0-3.4)"
+        },
+        {
+          "typeName": "Desi Rainfed Short Staple (દેશી કાલા કપાસ - ભાલ અને કાનમ વિશિષ્ટ)",
+          "varieties": [
+            "G.Cot 13 (કાનમ ટ્રેક્ટ)",
+            "G.Cot 21",
+            "Wagad (ભાલ કાલા કપાસ - વીઘે શૂન્ય પિયત)",
+            "V 797",
+            "Jayadhar"
+          ],
+          "marketUse": "Surgical sterile absorbent cotton, heavy canvas, denim blending, coarse organic khadi, traditional mattress stuffing",
+          "fiberType": "Short coarse staple (18-22 mm), very high drought and salinity resilience, rainfed zero-irrigation ecology"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_60_jute",
+      "name": "Jute",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "શણ (પટસન / સોનેરી રેસા)",
+        "hi": "जूट / पटसन",
+        "en": "Jute (Golden Fiber)"
+      },
+      "scientificName": "Corchorus olitorius / Corchorus capsularis",
+      "marketTypes": [
+        {
+          "typeName": "Tossa Jute - Golden Soft Fiber (ટોસા શણ - સોનેરી મજબૂત રેસા)",
+          "varieties": [
+            "JRO 524 (Navin - સૌથી લોકપ્રિય રાષ્ટ્રીય જાત)",
+            "JRO 204",
+            "JRO 8432",
+            "Ira (JRO 2413)",
+            "Tarun"
+          ],
+          "marketUse": "Gunny bags (બારદાન / અનાજના કોથળા), burlap sacks, geo-textiles for soil erosion, shopping bags, carpet backing yarn",
+          "fiberType": "Lustrous golden-yellow to copper soft bast fibers, high tensile strength, 2.5-3.5 meter tall unbranched stalks"
+        },
+        {
+          "typeName": "White Jute - Waterlogging Resistant (સફેદ શણ - નીચાણવાળી પાણી ભરાતી જમીન)",
+          "varieties": [
+            "JRC 321 (Sonali)",
+            "JRC 212",
+            "JRC 517",
+            "Bidhan Jute 1"
+          ],
+          "marketUse": "Twines, ropes, coarse packaging fabric, paper pulp blending, flood-prone alluvial belts",
+          "fiberType": "Silvery-white coarser fibers, lower strength than Tossa, but withstands standing water during monsoon"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_61_hemp",
+      "name": "Hemp",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "ઔદ્યોગિક ભાંગ (હેમ્પ રેસા)",
+        "hi": "औद्योगिक भांग / हेम्प",
+        "en": "Industrial Hemp"
+      },
+      "scientificName": "Cannabis sativa subsp. sativa",
+      "marketTypes": [
+        {
+          "typeName": "Industrial Bast Fiber & Hurds (ઔદ્યોગિક કાપડ, દોરડાં અને હેમ્પક્રિટ - THC < 0.3%)",
+          "varieties": [
+            "Fedora 17 (પ્રમાણિત ઔદ્યોગિક જાત)",
+            "Santhica 27",
+            "USO 31",
+            "Futura 75"
+          ],
+          "marketUse": "Eco-textiles (canvas, denim, durable workwear), bio-composites for automobile interior panels, hempcrete green insulation blocks, biodegradable plastics",
+          "fiberType": "Extraordinarily strong bast fiber, natural anti-microbial and UV resistance, high biomass hurds"
+        },
+        {
+          "typeName": "Dual-Purpose Seed & Biomass (હેમ્પ સીડ તેલ, પ્રોટીન અને ફાઇબર)",
+          "varieties": [
+            "Finola",
+            "Carmagnola"
+          ],
+          "marketUse": "Hemp seed hearts, cold-pressed omega-rich edible oil, plant-based protein powders, livestock bedding",
+          "fiberType": "Medium fiber length with high seed yield, rapid 90-100 day maturity"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_62_sisal",
+      "name": "Sisal",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "કેતકી (સીસલ / કુંવાર જેવા રેસા)",
+        "hi": "सीसल / केतकी",
+        "en": "Sisal Agave"
+      },
+      "scientificName": "Agave sisalana",
+      "marketTypes": [
+        {
+          "typeName": "Commercial Hard Leaf Fiber (દરિયાઈ દોરડાં, ચટાઈ અને વાયર કોર)",
+          "varieties": [
+            "Hybrid 11648 (ICAR સિસલ રિસર્ચ સ્ટેશન)",
+            "Agave sisalana Local",
+            "Agave veracruz"
+          ],
+          "marketUse": "Marine ship mooring cables, elevator wire rope cores, agricultural baler twine, dartboards, floor carpets, bio-fencing borders",
+          "fiberType": "Stiff creamy-white glossy leaf fibers (1 to 1.5 m length), extreme saltwater and stretch resistance"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_63_abaca_manila_hemp",
+      "name": "Abaca (Manila Hemp)",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "મનિલા હેમ્પ (એબાકા કેળા રેસા)",
+        "hi": "अबाका / मनीला हेम्प",
+        "en": "Abaca / Manila Hemp"
+      },
+      "scientificName": "Musa textilis",
+      "marketTypes": [
+        {
+          "typeName": "High-Tensile Specialty Paper & Marine Grade (વિશ્વનો સૌથી મજબૂત કુદરતી કેળા રેસો)",
+          "varieties": [
+            "Tangongon",
+            "Bongolanon",
+            "Maguindanao"
+          ],
+          "marketUse": "Currency banknote paper (રૂપિયા/ડોલરની નોટો), tea filter bags, surgical masks, marine ship hawsers, automotive dashboard composites",
+          "fiberType": "Highest mechanical tensile strength among plant fibers, lightweight, zero rotting in ocean saltwater"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_64_coir",
+      "name": "Coir",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "નાળિયેરના કાથા (કાથી / કોકોપીટ)",
+        "hi": "नारियल रेशा / कॉयर / कोकोपीट",
+        "en": "Coir / Coconut Fiber"
+      },
+      "scientificName": "Cocos nucifera (Mesocarp)",
+      "marketTypes": [
+        {
+          "typeName": "White Fiber - Coastal Retting Grade (સફેદ કાથી - ખાડીના પાણીમાં સડાવીને કાઢેલ રેસા)",
+          "varieties": [
+            "Mahuva Coastal Grade (મહુવા-વેરાવળ દરિયાકાંઠો)",
+            "Kerala Anjengo Retting Line"
+          ],
+          "marketUse": "Hand-spun fine coir yarn, luxury door mats (ચટાઈ), geo-textile soil erosion control blankets, marine cordage",
+          "fiberType": "Flexible golden-white smooth fiber extracted from green husks after saltwater retting"
+        },
+        {
+          "typeName": "Brown Fiber & Washed Cocopeat (બ્રાઉન કાથા અને ઓર્ગેનિક કોકોપીટ બ્લોક)",
+          "varieties": [
+            "Mechanical Decorticated Grade"
+          ],
+          "marketUse": "Coir spring mattresses, rubberized automobile seats, export coir pith blocks (Low EC < 0.5) for greenhouse horticulture seedling media",
+          "fiberType": "Stiff dark-brown lignin-rich fibers (40-45% lignin), resilient to rot and fungal attack"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_65_kenaf",
+      "name": "Kenaf",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "અંબાડી (મેસ્તા / ખાટી ભાજીના છોડના રેસા)",
+        "hi": "पटुआ / मेસ્તા / अम्बाडी",
+        "en": "Kenaf / Mesta"
+      },
+      "scientificName": "Hibiscus cannabinus / Hibiscus sabdariffa",
+      "marketTypes": [
+        {
+          "typeName": "Cannabinus Fast-Growing Bast Fiber (શણનો શ્રેષ્ઠ વિકલ્પ - કાગળ અને દોરડાં)",
+          "varieties": [
+            "AMC 108",
+            "HC 583",
+            "MT 150"
+          ],
+          "marketUse": "Jute blending in sack manufacturing, paper pulp, eco-composites, sour tender leaves cooked as vegetable curry (ખાટી ભાજી)",
+          "fiberType": "Light cream bast fibers, 1.8-2.5 m tall stalks, fast 100-day maturity in rainfed semi-arid soils"
+        },
+        {
+          "typeName": "Sabdariffa Drought-Hardy Roselle (લાલ અંબાડી - દુષ્કાળ પ્રતિરોધક)",
+          "varieties": [
+            "AMV 5",
+            "HS 4288",
+            "GR 27"
+          ],
+          "marketUse": "Arid zone coarse cordage, edible red tart calyces used for herbal hibiscus tea, jam and syrups",
+          "fiberType": "Coarser fiber, excellent tolerance to poor sandy soils and root-knot nematodes"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_66_flax_fiber",
+      "name": "Flax Fiber",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "લિનેન ફાઇબર (અળસીના રેસા)",
+        "hi": "अलसी रेशा / लिनेન",
+        "en": "Flax Fiber / Linen"
+      },
+      "scientificName": "Linum usitatissimum",
+      "marketTypes": [
+        {
+          "typeName": "Dual-Purpose Seed & Fine Linen Fiber (લિનેન કાપડ અને અળસી બીજ બંને)",
+          "varieties": [
+            "JRF 2 (CRIJAF પ્રમાણિત)",
+            "Tiara",
+            "Gaurav Fiber Selection",
+            "Electra"
+          ],
+          "marketUse": "Premium breathable summer linen shirts, luxury home furnishings, artist oil painting canvas, banknote security papers",
+          "fiberType": "Silky soft, high natural luster, absorbs up to 20% moisture without feeling damp, crisp cool hand-feel"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_67_sunn_hemp",
+      "name": "Sunn Hemp",
+      "category": "fiber_industrial",
+      "subcategory": "Fibers",
+      "localNames": {
+        "gu": "સણ (લીલા ખાતર અને દોરડાંનો પાક)",
+        "hi": "सनई / सण",
+        "en": "Sunn Hemp"
+      },
+      "scientificName": "Crotalaria juncea",
+      "marketTypes": [
+        {
+          "typeName": "High-Grade Cordage & Paper Bast (સણના મજબૂત રેસા - સિગારેટ પેપર અને દોરડાં)",
+          "varieties": [
+            "K 12 (Yellow)",
+            "Swastik (PA 4)",
+            "Ankur",
+            "Shailesh"
+          ],
+          "marketUse": "Cigarette tissue paper, marine fishing twines, traditional charpoy bedding rope (ખાટલા ભરવાની મજબૂત કાથી), handicrafts",
+          "fiberType": "Very strong bast fiber with high cellulose content, zero rotting in water, light grey-golden"
+        },
+        {
+          "typeName": "Dual-Purpose Green Manure & Biomass (લીલો ખાતર - જમીન સુધારક)",
+          "varieties": [
+            "Local Gujarat Sann (દેશી સણ)",
+            "CO 1"
+          ],
+          "marketUse": "Green manuring plowed in soil at 45 days (adds 80-100 kg atmospheric Nitrogen/ha), suppresses root-knot nematodes and builds humus",
+          "fiberType": "Rapid vegetative biomass, succulent leafy stalks decomposing in 10-15 days"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_68_sugarcane",
+      "name": "Sugarcane",
+      "category": "fiber_industrial",
+      "subcategory": "Industrial Latex & Resins",
+      "localNames": {
+        "gu": "શેરડી",
+        "hi": "गन्ना",
+        "en": "Sugarcane"
+      },
+      "scientificName": "Saccharum officinarum",
+      "marketTypes": [
+        {
+          "typeName": "Early Maturing High-Sugar Commercial (વહેલી પાકતી સુગર ફેક્ટરી જાતો - ૧૦ થી ૧૧ મહિના)",
+          "varieties": [
+            "CoC 671 (દક્ષિણ ગુજરાતની સુવર્ણ શેરડી - ૧૨-૧૩% શર્કરા)",
+            "Co 0238 (કરણ ૪ - ઉત્તર ભારત રેકોર્ડ ઉત્પાદક)",
+            "Co 94012 (ફૂલે સાવિત્રી)",
+            "Co 86032 (નયના - સાર્વત્રિક સફળ જાત)"
+          ],
+          "marketUse": "Commercial sugar mills (બારડોલી, ગણદેવી, મહુવા, કોડીનાર સુગર ફેક્ટરી), ethanol bio-refineries, fresh sweet sugarcane juice",
+          "fiberType": "Medium thick stalks, yellowish-green to purple rind, soft rind with high juicy sucrose (Brix 20-22%), high tillering"
+        },
+        {
+          "typeName": "Mid-Late Heavy Cane Ratoon Specialist (મધ્યમ-મોડી જાતો - ઉત્કૃષ્ટ કૂંચી/રાયતણ અને દેશી ગોળ)",
+          "varieties": [
+            "CoM 0265 (ફૂલે ૨૬૫ - રાક્ષસી વજન ૧૫૦ ટન/હેક્ટર)",
+            "Gujarat Sugarcane 5 (GS 5 - નવસારી કૃષિ યુનિવર્સિટી)",
+            "Co 99004",
+            "MS 10001"
+          ],
+          "marketUse": "Authentic organic chemical-free jaggery (દેશી ગોળ / રાબડા), multi-cut ratoon management (કૂંચી પાક), bagasse power co-generation",
+          "fiberType": "Extra-thick solid heavy canes, non-lodging erect habit, high red rot resistance, heavy biomass"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_69_sugar_beet",
+      "name": "Sugar Beet",
+      "category": "fiber_industrial",
+      "subcategory": "Industrial Latex & Resins",
+      "localNames": {
+        "gu": "સુગર બીટ (ખાંડનું બીટ)",
+        "hi": "चुकंदर / शुगर बीट",
+        "en": "Sugar Beet"
+      },
+      "scientificName": "Beta vulgaris subsp. vulgaris var. altissima",
+      "marketTypes": [
+        {
+          "typeName": "Tropical High Sucrose Hybrids (ઉષ્ણકટિબંધીય શિયાળુ સુગર બીટ - ૫ થી ૬ મહિના)",
+          "varieties": [
+            "Shubhra (શુભ્રા - ભારત અનુકૂળ)",
+            "Indus",
+            "Cauvery",
+            "Magnolia",
+            "SV 894"
+          ],
+          "marketUse": "Sugar production in saline and water-scarce coastal soils (uses 60% less water than sugarcane), ethanol distillery, beet pulp cattle feed",
+          "fiberType": "Large conical silvery-white fleshy taproot (1.2-2.0 kg), 16-18% sucrose content, high salt tolerance"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_70_para_rubber_natural_rubber",
+      "name": "Para Rubber (Natural Rubber)",
+      "category": "fiber_industrial",
+      "subcategory": "Industrial Latex & Resins",
+      "localNames": {
+        "gu": "કુદરતી રબરનું વૃક્ષ",
+        "hi": "प्राकृतिक रबर",
+        "en": "Para Rubber (Natural Rubber)"
+      },
+      "scientificName": "Hevea brasiliensis",
+      "marketTypes": [
+        {
+          "typeName": "High-Yielding Latex Clones (ઊંચું દૂધ આપતા રબર ક્લોન - ૭ વર્ષે ટેપિંગ શરૂ)",
+          "varieties": [
+            "RRII 105 (ભારતનો સૌથી સફળ રાષ્ટ્રીય ક્લોન)",
+            "RRII 414",
+            "RRII 430",
+            "PB 260",
+            "GT 1"
+          ],
+          "marketUse": "Automotive radial tires, aircraft landing tires, surgical gloves, conveyor belts, Ribbed Smoked Sheets (RSS 4), latex foam mattresses",
+          "fiberType": "Dry Rubber Content (DRC 35-40%), extreme elasticity and high tensile rebound resilience, 25-30 year productive tapping life"
+        }
+      ],
+      "status": "card_ready"
+    },
+    {
+      "id": "crop_71_tobacco",
+      "name": "Tobacco",
+      "category": "fiber_industrial",
+      "subcategory": "Industrial Latex & Resins",
+      "localNames": {
+        "gu": "તમાકુ (બીડી તમાકુ અને કલકત્તી)",
+        "hi": "तंबाकू",
+        "en": "Tobacco"
+      },
+      "scientificName": "Nicotiana tabacum / Nicotiana rustica",
+      "marketTypes": [
+        {
+          "typeName": "Gujarat Bidi Tobacco (ગુજરાત બીડી તમાકુ - ચરોતરનો ગોલ્ડન પાક)",
+          "varieties": [
+            "Anand 119 (A 119 - આણંદ કૃષિ યુનિવર્સિટી મુખ્ય ભલામણ)",
+            "Gujarat Tobacco 4 (GT 4)",
+            "GT 5",
+            "GT 7 (મોલો પ્રતિરોધક)",
+            "GT 9",
+            "GABT 11"
+          ],
+          "marketUse": "Bidi rolling flake tobacco, chewing blends, nicotine sulfate botanical insecticide manufacture, Charotar mandi auction trade",
+          "fiberType": "Thick puckered leaves developing prominent golden-yellow spangles upon maturity, 6-8% nicotine, strong pungent aroma"
+        },
+        {
+          "typeName": "Rustica / Calcuttia Hookah & Snuff (કલકત્તી તમાકુ - હુક્કો અને છીંકણી)",
+          "varieties": [
+            "Gujarat Calcuttia 1 (GC 1)",
+            "Dharmaj Selection",
+            "Motihari Local"
+          ],
+          "marketUse": "Traditional hookah paste, nasal snuff (છીંકણી), high nicotine extraction",
+          "fiberType": "Dark green thick leathery ovate leaves, extra-high nicotine content (8-10%), dwarf stocky plants"
+        },
+        {
+          "typeName": "Virginia Flue-Cured (VFC Export Tobacco - સિગરેટ તમાકુ)",
+          "varieties": [
+            "Kanchan",
+            "Siri",
+            "Hema",
+            "Bhavya"
+          ],
+          "marketUse": "Cigarette blends, barn flue-curing, international export auctions",
+          "fiberType": "Large thin lemon-yellow to bright orange cured leaves, mild nicotine, high pleasant aroma"
+        }
+      ],
+      "status": "card_ready"
+    },
   {
     "id": "crop_72_tea",
     "name": "Tea",
@@ -3559,7 +4565,7 @@ export const MASTER_CROPS = [
   }
 ];
 
-const STORAGE_KEY = 'khet_kharcha_user_crop_library_v4';
+const STORAGE_KEY = 'khet_kharcha_user_crop_library_v7';
 
 export const getLibraryCrops = () => {
   try {

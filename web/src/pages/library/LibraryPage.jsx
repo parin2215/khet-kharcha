@@ -399,6 +399,39 @@ export default function LibraryPage() {
         </div>
       )}
 
+      {selectedCategory === 'oilseeds' && (
+        <div className="bg-amber-50/90 border border-yellow-300 bg-linear-to-r from-amber-50/90 to-yellow-50/90 rounded-2xl p-4 flex items-center justify-between gap-4 text-xs text-amber-950 shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>
+              <strong>🛢️ Oilseed Crops Directory:</strong> All 12 oilseed crops below are equipped with certified commercial cultivars (GG-20 & GJG-22 Groundnut, GCH-7/9/11 Castor, GM-3 & GDM-4 Mustard, GT-1/5 & GT-10 Sesame, JS-335 Soybean, KBSH-41 Sunflower) and complete step-by-step university cultivation packages (જીપ્સમ/સલ્ફર ખાતર વ્યવસ્થાપન, FIR બીજ માવજત, નીંદણ નિયંત્રણ અને રોગ-જીવાત IPM)!
+            </span>
+          </div>
+        </div>
+      )}
+
+      {selectedCategory === 'tubers' && (
+        <div className="bg-amber-50/90 border border-orange-300 bg-linear-to-r from-orange-50/90 via-amber-50/90 to-yellow-50/90 rounded-2xl p-4 flex items-center justify-between gap-4 text-xs text-amber-950 shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-orange-600 shrink-0" />
+            <span>
+              <strong>🥔 Tubers & Root Crops Directory:</strong> All 10 tuber & root crops below are equipped with certified cultivars (Kufri Pukhraj & Chipsona 1/3 Potato, GSP-1 & Bhu Sona Sweet Potato, Gajendra Suran, GT-1 Taro/Alvi, Surti Ratalu) and complete step-by-step university cultivation packages (માટી ચડાવવી, કંદ ક્યોરિંગ, ખાતર વ્યવસ્થાપન, વેલ ઉથલાવવી અને પાછોતરો સુકારો નિયંત્રણ)!
+            </span>
+          </div>
+        </div>
+      )}
+
+      {selectedCategory === 'fiber_industrial' && (
+        <div className="bg-sky-50/90 border border-sky-300 bg-linear-to-r from-sky-50/90 via-cyan-50/90 to-blue-50/90 rounded-2xl p-4 flex items-center justify-between gap-4 text-xs text-sky-950 shadow-2xs">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-sky-600 shrink-0" />
+            <span>
+              <strong>🧵 Fiber & Industrial Crops Directory:</strong> All 13 fiber & industrial crops below are equipped with certified cultivars (RCH-2 Bt & Suvin Cotton, CoC-671 & Co-0238 Sugarcane, Anand-119 & GC-1 Tobacco, JRO-524 Jute, Sunn Hemp, Coir) and complete step-by-step university cultivation packages (ડોકા કાપણી/ખીલ તોડવી, ગુલાબી ઈયળ ફેરોમોન ટ્રેપ, શેરડીમાં મોટી માટી ચડાવવી, તમાકુમાં દિવેલી ખોળ વ્યવસ્થાપન અને રેસા સડાવવાની પદ્ધતિ)!
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Crops Cards Grid */}
       {filteredCrops.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
