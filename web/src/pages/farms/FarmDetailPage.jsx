@@ -63,7 +63,7 @@ export default function FarmDetailPage() {
   const navigate = useNavigate();
   
   const { profile } = useAuthStore();
-  const { farms, fetchFarms, selectedFarm, setSelectedFarm, editFarm, addFarmHistory, removeFarm } = useFarmStore();
+  const { farms, fetchFarms, selectedFarm, setSelectedFarm, editFarm, addFarmHistory, deleteFarmHistory, removeFarm } = useFarmStore();
   const { crops, fetchCrops } = useCurrentCropStore();
   const { weighingUnit } = useSettingsStore();
 
@@ -78,6 +78,8 @@ export default function FarmDetailPage() {
   const [isEditFarmModalOpen, setIsEditFarmModalOpen] = useState(false);
   const [isAddHistoryModalOpen, setIsAddHistoryModalOpen] = useState(false);
   const [selectedFarmoHistory, setSelectedFarmoHistory] = useState(null);
+  const [historyToDelete, setHistoryToDelete] = useState(null);
+  const [isDeletingHistory, setIsDeletingHistory] = useState(false);
 
   // Edit Farm Form state
   const [farmName, setFarmName] = useState('');
@@ -337,6 +339,23 @@ export default function FarmDetailPage() {
     setHistNotes('');
   };
 
+  const handleDeleteHistory = async () => {
+    if (!historyToDelete || !selectedFarm) return;
+    setIsDeletingHistory(true);
+    try {
+      await deleteFarmHistory(selectedFarm.id, historyToDelete.id, historyToDelete);
+      setToastMsg('Historical crop record deleted successfully!');
+      setToastType('success');
+      setHistoryToDelete(null);
+    } catch (err) {
+      console.error('Failed to delete history record:', err);
+      setToastMsg('Failed to delete record. Please try again.');
+      setToastType('error');
+    } finally {
+      setIsDeletingHistory(false);
+    }
+  };
+
   if (!selectedFarm) {
     return (
       <div className="p-8 text-center text-stone-400">
@@ -580,11 +599,24 @@ export default function FarmDetailPage() {
                     key={h.id} 
                     className="bg-white border border-stone-200/70 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
                   >
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <SeasonBadge seasonId={h.season} />
-                        <span className="text-xs font-bold text-stone-400">{h.year} Season</span>
-                        <span className="text-xs font-semibold text-stone-400">• Harvested {formatDate(h.harvestDate)}</span>
+                    <div className="space-y-2 flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <SeasonBadge seasonId={h.season} />
+                          <span className="text-xs font-bold text-stone-400">{h.year} Season</span>
+                          <span className="text-xs font-semibold text-stone-400">• Harvested {formatDate(h.harvestDate)}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setHistoryToDelete(h);
+                          }}
+                          className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition cursor-pointer shrink-0"
+                          title="Delete Harvest Record"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
 
                       <h4 className="text-xl font-extrabold text-stone-900">
@@ -1384,6 +1416,77 @@ export default function FarmDetailPage() {
           crop={selectedFarmoHistory}
           onClose={() => setSelectedFarmoHistory(null)}
         />
+      )}
+
+      {/* Delete Historical Crop Confirmation Modal */}
+      {historyToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4">
+            <div className="flex items-start justify-between">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <button
+                type="button"
+                onClick={() => setHistoryToDelete(null)}
+                className="p-1 text-stone-400 hover:text-stone-700 rounded-lg cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-extrabold text-stone-900">
+                Delete Historical Crop Record?
+              </h3>
+              <p className="text-xs text-stone-500 mt-1">
+                Are you sure you want to permanently delete this archived harvest record from <strong>{selectedFarm?.name}</strong>?
+              </p>
+            </div>
+
+            {/* Record Preview HUD */}
+            <div className="p-3.5 bg-stone-50 border border-stone-200/80 rounded-2xl space-y-1.5 text-xs">
+              <div className="flex justify-between">
+                <span className="text-stone-400 font-semibold">Crop Name:</span>
+                <strong className="text-stone-900">{historyToDelete.cropName} {historyToDelete.variety ? `(${historyToDelete.variety})` : ''}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-stone-400 font-semibold">Season / Year:</span>
+                <strong className="text-stone-800 capitalize">{historyToDelete.season} {historyToDelete.year}</strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-stone-400 font-semibold">Total Yield:</span>
+                <strong className="text-amber-800">
+                  {historyToDelete.yieldAmount} {getWeightUnitLabel(historyToDelete.yieldUnit || 'quintal', currentLang, 'short')}
+                </strong>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-stone-400 font-semibold">Net Profit:</span>
+                <strong className="text-emerald-700">+{formatINR(historyToDelete.netProfit || 0)}</strong>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setHistoryToDelete(null)}
+                disabled={isDeletingHistory}
+                className="flex-1 py-3 text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-xl transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteHistory}
+                disabled={isDeletingHistory}
+                className="flex-1 py-3 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shadow-red-200 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                {isDeletingHistory ? 'Deleting...' : 'Yes, Delete Record'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>

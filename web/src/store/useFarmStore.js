@@ -397,12 +397,13 @@ export const useFarmStore = create((set, get) => ({
     }
   },
 
-  addFarmHistory: (farmId, historyRecord) => {
+  addFarmHistory: async (farmId, historyRecord) => {
     const currentFarms = get().farms;
+    let newHistory = [];
     const updated = currentFarms.map(f => {
       if (f.id === farmId) {
         const existingHistory = f.cropHistory || [];
-        const newHistory = [historyRecord, ...existingHistory];
+        newHistory = [historyRecord, ...existingHistory];
         return {
           ...f,
           cropHistory: newHistory,
@@ -420,6 +421,48 @@ export const useFarmStore = create((set, get) => ({
 
     const ownerId = updated[0]?.ownerId || 'default';
     localStorage.setItem(`khet_kharcha_farms_${ownerId}`, JSON.stringify(updated));
+
+    try {
+      await updateFarm(farmId, { cropHistory: newHistory, currentCrop: '' });
+    } catch (e) {
+      console.warn('Firestore updateFarm add cropHistory failed, saved locally:', e);
+    }
+  },
+
+  deleteFarmHistory: async (farmId, historyId, targetRecord = null) => {
+    const currentFarms = get().farms;
+    let newHistory = [];
+    const updated = currentFarms.map(f => {
+      if (f.id === farmId) {
+        newHistory = (f.cropHistory || []).filter(h => {
+          if (historyId && h.id) return h.id !== historyId;
+          if (targetRecord) {
+            return !(h.cropName === targetRecord.cropName && h.harvestDate === targetRecord.harvestDate);
+          }
+          return true;
+        });
+        return {
+          ...f,
+          cropHistory: newHistory
+        };
+      }
+      return f;
+    });
+
+    const updatedSelected = get().selectedFarm && get().selectedFarm.id === farmId
+      ? { ...get().selectedFarm, cropHistory: newHistory }
+      : get().selectedFarm;
+
+    set({ farms: updated, selectedFarm: updatedSelected });
+
+    const ownerId = updated[0]?.ownerId || 'default';
+    localStorage.setItem(`khet_kharcha_farms_${ownerId}`, JSON.stringify(updated));
+
+    try {
+      await updateFarm(farmId, { cropHistory: newHistory });
+    } catch (e) {
+      console.warn('Firestore updateFarm cropHistory delete failed, saved locally:', e);
+    }
   },
 
   removeFarm: async (farmId) => {
