@@ -40,7 +40,8 @@ import Toast from '../../components/Toast.jsx';
 import HisabFarmoModal from '../../components/HisabFarmoModal.jsx';
 
 export default function CurrentStatePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n?.language || 'gu';
   const navigate = useNavigate();
   const location = useLocation();
   const { profile } = useAuthStore();
@@ -596,7 +597,7 @@ export default function CurrentStatePage() {
                       <div className="text-right">
                         <span className="text-[10px] text-stone-400 font-bold block uppercase">{t('farms.targetYield', 'Target')}</span>
                         <span className="text-xs font-extrabold text-stone-700">
-                          {crop.targetYield} {getWeightUnitLabel(crop.yieldUnit || weighingUnit || 'mann', i18n.language, 'short')}
+                          {crop.targetYield} {getWeightUnitLabel(crop.yieldUnit || weighingUnit || 'mann', currentLang, 'short')}
                         </span>
                       </div>
                     )}

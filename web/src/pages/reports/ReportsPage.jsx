@@ -458,7 +458,7 @@ export default function ReportsPage() {
                           </td>
                           <td className="p-3 text-stone-850">
                             {latestHarvest 
-                              ? `${Math.round(convertWeight(latestHarvest.totalYield * (partner.partnerSharePercent || 50) / 100, latestHarvest.yieldUnit || 'quintal', weighingUnit || 'mann'))} ${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')}` 
+                              ? `${Math.round(convertWeight(latestHarvest.totalYield * (partner.partnerSharePercent || 50) / 100, latestHarvest.yieldUnit || 'quintal', weighingUnit || 'mann'))} ${getWeightUnitLabel(weighingUnit || 'mann', i18n?.language || 'gu', 'short')}` 
                               : 'No harvest yet'}
                           </td>
                         </tr>

@@ -33,7 +33,8 @@ import LoadingSkeleton from '../../components/LoadingSkeleton.jsx';
 import { getCategoryColor, getCategoryById, EXPENSE_CATEGORIES } from '../../../../shared/constants/categories.js';
 
 export default function DashboardPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n?.language || 'gu';
   const navigate = useNavigate();
   const { profile } = useAuthStore();
   const { farms, fetchFarms } = useFarmStore();
@@ -347,15 +348,15 @@ export default function DashboardPage() {
           {/* Yield Progress */}
           <ChartCard 
             title="Yield Progress" 
-            subtitle={`Crop production volume (${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')}) over time`}
+            subtitle={`Crop production volume (${getWeightUnitLabel(weighingUnit || 'mann', currentLang, 'short')}) over time`}
           >
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={trendData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                 <XAxis dataKey="name" stroke="#888888" fontSize={11} />
                 <YAxis stroke="#888888" fontSize={11} />
-                <Tooltip cursor={{ fill: '#f5f5f4' }} formatter={(val) => [`${val} ${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')}`, 'Yield Volume']} />
-                <Bar dataKey="yield" name={`Yield (${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')})`} fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={30} />
+                <Tooltip cursor={{ fill: '#f5f5f4' }} formatter={(val) => [`${val} ${getWeightUnitLabel(weighingUnit || 'mann', currentLang, 'short')}`, 'Yield Volume']} />
+                <Bar dataKey="yield" name={`Yield (${getWeightUnitLabel(weighingUnit || 'mann', currentLang, 'short')})`} fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={30} />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>

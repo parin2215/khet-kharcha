@@ -307,7 +307,7 @@ _Generated via Khet Kharcha App_`;
 
           <div>
             <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-              Mandi Rate (₹ per {getWeightUnitLabel(yieldUnit, i18n.language, 'full')} — optional)
+              Mandi Rate (₹ per {getWeightUnitLabel(yieldUnit, i18n?.language || 'gu', 'full')} — optional)
             </label>
             <div className="relative">
               <span className="absolute left-3 top-3 text-stone-400 text-sm font-bold">₹</span>
