@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Khet Kharcha</string>
+    <string name="title_activity_main">Khet Kharcha</string>
+    <string name="package_name">com.khetkharcha.app</string>
+    <string name="custom_url_scheme">com.khetkharcha.app</string>
+</resources>

@@ -1,3 +1,4 @@
+import { saveUserCropLibraryToCloud, getUserCropLibraryFromCloud } from '../../../shared/services/currentCropService.js';
 /**
  * Crop Cultivation Library Catalog
  * Contains complete master catalog of 241 agricultural crops.
@@ -4595,9 +4596,45 @@ export const getLibraryCrops = () => {
   }
 };
 
-export const saveLibraryCrops = (crops) => {
+export const syncLibraryCropsFromCloud = async (ownerId) => {
+  if (!ownerId || ownerId === 'default' || ownerId === 'demo_farmer_101') return getLibraryCrops();
+  try {
+    const cloudCrops = await getUserCropLibraryFromCloud(ownerId);
+    if (cloudCrops && Array.isArray(cloudCrops) && cloudCrops.length > 0) {
+      const merged = MASTER_CROPS.map(mc => {
+        const userCrop = cloudCrops.find(p => p.id === mc.id || p.name === mc.name);
+        if (!userCrop) return mc;
+        return {
+          ...mc,
+          ...userCrop,
+          marketTypes: (userCrop.marketTypes && userCrop.marketTypes.length > 0)
+            ? userCrop.marketTypes
+            : mc.marketTypes
+        };
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      return merged;
+    }
+  } catch (e) {
+    console.warn('Cloud library sync failed, using local cache:', e);
+  }
+  return getLibraryCrops();
+};
+
+export const saveLibraryCrops = (crops, ownerId = null) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(crops));
+    
+    // Cloud sync for authenticated user
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const customizedOnly = crops.filter(c => 
+        (c.marketTypes && c.marketTypes.some(m => m.userPractices || m.custom)) ||
+        c.userNotes
+      );
+      saveUserCropLibraryToCloud(ownerId, customizedOnly).catch(e => 
+        console.warn('Failed to sync crop library to cloud:', e)
+      );
+    }
   } catch (e) {
     console.error('Error saving library crops:', e);
   }

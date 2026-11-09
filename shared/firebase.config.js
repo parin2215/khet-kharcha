@@ -52,4 +52,6 @@ export const COLLECTIONS = {
   TRANSACTIONS: 'transactions',
   ADVANCES: 'advances',
   AUDIT_LOGS: 'audit_logs',
+  CURRENT_CROPS: 'current_crops',
+  USER_CROP_LIBRARY: 'user_crop_library',
 };

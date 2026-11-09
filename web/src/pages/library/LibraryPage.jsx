@@ -37,15 +37,18 @@ import {
   FileCheck
 } from 'lucide-react';
 import { getResearchPackageForCrop } from '../../data/cropResearchPackages.js';
+import { useAuthStore } from '../../store/useAuthStore.js';
 import { 
   CROP_CATEGORIES, 
   getLibraryCrops,
-  saveLibraryCrops 
+  saveLibraryCrops,
+  syncLibraryCropsFromCloud 
 } from '../../data/cropLibraryData.js';
 
 export default function LibraryPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
 
   const [crops, setCrops] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,7 +70,12 @@ export default function LibraryPage() {
   useEffect(() => {
     const loaded = getLibraryCrops();
     setCrops(loaded);
-  }, []);
+    if (user?.uid && user.uid !== 'demo_farmer_101') {
+      syncLibraryCropsFromCloud(user.uid).then(synced => {
+        if (synced) setCrops(synced);
+      });
+    }
+  }, [user?.uid]);
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -237,7 +245,7 @@ export default function LibraryPage() {
     const updatedCrops = crops.map(c => c.id === updatedCrop.id ? updatedCrop : c);
     setCrops(updatedCrops);
     setSelectedCrop(updatedCrop);
-    saveLibraryCrops(updatedCrops);
+    saveLibraryCrops(updatedCrops, user?.uid);
 
     // Auto expand the practices section for this type so the user immediately sees it
     const activeIndex = isAddingNewType ? updatedMarketTypes.length - 1 : editingTypeIndex;

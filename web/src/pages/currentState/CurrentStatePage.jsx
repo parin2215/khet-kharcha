@@ -46,6 +46,7 @@ export default function CurrentStatePage() {
     crops, 
     fetchCrops, 
     createCrop, 
+    deleteCrop,
     addCropExpense, 
     deleteCropExpense, 
     addCropUpad,
@@ -70,8 +71,10 @@ export default function CurrentStatePage() {
   const [isSaleModalOpen, setIsSaleModalOpen] = useState(false);
   const [isFarmoModalOpen, setIsFarmoModalOpen] = useState(false);
   const [isHarvestModalOpen, setIsHarvestModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [activeCrop, setActiveCrop] = useState(null);
+  const [cropToDelete, setCropToDelete] = useState(null);
 
   // Form states - Add Ongoing Crop
   const [newCropFarmId, setNewCropFarmId] = useState('');
@@ -364,6 +367,21 @@ export default function CurrentStatePage() {
     }
   };
 
+  // Delete Ongoing Crop Handlers
+  const handleRequestDelete = (crop) => {
+    setCropToDelete(crop);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!cropToDelete) return;
+    deleteCrop(cropToDelete.id, profile?.uid || 'default');
+    setToastMsg(`ચાલુ પાક સફળતાપૂર્વક ડિલીટ કર્યો: ${cropToDelete.cropName}`);
+    setToastType('info');
+    setIsDeleteModalOpen(false);
+    setCropToDelete(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Toast Notification */}
@@ -524,10 +542,20 @@ export default function CurrentStatePage() {
                       </h3>
                     </div>
 
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      Day {daysSinceSowing}
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Day {daysSinceSowing}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleRequestDelete(crop)}
+                        className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition border border-transparent hover:border-red-200 cursor-pointer"
+                        title="પાક ડિલીટ કરો (Delete Crop)"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Partner / Management Banner */}
@@ -696,6 +724,15 @@ export default function CurrentStatePage() {
                   >
                     <Wheat className="w-3.5 h-3.5 text-amber-400" />
                     લણણી & સેટલ
+                  </button>
+
+                  <button
+                    onClick={() => handleRequestDelete(crop)}
+                    className="flex items-center justify-center gap-1 py-2.5 px-3 bg-red-50 hover:bg-red-100 text-red-600 font-extrabold rounded-xl text-xs transition cursor-pointer border border-red-200"
+                    title="આ ચાલુ પાક ડિલીટ કરો (Delete Crop)"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    ડિલીટ
                   </button>
                 </div>
               </div>
@@ -1481,6 +1518,44 @@ export default function CurrentStatePage() {
           </div>
         );
       })()}
+
+      {/* ======================================================== */}
+      {/* MODAL 7: DELETE ONGOING CROP CONFIRMATION                 */}
+      {/* ======================================================== */}
+      {isDeleteModalOpen && cropToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-stone-100 p-6 md:p-8 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 rounded-3xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-100 shadow-sm">
+              <Trash2 className="w-7 h-7" />
+            </div>
+
+            <h3 className="text-xl font-extrabold text-stone-900 tracking-tight font-serif">
+              ચાલુ પાક ડિલીટ કરવો છે?
+            </h3>
+            <p className="text-xs text-stone-500 font-medium mt-2 leading-relaxed">
+              તમે <span className="font-extrabold text-stone-900">"{cropToDelete.cropName}"</span> ({cropToDelete.farmName}) પાક ડિલીટ કરવા જઈ રહ્યા છો. આ પાકના તમામ ખર્ચ, ઉપાડ અને મદતરનો રેકોર્ડ કાયમ માટે હટાવી દેવામાં આવશે.
+            </p>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => { setIsDeleteModalOpen(false); setCropToDelete(null); }}
+                className="flex-1 py-3 px-4 rounded-xl border border-stone-200 text-stone-700 font-bold text-xs hover:bg-stone-50 transition cursor-pointer"
+              >
+                રદ કરો (Cancel)
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDelete}
+                className="flex-1 py-3 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" />
+                હા, ડિલીટ કરો
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

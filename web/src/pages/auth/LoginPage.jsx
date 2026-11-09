@@ -60,9 +60,30 @@ export default function LoginPage() {
 
     if (activeTab === 'login') {
       try {
-        await loginWithEmail(email, password);
+        const result = await loginWithEmail(email.trim(), password);
+        const authedUser = result?.user;
+        const authedProfile = result?.profile;
+        if (authedProfile && authedProfile.name && authedProfile.state) {
+          navigate('/dashboard');
+        } else if (authedUser) {
+          setTempUser(authedUser);
+          setIsProfileCompletionOpen(true);
+        } else {
+          navigate('/dashboard');
+        }
       } catch (err) {
-        setFormError(err.message || 'Login failed');
+        console.error('Login error:', err);
+        let errorMsg = err.message || 'Login failed';
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+          errorMsg = 'ખોટો ઈમેલ કે પાસવર્ડ! કૃપા કરીને તપાસીને ફરી પ્રયત્ન કરો. (Invalid email or password)';
+        } else if (err.code === 'auth/too-many-requests') {
+          errorMsg = 'ઘણા પ્રયાસો થયા છે. કૃપા કરીને થોડીવાર પછી પ્રયત્ન કરો. (Too many attempts)';
+        } else if (err.code === 'auth/network-request-failed') {
+          errorMsg = 'ઈન્ટરનેટ કનેક્શન તપાસો. (Network connection failed)';
+        } else if (err.code === 'auth/invalid-email') {
+          errorMsg = 'અમાન્ય ઈમેલ એડ્રેસ! (Invalid email address)';
+        }
+        setFormError(errorMsg);
       }
     } else {
       if (password !== confirmPassword) {
@@ -79,15 +100,21 @@ export default function LoginPage() {
       }
 
       try {
-        await registerWithEmail(email, password, {
+        await registerWithEmail(email.trim(), password, {
           name: fullName,
           state: selectedState,
           language: language,
           unitPreference: 'bigha',
         });
         setMessage('Registration successful!');
+        navigate('/dashboard');
       } catch (err) {
-        setFormError(err.message || 'Registration failed');
+        console.error('Registration error:', err);
+        let errorMsg = err.message || 'Registration failed';
+        if (err.code === 'auth/email-already-in-use') {
+          errorMsg = 'આ ઈમેલ પહેલેથી રજીસ્ટર થયેલ છે. કૃપા કરીને લોગિન કરો. (Email already registered, please login)';
+        }
+        setFormError(errorMsg);
       }
     }
   };

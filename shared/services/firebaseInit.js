@@ -37,8 +37,20 @@ export const initAuth = async (isWeb = false) => {
   if (auth) return auth;
 
   if (isWeb) {
-    const { getAuth } = await import('firebase/auth');
-    auth = getAuth(app);
+    const { 
+      initializeAuth, 
+      indexedDBLocalPersistence, 
+      browserLocalPersistence, 
+      inMemoryPersistence, 
+      getAuth 
+    } = await import('firebase/auth');
+    try {
+      auth = initializeAuth(app, {
+        persistence: [indexedDBLocalPersistence, browserLocalPersistence, inMemoryPersistence],
+      });
+    } catch (e) {
+      auth = getAuth(app);
+    }
   } else {
     const { initializeAuth, getReactNativePersistence } = await import('firebase/auth');
     const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
@@ -74,19 +86,25 @@ export const initFirestore = async (isWeb = false) => {
     const {
       initializeFirestore,
       persistentLocalCache,
-      persistentMultipleTabManager,
+      persistentSingleTabManager,
       getFirestore,
     } = await import('firebase/firestore');
 
     try {
+      // In Capacitor Android WebView and web apps, persistentSingleTabManager
+      // avoids the multi-tab lock acquisition deadlock that hangs Firestore operations.
       db = initializeFirestore(app, {
         localCache: persistentLocalCache({
-          tabManager: persistentMultipleTabManager(),
+          tabManager: persistentSingleTabManager({ forceOwnership: true }),
         }),
       });
     } catch (e) {
-      console.warn('Firestore already initialized or in progress. Falling back to getFirestore().');
-      db = getFirestore(app);
+      console.warn('Firestore already initialized or in progress. Falling back to getFirestore().', e);
+      try {
+        db = getFirestore(app);
+      } catch (err) {
+        console.error('getFirestore failed:', err);
+      }
     }
   } else {
     // Native: offline persistence is enabled by default

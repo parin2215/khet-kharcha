@@ -269,12 +269,23 @@ export const userProfileExists = async (uid) => {
  * @returns {Promise<Object|null>}
  */
 export const getUserProfile = async (uid) => {
-  const db = getDb();
-  const docSnap = await getDoc(doc(db, COLLECTIONS.USERS, uid));
-  if (docSnap.exists()) {
-    return { uid, ...docSnap.data() };
+  if (!uid) return null;
+  try {
+    const db = getDb();
+    // 4-second timeout to prevent WebView blocking
+    const fetchDoc = getDoc(doc(db, COLLECTIONS.USERS, uid));
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Profile fetch timeout')), 4000)
+    );
+    const docSnap = await Promise.race([fetchDoc, timeoutPromise]);
+    if (docSnap && docSnap.exists()) {
+      return { uid, ...docSnap.data() };
+    }
+    return null;
+  } catch (error) {
+    console.warn('getUserProfile timeout or read error (using fallback):', error?.message || error);
+    return null;
   }
-  return null;
 };
 
 /**

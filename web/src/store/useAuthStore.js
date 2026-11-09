@@ -9,6 +9,23 @@ import {
   onAuthStateChange
 } from '../../../shared/services/auth.js';
 
+const ensureProfile = (user, rawProfile) => {
+  if (rawProfile && rawProfile.name && rawProfile.state) {
+    return rawProfile;
+  }
+  const emailName = user?.email ? user.email.split('@')[0] : 'Farmer';
+  return {
+    uid: user?.uid,
+    name: rawProfile?.name || user?.displayName || emailName,
+    email: user?.email || '',
+    phone: rawProfile?.phone || user?.phoneNumber || '',
+    state: rawProfile?.state || 'GJ',
+    language: rawProfile?.language || 'gu',
+    unitPreference: rawProfile?.unitPreference || 'bigha',
+    ...rawProfile
+  };
+};
+
 export const useAuthStore = create((set, get) => ({
   user: null,
   profile: null,
@@ -41,11 +58,13 @@ export const useAuthStore = create((set, get) => ({
       if (user) {
         set({ user, loading: true });
         try {
-          const profile = await getUserProfile(user.uid);
+          const rawProfile = await getUserProfile(user.uid);
+          const profile = ensureProfile(user, rawProfile);
           set({ profile, loading: false, initialized: true });
         } catch (error) {
-          console.error('Failed to load user profile', error);
-          set({ loading: false, initialized: true });
+          console.warn('Failed to load user profile, using safe fallback:', error);
+          const profile = ensureProfile(user, null);
+          set({ profile, loading: false, initialized: true });
         }
       } else {
         set({ user: null, profile: null, loading: false, initialized: true });
@@ -77,7 +96,13 @@ export const useAuthStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const user = await signInWithEmail(email, password);
-      const profile = await getUserProfile(user.uid);
+      let rawProfile = null;
+      try {
+        rawProfile = await getUserProfile(user.uid);
+      } catch (e) {
+        console.warn('Profile read error during email login:', e);
+      }
+      const profile = ensureProfile(user, rawProfile);
       set({ user, profile, loading: false });
       return { user, profile };
     } catch (error) {
@@ -90,7 +115,18 @@ export const useAuthStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const user = await signUpWithEmail(email, password, profileData);
-      const profile = await getUserProfile(user.uid);
+      let rawProfile = null;
+      try {
+        rawProfile = await getUserProfile(user.uid);
+      } catch (e) {
+        console.warn('Profile read error during email register:', e);
+      }
+      const profile = ensureProfile(user, rawProfile || {
+        name: profileData.name,
+        state: profileData.state,
+        language: profileData.language,
+        unitPreference: profileData.unitPreference
+      });
       set({ user, profile, loading: false });
       return { user, profile };
     } catch (error) {
@@ -103,7 +139,13 @@ export const useAuthStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const { user, isNewUser } = await signInWithGoogleWeb();
-      const profile = await getUserProfile(user.uid);
+      let rawProfile = null;
+      try {
+        rawProfile = await getUserProfile(user.uid);
+      } catch (e) {
+        console.warn('Profile read error during google login:', e);
+      }
+      const profile = ensureProfile(user, rawProfile);
       set({ user, profile, loading: false });
       return { user, profile, isNewUser };
     } catch (error) {

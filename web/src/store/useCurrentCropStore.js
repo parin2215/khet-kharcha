@@ -1,5 +1,11 @@
 import { create } from 'zustand';
 import { useFarmStore } from './useFarmStore.js';
+import { 
+  getCurrentCropsByOwner, 
+  subscribeCurrentCrops, 
+  saveCurrentCropToCloud, 
+  deleteCurrentCropFromCloud 
+} from '../../../shared/services/currentCropService.js';
 
 /**
  * Universal Farmo Calculation Engine
@@ -202,50 +208,74 @@ export const useCurrentCropStore = create((set, get) => ({
   crops: [],
   loading: false,
   error: null,
+  activeSubscriptionOwner: null,
+  unsubscribeCloud: null,
 
   fetchCrops: (ownerId = 'default') => {
     set({ loading: true });
     try {
       const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+      const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
       const saved = localStorage.getItem(storageKey);
+      const isAlreadyInit = localStorage.getItem(initializedKey) === 'true';
       let cropsList = [];
 
-      if (saved) {
-        cropsList = JSON.parse(saved);
-        // Ensure every crop conforms to Farmo structure
-        cropsList = cropsList.map(c => ({
-          ...c,
-          expenses: c.expenses || [],
-          upad: c.upad || [],
-          sales: c.sales || (c.profits ? c.profits.map(p => ({
-            id: p.id,
-            date: p.date,
-            grossWeightKg: (p.quantity || 1) * 100,
-            otherWeightKg: 0,
-            weightDeductionKg: 0,
-            netWeightKg: (p.quantity || 1) * 100,
-            weightInMann: (p.quantity || 1) * 5,
-            ratePerMann: Math.round(p.amount / Math.max(1, (p.quantity || 1) * 5)),
-            totalMadatar: p.amount,
-            buyer: p.buyer,
-            notes: p.notes
-          })) : [])
-        }));
-      } else {
-        cropsList = getInitialOngoingCrops(ownerId);
-        const farms = useFarmStore.getState().farms || [];
-        if (farms.length > 0 && cropsList.length > 0) {
-          cropsList[0].farmId = farms[0]?.id || 'farm_1';
-          cropsList[0].farmName = farms[0]?.name || cropsList[0].farmName;
-          if (farms[1] && cropsList[1]) {
-            cropsList[1].farmId = farms[1]?.id || 'farm_2';
-            cropsList[1].farmName = farms[1]?.name || cropsList[1].farmName;
+      if (saved !== null) {
+        try {
+          cropsList = JSON.parse(saved);
+        } catch (e) {
+          cropsList = [];
+        }
+      } else if (!isAlreadyInit) {
+        // Only seed sample crops for demo users on their very first visit
+        const isDemo = ownerId === 'default' || ownerId === 'demo_farmer_101';
+        if (isDemo) {
+          cropsList = getInitialOngoingCrops(ownerId);
+          const farms = useFarmStore.getState().farms || [];
+          if (farms.length > 0 && cropsList.length > 0) {
+            cropsList[0].farmId = farms[0]?.id || 'farm_1';
+            cropsList[0].farmName = farms[0]?.name || cropsList[0].farmName;
+            if (farms[1] && cropsList[1]) {
+              cropsList[1].farmId = farms[1]?.id || 'farm_2';
+              cropsList[1].farmName = farms[1]?.name || cropsList[1].farmName;
+            }
           }
+        } else {
+          cropsList = [];
         }
         localStorage.setItem(storageKey, JSON.stringify(cropsList));
+        localStorage.setItem(initializedKey, 'true');
       }
 
+      // Initial fast local render
       set({ crops: cropsList, loading: false });
+
+      // Real-time Cloud Sync for authenticated users (cross-device sync)
+      const isCloudEligible = ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101';
+      const currentSub = get().activeSubscriptionOwner;
+
+      if (isCloudEligible && currentSub !== ownerId) {
+        if (get().unsubscribeCloud) {
+          get().unsubscribeCloud();
+        }
+
+        const unsub = subscribeCurrentCrops(
+          ownerId,
+          (cloudCrops) => {
+            const list = cloudCrops || [];
+            // Reflect exact cloud state. Never resurrect crops if user deleted all of them.
+            set({ crops: list, loading: false });
+            localStorage.setItem(storageKey, JSON.stringify(list));
+            localStorage.setItem(initializedKey, 'true');
+          },
+          (err) => {
+            console.warn('Real-time sync error, using local data:', err);
+          }
+        );
+
+        set({ activeSubscriptionOwner: ownerId, unsubscribeCloud: unsub });
+      }
+
       return cropsList;
     } catch (err) {
       console.error('Error fetching ongoing crops:', err);
@@ -287,7 +317,14 @@ export const useCurrentCropStore = create((set, get) => ({
     set({ crops: updated });
 
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+
+    // Cloud sync to Firestore
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      saveCurrentCropToCloud(newCrop).catch(e => console.warn('Cloud save failed:', e));
+    }
 
     if (newCrop.farmId) {
       useFarmStore.getState().editFarm(newCrop.farmId, {
@@ -298,6 +335,37 @@ export const useCurrentCropStore = create((set, get) => ({
     }
 
     return newCrop;
+  },
+
+  // Delete an ongoing crop entirely
+  deleteCrop: (cropId, ownerId = 'default') => {
+    const currentCrops = get().crops;
+    const targetCrop = currentCrops.find(c => c.id === cropId);
+
+    // If farm was linked to this active crop, clear farm's currentCrop & currentPartner
+    if (targetCrop?.farmId) {
+      try {
+        useFarmStore.getState().editFarm(targetCrop.farmId, {
+          currentCrop: '',
+          currentPartner: null
+        });
+      } catch (e) {
+        console.warn('Could not reset farm currentCrop on delete:', e);
+      }
+    }
+
+    const updated = currentCrops.filter(c => c.id !== cropId);
+    set({ crops: updated });
+
+    const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+
+    // Delete from Firestore cloud
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      deleteCurrentCropFromCloud(cropId).catch(e => console.warn('Cloud delete crop failed:', e));
+    }
   },
 
   // Log Expense (ખર્ચ)
@@ -323,7 +391,13 @@ export const useCurrentCropStore = create((set, get) => ({
 
     set({ crops: updated });
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
   },
 
   deleteCropExpense: (cropId, expenseId, ownerId = 'default') => {
@@ -340,7 +414,13 @@ export const useCurrentCropStore = create((set, get) => ({
 
     set({ crops: updated });
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
   },
 
   // Log Upad (ઉપાડ - Partner Cash Advance)
@@ -365,7 +445,13 @@ export const useCurrentCropStore = create((set, get) => ({
 
     set({ crops: updated });
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
   },
 
   deleteCropUpad: (cropId, upadId, ownerId = 'default') => {
@@ -382,7 +468,13 @@ export const useCurrentCropStore = create((set, get) => ({
 
     set({ crops: updated });
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
   },
 
   // Log Sale & Weight (પાક વેચાણ / મદતર)
@@ -422,7 +514,13 @@ export const useCurrentCropStore = create((set, get) => ({
 
     set({ crops: updated });
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
   },
 
   deleteCropSale: (cropId, saleId, ownerId = 'default') => {
@@ -439,7 +537,13 @@ export const useCurrentCropStore = create((set, get) => ({
 
     set({ crops: updated });
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
   },
 
   // Finalize Harvest & Settle into Farm History using Hisab Farmo
@@ -517,10 +621,15 @@ export const useCurrentCropStore = create((set, get) => ({
 
     // Remove active crop
     const updated = currentCrops.filter(c => c.id !== cropId);
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      deleteCurrentCropFromCloud(cropId).catch(e => console.warn('Cloud delete failed:', e));
+    }
     set({ crops: updated });
 
     const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
     localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
 
     return historyRecord;
   }
