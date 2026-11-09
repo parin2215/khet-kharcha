@@ -26,6 +26,7 @@ import PartnershipTermsBuilderPage from './pages/partners/PartnershipTermsBuilde
 import HarvestEntryPage from './pages/farms/HarvestEntryPage.jsx';
 import LandingPage from './pages/landing/LandingPage.jsx';
 import PartnersPage from './pages/partners/PartnersPage.jsx';
+import ShopBillsPage from './pages/shopBills/ShopBillsPage.jsx';
 
 function ProtectedRoute({ children }) {
   const { user, initialized, loading } = useAuthStore();
@@ -100,6 +101,12 @@ export default function App() {
         <Route path="/current-state" element={
           <ProtectedRoute>
             <CurrentStatePage />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/shop-bills" element={
+          <ProtectedRoute>
+            <ShopBillsPage />
           </ProtectedRoute>
         } />
         

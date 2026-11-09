@@ -16,7 +16,8 @@ import {
   Users,
   Activity,
   BookOpen,
-  FlaskConical
+  FlaskConical,
+  Store
 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore.js';
 import { useSettingsStore } from '../store/useSettingsStore.js';
@@ -64,6 +65,7 @@ export default function Layout({ children }) {
     { to: '/dashboard', label: t('navigation.dashboard'), icon: LayoutDashboard },
     { to: '/farms', label: t('navigation.farms'), icon: Sprout },
     { to: '/current-state', label: 'Current State', icon: Activity },
+    { to: '/shop-bills', label: t('navigation.shopBills') || 'Shop Bills', icon: Store },
     { to: '/library', label: 'Library', icon: BookOpen },
     { to: '/fertilizers', label: 'Fertilizers', icon: FlaskConical },
     { to: '/partners', label: t('navigation.partners') || 'Partners', icon: Users },
@@ -77,6 +79,7 @@ export default function Layout({ children }) {
     const path = location.pathname;
     if (path.startsWith('/dashboard')) return t('navigation.dashboard');
     if (path.startsWith('/current-state')) return 'Current State - Ongoing Crops';
+    if (path.startsWith('/shop-bills')) return t('shopBills.title') || 'Shop Bills Ledger (દુકાન બિલ)';
     if (path.startsWith('/library')) return 'Crop Knowledge Library & Agronomy Guides';
     if (path.startsWith('/fertilizers')) return 'Fertilizers & Soil Health Guide (ખાતર માર્ગદર્શિકા)';
     if (path.startsWith('/farms/new')) return 'Add Farm';

@@ -11,7 +11,8 @@
     "reports": "Reports",
     "bills": "Bills",
     "reminders": "Reminders",
-    "settings": "Settings"
+    "settings": "Settings",
+    "shopBills": "Shop Bills"
   },
   "farm": {
     "title": "My Farms",
@@ -325,5 +326,35 @@
     "markSettled": "Mark as Settled",
     "settleSuccess": "Account marked as settled!",
     "settleFailed": "Failed to settle accounts"
+  },
+  "shopBills": {
+    "nav": "Shop Bills",
+    "title": "Shop Bills Ledger",
+    "subtitle": "Track fertilizer, seed & chemical purchases from agro shops and monitor paid vs pending balances.",
+    "allShops": "All Shops",
+    "addShop": "Add Shop",
+    "editShop": "Edit Shop",
+    "deleteShop": "Delete Shop",
+    "addBill": "Add Shop Bill",
+    "editBill": "Edit Bill",
+    "deleteBill": "Delete Bill",
+    "totalPending": "Remaining Pending",
+    "totalPaid": "Total Paid",
+    "totalPurchases": "Total Purchases",
+    "totalShops": "Total Shops",
+    "pending": "Pending",
+    "paid": "Paid",
+    "markPaid": "Mark Paid",
+    "markPending": "Mark Pending",
+    "shopName": "Shop Name",
+    "ownerName": "Dealer / Contact Person",
+    "phone": "Phone Number",
+    "location": "Location / Market",
+    "category": "Category",
+    "billNumber": "Bill / Slip #",
+    "billDate": "Bill Date",
+    "items": "Items / Products",
+    "amount": "Amount (₹)",
+    "paidCheckbox": "Mark as Paid"
   }
 }

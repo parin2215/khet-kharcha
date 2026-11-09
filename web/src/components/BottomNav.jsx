@@ -16,10 +16,12 @@ import {
   ChevronRight,
   Activity,
   BookOpen,
-  FlaskConical
+  FlaskConical,
+  Store
 } from 'lucide-react';
 
 const LABELS = {
+  shopBills: { en: 'Shop Bills (દુકાન બિલ)', hi: 'दुकान बिल (Shop Bills)', gu: 'દુકાન બિલ (Shop Bills)', mr: 'दुकान बिल (Shop Bills)' },
   currentState: { en: 'Current', hi: 'चल रहा', gu: 'ચાલુ પાક', mr: 'सुरू' },
   home: { en: 'Home', hi: 'होम', gu: 'હોમ', mr: 'होम' },
   farms: { en: 'Farms', hi: 'खेत', gu: 'ખેત', mr: 'शेत' },
@@ -222,6 +224,18 @@ export default function BottomNav() {
                 <div className="flex items-center gap-3">
                   <Activity className="w-5 h-5 text-emerald-600" />
                   <span className="text-xs font-bold text-stone-900">Current State (Ongoing Crops)</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-stone-400" />
+              </button>
+
+              {/* Shop Bills */}
+              <button
+                onClick={() => handleTabClick('/shop-bills', 'shopBills')}
+                className="w-full h-[52px] flex items-center justify-between border-b border-stone-100 hover:bg-amber-50 px-2 rounded-xl transition active:bg-amber-100 cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Store className="w-5 h-5 text-amber-600" />
+                  <span className="text-xs font-bold text-stone-900">{LABELS.shopBills[lang]}</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-stone-400" />
               </button>

@@ -54,4 +54,6 @@ export const COLLECTIONS = {
   AUDIT_LOGS: 'audit_logs',
   CURRENT_CROPS: 'current_crops',
   USER_CROP_LIBRARY: 'user_crop_library',
+  SHOPS: 'shops',
+  SHOP_BILLS: 'shop_bills',
 };

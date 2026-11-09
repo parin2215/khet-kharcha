@@ -11,7 +11,8 @@
     "reports": "अहवाल",
     "bills": "बिल",
     "reminders": "स्मरणपत्रे",
-    "settings": "सेटिंग्ज"
+    "settings": "सेटिंग्ज",
+    "shopBills": "दुकान बिल (Shop Bills)"
   },
   "farm": {
     "title": "माझी शेतं",
@@ -325,5 +326,35 @@
     "markSettled": "हिशोब पूर्ण करा",
     "settleSuccess": "हिशोब पूर्ण झाला आहे!",
     "settleFailed": "हिशोब पूर्ण करण्यात अपयशी"
+  },
+  "shopBills": {
+    "nav": "दुकान बिल (Shop Bills)",
+    "title": "दुकान बिल खातेवही (Shop Bills)",
+    "subtitle": "खत, बियाणे आणि औषधांच्या दुकानांची बिले आणि बाकी रकमेची वैयक्तिक नोंद.",
+    "allShops": "सर्व दुकाने",
+    "addShop": "नवीन दुकान जोडा",
+    "editShop": "दुकान संपादित करा",
+    "deleteShop": "दुकान हटवा",
+    "addBill": "नवीन बिल जोडा",
+    "editBill": "बिल संपादित करा",
+    "deleteBill": "बिल हटवा",
+    "totalPending": "बाकी रक्कम (Pending)",
+    "totalPaid": "दिलेली रक्कम (Paid)",
+    "totalPurchases": "एकूण खरेदी",
+    "totalShops": "एकूण दुकाने",
+    "pending": "बाकी",
+    "paid": "दिले",
+    "markPaid": "दिलेले म्हणून मार्क करा",
+    "markPending": "बाकी म्हणून मार्क करा",
+    "shopName": "दुकानाचे नाव",
+    "ownerName": "दुकानदार / संपर्क व्यक्ती",
+    "phone": "फोन नंबर",
+    "location": "पत्ता / मार्केट",
+    "category": "वर्गवारी",
+    "billNumber": "बिल / पावती क्र.",
+    "billDate": "बिल दिनांक",
+    "items": "वस्तू / खत-औषध",
+    "amount": "रक्कम (₹)",
+    "paidCheckbox": "पैसे दिले आहेत"
   }
 }

@@ -11,7 +11,8 @@
     "reports": "રિપોર્ટ",
     "bills": "બિલ ટ્રેકર",
     "reminders": "રીમાઇન્ડર",
-    "settings": "સેટિંગ્સ"
+    "settings": "સેટિંગ્સ",
+    "shopBills": "દુકાન બિલ (Shop Bills)"
   },
   "farm": {
     "title": "મારા ખેતર",
@@ -325,5 +326,35 @@
     "markSettled": "હિસાબ પતાવટ કરો",
     "settleSuccess": "હિસાબ પતાવટ સફળતાપૂર્વક થઈ ગઈ છે!",
     "settleFailed": "હિસાબ પતાવટ કરવામાં નિષ્ફળ"
+  },
+  "shopBills": {
+    "nav": "દુકાન બિલ (Shop Bills)",
+    "title": "દુકાન બિલ ખાતાવહી (Shop Bills)",
+    "subtitle": "એગ્રો દુકાન પરથી લીધેલા ખાતર, બિયારણ અને દવાના બિલ તથા બાકી રકમની વ્યક્તિગત નોંધ.",
+    "allShops": "બધી દુકાનો",
+    "addShop": "નવી દુકાન ઉમેરો",
+    "editShop": "દુકાન સુધારો",
+    "deleteShop": "દુકાન કાઢી નાખો",
+    "addBill": "નવું બિલ ઉમેરો",
+    "editBill": "બિલ સુધારો",
+    "deleteBill": "બિલ કાઢી નાખો",
+    "totalPending": "બાકી રકમ (Pending)",
+    "totalPaid": "ચૂકવેલ રકમ (Paid)",
+    "totalPurchases": "કુલ ખરીદી",
+    "totalShops": "કુલ દુકાનો",
+    "pending": "બાકી",
+    "paid": "ચૂકવેલ",
+    "markPaid": "ચૂકવેલ તરીકે માર્ક કરો",
+    "markPending": "બાકી તરીકે માર્ક કરો",
+    "shopName": "દુકાનનું નામ",
+    "ownerName": "વેપારી / સંપર્ક વ્યક્તિ",
+    "phone": "ફોન નંબર",
+    "location": "સરનામું / માર્કેટ",
+    "category": "કેટેગરી",
+    "billNumber": "બિલ / સ્લિપ નં.",
+    "billDate": "બિલ તારીખ",
+    "items": "વસ્તુઓ / ખાતર-દવા",
+    "amount": "રકમ (₹)",
+    "paidCheckbox": "ચૂકવણી થઈ ગઈ છે"
   }
 }
