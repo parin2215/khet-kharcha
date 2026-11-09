@@ -6,6 +6,7 @@ import { useSettingsStore } from '../../store/useSettingsStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
 import { useCurrentCropStore, calculateFarmoHisab } from '../../store/useCurrentCropStore.js';
 import { WEIGHING_UNITS } from '../../../../shared/constants/index.js';
+import { getWeightUnitLabel } from '../../../../shared/utils/units.js';
 import { 
   Sprout, 
   Plus, 
@@ -593,9 +594,9 @@ export default function CurrentStatePage() {
 
                     {crop.targetYield > 0 && (
                       <div className="text-right">
-                        <span className="text-[10px] text-stone-400 font-bold block uppercase">ટાર્ગેટ</span>
+                        <span className="text-[10px] text-stone-400 font-bold block uppercase">{t('farms.targetYield', 'Target')}</span>
                         <span className="text-xs font-extrabold text-stone-700">
-                          {crop.targetYield} {crop.yieldUnit === 'mann' ? 'મણ (Mann)' : crop.yieldUnit === 'quintal' ? 'ક્વિન્ટલ' : crop.yieldUnit === 'ton' ? 'ટન' : crop.yieldUnit === 'kg' ? 'કિલો' : (crop.yieldUnit || 'મણ')}
+                          {crop.targetYield} {getWeightUnitLabel(crop.yieldUnit || weighingUnit || 'mann', i18n.language, 'short')}
                         </span>
                       </div>
                     )}

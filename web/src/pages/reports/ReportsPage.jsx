@@ -21,6 +21,8 @@ import {
   Legend 
 } from 'recharts';
 import { formatINR, formatDate } from '../../../../shared/utils/helpers.js';
+import { convertWeight, getWeightUnitLabel } from '../../../../shared/utils/units.js';
+import { useSettingsStore } from '../../store/useSettingsStore.js';
 import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js';
 import AmountDisplay from '../../components/AmountDisplay.jsx';
 import ChartCard from '../../components/ChartCard.jsx';
@@ -32,8 +34,9 @@ import 'jspdf-autotable';
 import { getCategoryById, EXPENSE_CATEGORIES } from '../../../../shared/constants/categories.js';
 
 export default function ReportsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { profile } = useAuthStore();
+  const { weighingUnit } = useSettingsStore();
   const { farms, fetchFarms } = useFarmStore();
   const { 
     transactions, 
@@ -455,7 +458,7 @@ export default function ReportsPage() {
                           </td>
                           <td className="p-3 text-stone-850">
                             {latestHarvest 
-                              ? `${Math.round(latestHarvest.totalYield * (partner.partnerSharePercent || 50) / 100)} ${latestHarvest.yieldUnit || 'q'}` 
+                              ? `${Math.round(convertWeight(latestHarvest.totalYield * (partner.partnerSharePercent || 50) / 100, latestHarvest.yieldUnit || 'quintal', weighingUnit || 'mann'))} ${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')}` 
                               : 'No harvest yet'}
                           </td>
                         </tr>

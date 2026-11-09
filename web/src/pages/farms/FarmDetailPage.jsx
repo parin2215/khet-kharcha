@@ -45,19 +45,30 @@ import {
   ComposedChart
 } from 'recharts';
 import { formatINR, formatDate, toLocalDateString } from '../../../../shared/utils/helpers.js';
+import { 
+  convertWeight, 
+  convertMandiRate, 
+  getWeightUnitLabel, 
+  normalizeWeightUnit 
+} from '../../../../shared/utils/units.js';
 import SeasonBadge from '../../components/SeasonBadge.jsx';
 import OwnershipBadge from '../../components/OwnershipBadge.jsx';
 import Toast from '../../components/Toast.jsx';
 import HisabFarmoModal from '../../components/HisabFarmoModal.jsx';
 
 export default function FarmDetailPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || 'gu';
   const { id } = useParams();
   const navigate = useNavigate();
   
   const { profile } = useAuthStore();
   const { farms, fetchFarms, selectedFarm, setSelectedFarm, editFarm, addFarmHistory, removeFarm } = useFarmStore();
   const { crops, fetchCrops } = useCurrentCropStore();
+  const { weighingUnit } = useSettingsStore();
+
+  const activeUnit = weighingUnit || 'mann';
+  const unitLabel = getWeightUnitLabel(activeUnit, currentLang, 'short');
 
   const [activeTab, setActiveTab] = useState('history'); // 'history' | 'analytics' | 'partners' | 'details'
   const [toastMsg, setToastMsg] = useState('');
@@ -83,16 +94,15 @@ export default function FarmDetailPage() {
   const [histVariety, setHistVariety] = useState('');
   const [histSeason, setHistSeason] = useState('kharif');
   const [histYear, setHistYear] = useState(new Date().getFullYear().toString());
-  const { weighingUnit } = useSettingsStore();
   const [histHarvestDate, setHistHarvestDate] = useState(toLocalDateString());
   const [histYield, setHistYield] = useState('');
-  const [histYieldUnit, setHistYieldUnit] = useState(weighingUnit || 'mann');
+  const [histYieldUnit, setHistYieldUnit] = useState(activeUnit);
 
   useEffect(() => {
-    if (weighingUnit) {
-      setHistYieldUnit(weighingUnit);
+    if (activeUnit) {
+      setHistYieldUnit(activeUnit);
     }
-  }, [weighingUnit]);
+  }, [activeUnit]);
   const [histMandiRate, setHistMandiRate] = useState('');
   const [histExpenses, setHistExpenses] = useState('');
   const [histRevenue, setHistRevenue] = useState('');
@@ -144,7 +154,7 @@ export default function FarmDetailPage() {
   }, [selectedFarm?.cropHistory]);
 
   // ========================================================
-  // ANALYTICS COMPUTATIONS
+  // ANALYTICS COMPUTATIONS (Universal Unit Converted)
   // ========================================================
 
   // 1. Entire Average Per Season of All Crops
@@ -159,7 +169,8 @@ export default function FarmDetailPage() {
       const s = (h.season || 'kharif').toLowerCase();
       if (seasonMap[s]) {
         seasonMap[s].count += 1;
-        seasonMap[s].totalYield += parseFloat(h.yieldAmount) || 0;
+        const converted = convertWeight(h.yieldAmount || 0, h.yieldUnit || 'quintal', activeUnit);
+        seasonMap[s].totalYield += converted;
         seasonMap[s].totalExp += parseFloat(h.totalExpenses) || 0;
         seasonMap[s].totalRev += parseFloat(h.totalRevenue) || 0;
         seasonMap[s].totalNet += parseFloat(h.netProfit) || 0;
@@ -175,7 +186,7 @@ export default function FarmDetailPage() {
       avgNetProfit: item.count > 0 ? Math.round(item.totalNet / item.count) : 0,
       roi: item.totalExp > 0 ? Number(((item.totalNet / item.totalExp) * 100).toFixed(1)) : 0
     }));
-  }, [cropHistory]);
+  }, [cropHistory, activeUnit]);
 
   // 2. Crop-Wise Analytics
   const cropWiseAnalytics = useMemo(() => {
@@ -187,7 +198,8 @@ export default function FarmDetailPage() {
         map[baseName] = { cropName: baseName, count: 0, totalYield: 0, totalExp: 0, totalRev: 0, totalNet: 0, historyList: [] };
       }
       map[baseName].count += 1;
-      map[baseName].totalYield += parseFloat(h.yieldAmount) || 0;
+      const converted = convertWeight(h.yieldAmount || 0, h.yieldUnit || 'quintal', activeUnit);
+      map[baseName].totalYield += converted;
       map[baseName].totalExp += parseFloat(h.totalExpenses) || 0;
       map[baseName].totalRev += parseFloat(h.totalRevenue) || 0;
       map[baseName].totalNet += parseFloat(h.netProfit) || 0;
@@ -198,7 +210,7 @@ export default function FarmDetailPage() {
       cropName: c.cropName,
       count: c.count,
       avgYield: c.count > 0 ? Number((c.totalYield / c.count).toFixed(1)) : 0,
-      totalYield: c.totalYield,
+      totalYield: Math.round(c.totalYield * 10) / 10,
       avgExpense: c.count > 0 ? Math.round(c.totalExp / c.count) : 0,
       avgRevenue: c.count > 0 ? Math.round(c.totalRev / c.count) : 0,
       avgNetProfit: c.count > 0 ? Math.round(c.totalNet / c.count) : 0,
@@ -206,10 +218,14 @@ export default function FarmDetailPage() {
       roi: c.totalExp > 0 ? Number(((c.totalNet / c.totalExp) * 100).toFixed(1)) : 0,
       historyList: c.historyList
     }));
-  }, [cropHistory]);
+  }, [cropHistory, activeUnit]);
 
-  // Overall KPI stats
-  const totalLifetimeYield = cropHistory.reduce((s, h) => s + (parseFloat(h.yieldAmount) || 0), 0);
+  // Overall KPI stats (all converted dynamically to user's universal weighingUnit)
+  const totalLifetimeYield = Math.round(
+    cropHistory.reduce((s, h) => {
+      return s + convertWeight(h.yieldAmount || 0, h.yieldUnit || 'quintal', activeUnit);
+    }, 0) * 10
+  ) / 10;
   const totalLifetimeNetProfit = cropHistory.reduce((s, h) => s + (parseFloat(h.netProfit) || 0), 0);
   const totalHarvestsCount = cropHistory.length;
   const bestCrop = cropWiseAnalytics.slice().sort((a, b) => b.totalNetProfit - a.totalNetProfit)[0]?.cropName || 'N/A';
@@ -400,8 +416,8 @@ export default function FarmDetailPage() {
               <span className="text-base font-extrabold text-stone-900">{totalHarvestsCount}</span>
             </div>
             <div className="bg-stone-50 border border-stone-200/60 rounded-2xl p-3 text-center min-w-[110px]">
-              <span className="text-[10px] text-stone-400 font-bold block uppercase">Total Yield</span>
-              <span className="text-base font-extrabold text-stone-900">{totalLifetimeYield} Qtl</span>
+              <span className="text-[10px] text-stone-400 font-bold block uppercase">{t('farms.totalYield', 'Total Yield')}</span>
+              <span className="text-base font-extrabold text-stone-900">{totalLifetimeYield.toLocaleString('en-IN')} {unitLabel}</span>
             </div>
             <div className="bg-emerald-50 border border-emerald-200/60 rounded-2xl p-3 text-center min-w-[120px]">
               <span className="text-[10px] text-emerald-700 font-bold block uppercase">Net Return</span>
@@ -555,7 +571,9 @@ export default function FarmDetailPage() {
             <div className="space-y-4">
               {cropHistory.map((h) => {
                 const yieldVal = parseFloat(h.yieldAmount) || 0;
-                const productivity = farmAreaSize > 0 ? (yieldVal / farmAreaSize).toFixed(1) : yieldVal;
+                const recordedUnit = h.yieldUnit || 'quintal';
+                const yieldInActiveUnit = convertWeight(yieldVal, recordedUnit, activeUnit);
+                const productivity = farmAreaSize > 0 ? (yieldInActiveUnit / farmAreaSize).toFixed(1) : yieldInActiveUnit;
 
                 return (
                   <div 
@@ -574,17 +592,24 @@ export default function FarmDetailPage() {
                         {h.variety && <span className="text-xs font-semibold text-stone-400 ml-2">({h.variety})</span>}
                       </h4>
 
-                      {/* Yield details */}
+                      {/* Yield details (Universal Unit Converted & Original Tracked) */}
                       <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-stone-600">
                         <span className="bg-amber-50 border border-amber-200/60 text-amber-900 px-2.5 py-1 rounded-lg">
-                          🌾 Total Yield: <strong>{yieldVal} {h.yieldUnit || 'quintal'}</strong>
+                          🌾 Total Yield: <strong>
+                            {yieldVal.toLocaleString('en-IN')} {getWeightUnitLabel(recordedUnit, currentLang, 'short')}
+                            {normalizeWeightUnit(recordedUnit) !== normalizeWeightUnit(activeUnit) && (
+                              <span className="ml-1 text-amber-700/80 font-normal">
+                                ({yieldInActiveUnit.toLocaleString('en-IN')} {unitLabel})
+                              </span>
+                            )}
+                          </strong>
                         </span>
                         <span className="bg-emerald-50 border border-emerald-200/60 text-emerald-900 px-2.5 py-1 rounded-lg">
-                          📈 Productivity: <strong>{productivity} Qtl/{selectedFarm.sizeUnit || 'bigha'}</strong>
+                          📈 Productivity: <strong>{productivity} {unitLabel}/{selectedFarm.sizeUnit || 'bigha'}</strong>
                         </span>
                         {h.mandiRate > 0 && (
                           <span className="bg-stone-100 text-stone-700 px-2.5 py-1 rounded-lg">
-                            Mandi Rate: ₹{h.mandiRate}/Qtl
+                            Mandi Rate: ₹{h.mandiRate}/{getWeightUnitLabel(recordedUnit, currentLang, 'short')}
                           </span>
                         )}
                       </div>
@@ -683,14 +708,14 @@ export default function FarmDetailPage() {
 
             <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
               <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Total Production</span>
-              <p className="text-2xl font-extrabold text-stone-900 mt-1">{totalLifetimeYield} Qtl</p>
+              <p className="text-2xl font-extrabold text-stone-900 mt-1">{totalLifetimeYield.toLocaleString('en-IN')} {unitLabel}</p>
               <p className="text-[11px] text-stone-400 mt-0.5">Harvested output</p>
             </div>
 
             <div className="bg-white border border-stone-200/60 rounded-2xl p-4 shadow-sm">
               <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">Average Productivity</span>
               <p className="text-2xl font-extrabold text-stone-900 mt-1">
-                {cropHistory.length > 0 ? (totalLifetimeYield / (farmAreaSize * cropHistory.length)).toFixed(1) : 0} Qtl/{selectedFarm.sizeUnit || 'bigha'}
+                {cropHistory.length > 0 ? (totalLifetimeYield / (farmAreaSize * cropHistory.length)).toFixed(1) : 0} {unitLabel}/{selectedFarm.sizeUnit || 'bigha'}
               </p>
               <p className="text-[11px] text-stone-400 mt-0.5">Average per crop cycle</p>
             </div>
@@ -741,7 +766,7 @@ export default function FarmDetailPage() {
               {/* Yield Averages Chart */}
               <div>
                 <h4 className="text-xs font-bold text-stone-600 uppercase tracking-wider mb-4">
-                  Average Yield per Season (Quintals)
+                  Average Yield per Season ({unitLabel})
                 </h4>
                 <div className="h-72 w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -749,9 +774,9 @@ export default function FarmDetailPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0ee" />
                       <XAxis dataKey="season" tick={{ fontSize: 12, fontWeight: 'bold' }} stroke="#78716c" />
                       <YAxis tick={{ fontSize: 10 }} stroke="#78716c" />
-                      <Tooltip formatter={(value) => [`${value} Quintal`, 'Average Output']} />
+                      <Tooltip formatter={(value) => [`${value} ${unitLabel}`, 'Average Output']} />
                       <Legend wrapperStyle={{ fontSize: 11, fontWeight: 'bold' }} />
-                      <Bar dataKey="avgYield" name="Avg Yield (Qtl)" fill="#84cc16" radius={[6, 6, 0, 0]} />
+                      <Bar dataKey="avgYield" name={`Avg Yield (${unitLabel})`} fill="#84cc16" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -765,7 +790,7 @@ export default function FarmDetailPage() {
                   <tr>
                     <th className="p-3">Season</th>
                     <th className="p-3">Crops Harvested</th>
-                    <th className="p-3">Average Yield</th>
+                    <th className="p-3">Average Yield ({unitLabel})</th>
                     <th className="p-3">Average Expenses</th>
                     <th className="p-3">Average Revenue</th>
                     <th className="p-3">Average Net Profit</th>
@@ -777,7 +802,7 @@ export default function FarmDetailPage() {
                     <tr key={s.season} className="hover:bg-stone-50/50">
                       <td className="p-3 font-extrabold">{s.season}</td>
                       <td className="p-3">{s.count} cycle(s)</td>
-                      <td className="p-3 font-bold text-emerald-700">{s.avgYield} Quintal</td>
+                      <td className="p-3 font-bold text-emerald-700">{s.avgYield} {unitLabel}</td>
                       <td className="p-3 text-amber-700">{formatINR(s.avgExpenses)}</td>
                       <td className="p-3">{formatINR(s.avgRevenue)}</td>
                       <td className="p-3 font-extrabold text-emerald-700">+{formatINR(s.avgNetProfit)}</td>
@@ -821,7 +846,7 @@ export default function FarmDetailPage() {
               {/* Crop Yield Chart */}
               <div>
                 <h4 className="text-xs font-bold text-stone-600 uppercase tracking-wider mb-4">
-                  Average Yield Output by Crop (Quintals)
+                  Average Yield Output by Crop ({unitLabel})
                 </h4>
                 <div className="h-72 w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -829,8 +854,8 @@ export default function FarmDetailPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0ee" />
                       <XAxis dataKey="cropName" tick={{ fontSize: 11, fontWeight: 'bold' }} stroke="#78716c" />
                       <YAxis tick={{ fontSize: 10 }} stroke="#78716c" />
-                      <Tooltip formatter={(value) => [`${value} Qtl`, 'Average Yield']} />
-                      <Bar dataKey="avgYield" name="Avg Yield" fill="#1D9E75" radius={[6, 6, 0, 0]} />
+                      <Tooltip formatter={(value) => [`${value} ${unitLabel}`, 'Average Yield']} />
+                      <Bar dataKey="avgYield" name={`Avg Yield (${unitLabel})`} fill="#1D9E75" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -870,7 +895,7 @@ export default function FarmDetailPage() {
                     <div className="text-xs space-y-1 text-stone-600">
                       <div className="flex justify-between">
                         <span>Average Yield:</span>
-                        <strong className="text-stone-900">{c.avgYield} Quintals</strong>
+                        <strong className="text-stone-900">{c.avgYield} {unitLabel}</strong>
                       </div>
                       <div className="flex justify-between">
                         <span>Average Cycle Expense:</span>

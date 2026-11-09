@@ -5,6 +5,8 @@
  * Takes an array of Transactions and computes standardized outputs.
  */
 
+import { convertWeight } from '../utils/units.js';
+
 export class FinancialEngine {
   /**
    * Calculate standard financials from an array of transactions
@@ -45,7 +47,8 @@ export class FinancialEngine {
       } 
       else if (tx.type === 'crop_sale') {
         cropIncome += amt;
-        totalYield += parseFloat(tx.totalYield) || 0; 
+        const targetUnit = options.weighingUnit || 'mann';
+        totalYield += convertWeight(tx.totalYield || 0, tx.yieldUnit || 'quintal', targetUnit); 
       }
       else if (tx.type === 'loan') {
         if (tx.loanDirection === 'owner_to_partner') {
@@ -141,6 +144,7 @@ export class FinancialEngine {
 
     const periodType = options.periodType || 'year';
     const targetDate = options.targetDate ? new Date(options.targetDate) : new Date();
+    const targetUnit = options.weighingUnit || 'mann';
 
     if (periodType === 'year') {
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -157,7 +161,7 @@ export class FinancialEngine {
           if (tx.type === 'expense') monthlyExpenses[m] += parseFloat(tx.amount) || 0;
           if (tx.type === 'crop_sale') {
             monthlyRevenue[m] += parseFloat(tx.amount) || 0;
-            monthlyYield[m] += parseFloat(tx.totalYield) || 0;
+            monthlyYield[m] += convertWeight(tx.totalYield || 0, tx.yieldUnit || 'quintal', targetUnit);
           }
         }
       });
@@ -190,7 +194,7 @@ export class FinancialEngine {
           if (tx.type === 'expense') weekExpenses[weekIdx] += parseFloat(tx.amount) || 0;
           if (tx.type === 'crop_sale') {
             weekRevenue[weekIdx] += parseFloat(tx.amount) || 0;
-            weekYield[weekIdx] += parseFloat(tx.totalYield) || 0;
+            weekYield[weekIdx] += convertWeight(tx.totalYield || 0, tx.yieldUnit || 'quintal', targetUnit);
           }
         }
       });

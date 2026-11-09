@@ -21,6 +21,8 @@ import {
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid, ComposedChart, Legend, Area } from 'recharts';
 import { formatINR, formatDate } from '../../../../shared/utils/helpers.js';
+import { getWeightUnitLabel } from '../../../../shared/utils/units.js';
+import { useSettingsStore } from '../../store/useSettingsStore.js';
 
 import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js';
 import AmountDisplay from '../../components/AmountDisplay.jsx';
@@ -42,6 +44,7 @@ export default function DashboardPage() {
   } = useTransactionStore();
   const { pendingCount, fetchPendingSummary } = useBillStore();
   const { upcoming, fetchUpcoming, toggleReminder } = useReminderStore();
+  const { weighingUnit } = useSettingsStore();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [periodType, setPeriodType] = useState('month'); // 'month' | 'year'
@@ -81,7 +84,8 @@ export default function DashboardPage() {
   // Use FinancialEngine to calculate everything
   const financials = FinancialEngine.calculate(transactions, {
     periodType,
-    targetDate: selectedDate
+    targetDate: selectedDate,
+    weighingUnit: weighingUnit || 'mann'
   });
 
   const {
@@ -343,15 +347,15 @@ export default function DashboardPage() {
           {/* Yield Progress */}
           <ChartCard 
             title="Yield Progress" 
-            subtitle="Crop production volume over time"
+            subtitle={`Crop production volume (${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')}) over time`}
           >
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={trendData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                 <XAxis dataKey="name" stroke="#888888" fontSize={11} />
                 <YAxis stroke="#888888" fontSize={11} />
-                <Tooltip cursor={{ fill: '#f5f5f4' }} formatter={(val) => `${val} units`} />
-                <Bar dataKey="yield" name="Yield Volume" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={30} />
+                <Tooltip cursor={{ fill: '#f5f5f4' }} formatter={(val) => [`${val} ${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')}`, 'Yield Volume']} />
+                <Bar dataKey="yield" name={`Yield (${getWeightUnitLabel(weighingUnit || 'mann', i18n.language, 'short')})`} fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={30} />
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>

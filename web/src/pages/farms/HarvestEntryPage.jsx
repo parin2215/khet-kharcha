@@ -8,6 +8,7 @@ import { usePartnerStore } from '../../store/usePartnerStore.js';
 import { useTransactionStore } from '../../store/useTransactionStore.js';
 import { usePartnerLoanStore } from '../../store/usePartnerLoanStore.js';
 import { WEIGHING_UNITS } from '../../../../shared/constants/index.js';
+import { getWeightUnitLabel } from '../../../../shared/utils/units.js';
 import { 
   ArrowLeft, Scale, Calendar, IndianRupee, Save, 
   Share2, Award, ClipboardCheck, Info, Wheat, Scissors
@@ -17,7 +18,7 @@ import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js
 import Toast from '../../components/Toast.jsx';
 
 export default function HarvestEntryPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { farmId } = useParams();
   const navigate = useNavigate();
 
@@ -306,7 +307,7 @@ _Generated via Khet Kharcha App_`;
 
           <div>
             <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-              Mandi Rate (₹ per {yieldUnit === 'mann' ? 'મણ (20 kg)' : yieldUnit} — optional)
+              Mandi Rate (₹ per {getWeightUnitLabel(yieldUnit, i18n.language, 'full')} — optional)
             </label>
             <div className="relative">
               <span className="absolute left-3 top-3 text-stone-400 text-sm font-bold">₹</span>
