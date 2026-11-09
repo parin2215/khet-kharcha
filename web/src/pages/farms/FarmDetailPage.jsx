@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
 import { useCurrentCropStore } from '../../store/useCurrentCropStore.js';
+import { useSettingsStore } from '../../store/useSettingsStore.js';
+import { WEIGHING_UNITS } from '../../../../shared/constants/index.js';
 import { 
   Sprout, 
   MapPin, 
@@ -81,9 +83,16 @@ export default function FarmDetailPage() {
   const [histVariety, setHistVariety] = useState('');
   const [histSeason, setHistSeason] = useState('kharif');
   const [histYear, setHistYear] = useState(new Date().getFullYear().toString());
+  const { weighingUnit } = useSettingsStore();
   const [histHarvestDate, setHistHarvestDate] = useState(toLocalDateString());
   const [histYield, setHistYield] = useState('');
-  const [histYieldUnit, setHistYieldUnit] = useState('quintal');
+  const [histYieldUnit, setHistYieldUnit] = useState(weighingUnit || 'mann');
+
+  useEffect(() => {
+    if (weighingUnit) {
+      setHistYieldUnit(weighingUnit);
+    }
+  }, [weighingUnit]);
   const [histMandiRate, setHistMandiRate] = useState('');
   const [histExpenses, setHistExpenses] = useState('');
   const [histRevenue, setHistRevenue] = useState('');
@@ -1252,11 +1261,13 @@ export default function FarmDetailPage() {
                   <select
                     value={histYieldUnit}
                     onChange={(e) => setHistYieldUnit(e.target.value)}
-                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white"
+                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white cursor-pointer"
                   >
-                    <option value="quintal">Quintal</option>
-                    <option value="kg">Kg</option>
-                    <option value="ton">Metric Ton</option>
+                    {WEIGHING_UNITS.map(u => (
+                      <option key={u.value} value={u.value}>
+                        {t(u.labelKey)}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

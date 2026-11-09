@@ -47,12 +47,23 @@ export const LANGUAGES = [
 ];
 
 /**
- * Size unit options
+ * Size unit options (Land Area)
  */
 export const SIZE_UNITS = [
   { value: 'bigha', labelKey: 'unit.bigha' },
   { value: 'acre', labelKey: 'unit.acre' },
   { value: 'hectare', labelKey: 'unit.hectare' },
+];
+
+/**
+ * Weighing unit options (Crop Yield & Harvest)
+ * 20 kg = 1 Maann / Mann
+ */
+export const WEIGHING_UNITS = [
+  { value: 'mann', labelKey: 'unit.mann', kgPerUnit: 20 },
+  { value: 'quintal', labelKey: 'unit.quintal', kgPerUnit: 100 },
+  { value: 'kg', labelKey: 'unit.kg', kgPerUnit: 1 },
+  { value: 'ton', labelKey: 'unit.ton', kgPerUnit: 1000 },
 ];
 
 /**

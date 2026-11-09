@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { useFarmStore } from './useFarmStore.js';
+import { useSettingsStore } from './useSettingsStore.js';
 import { 
   getCurrentCropsByOwner, 
   subscribeCurrentCrops, 
@@ -297,7 +298,7 @@ export const useCurrentCropStore = create((set, get) => ({
       sowingDate: cropData.sowingDate || new Date().toISOString().split('T')[0],
       expectedHarvestDate: cropData.expectedHarvestDate || '',
       targetYield: Number(cropData.targetYield) || 0,
-      yieldUnit: cropData.yieldUnit || 'mann',
+      yieldUnit: cropData.yieldUnit || useSettingsStore.getState().weighingUnit || 'mann',
       status: 'ongoing',
       partner: cropData.partner || {
         hasPartner: false,

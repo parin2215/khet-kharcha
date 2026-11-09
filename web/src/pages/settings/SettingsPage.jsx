@@ -7,7 +7,7 @@ import { useTransactionStore } from '../../store/useTransactionStore.js';
 import { useBillStore } from '../../store/useBillStore.js';
 import { useReminderStore } from '../../store/useReminderStore.js';
 import { Settings, User, MapPin, Globe, Scale, Download, Save, ShieldCheck } from 'lucide-react';
-import { LANGUAGES, SIZE_UNITS } from '../../../../shared/constants/index.js';
+import { LANGUAGES, SIZE_UNITS, WEIGHING_UNITS } from '../../../../shared/constants/index.js';
 import { INDIAN_STATES } from '../../../../shared/constants/states.js';
 import Toast from '../../components/Toast.jsx';
 import { toLocalDateString } from '../../../../shared/utils/helpers.js';
@@ -15,7 +15,14 @@ import { toLocalDateString } from '../../../../shared/utils/helpers.js';
 export default function SettingsPage() {
   const { t } = useTranslation();
   const { profile, updateProfile } = useAuthStore();
-  const { language, setLanguage, unitPreference, setUnitPreference } = useSettingsStore();
+  const { 
+    language, 
+    setLanguage, 
+    unitPreference, 
+    setUnitPreference, 
+    weighingUnit, 
+    setWeighingUnit 
+  } = useSettingsStore();
 
   const [name, setName] = useState(profile?.name || '');
   const [state, setState] = useState(profile?.state || '');
@@ -167,7 +174,7 @@ export default function SettingsPage() {
             <div>
               <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2 flex items-center gap-1">
                 <Scale className="w-4 h-4 text-stone-400" />
-                {t('settings.unitPreference')}
+                {t('settings.unitPreference')} (Land Area)
               </label>
               <select
                 value={unitPreference}
@@ -180,6 +187,28 @@ export default function SettingsPage() {
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* Weighing & Harvest Unit (Mann / Maann, Quintal, Kg, Ton) */}
+            <div className="sm:col-span-2 pt-2 border-t border-stone-100">
+              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                <Scale className="w-4 h-4 text-primary" />
+                {t('settings.weighingUnit')}
+              </label>
+              <select
+                value={weighingUnit}
+                onChange={(e) => setWeighingUnit(e.target.value)}
+                className="w-full px-4 py-3 text-sm font-bold border border-stone-300 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none bg-stone-50/50 hover:bg-white cursor-pointer shadow-sm transition"
+              >
+                {WEIGHING_UNITS.map((u) => (
+                  <option key={u.value} value={u.value}>
+                    {t(u.labelKey)}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[11px] text-stone-500 font-medium mt-1.5">
+                {t('settings.weighingUnitDesc')}
+              </p>
             </div>
           </div>
         </div>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore.js';
+import { useSettingsStore } from '../../store/useSettingsStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
 import { useCurrentCropStore, calculateFarmoHisab } from '../../store/useCurrentCropStore.js';
+import { WEIGHING_UNITS } from '../../../../shared/constants/index.js';
 import { 
   Sprout, 
   Plus, 
@@ -41,6 +43,7 @@ export default function CurrentStatePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { profile } = useAuthStore();
+  const { weighingUnit } = useSettingsStore();
   const { farms, fetchFarms } = useFarmStore();
   const { 
     crops, 
@@ -83,7 +86,13 @@ export default function CurrentStatePage() {
   const [newCropSeason, setNewCropSeason] = useState('kharif');
   const [newCropSowingDate, setNewCropSowingDate] = useState(toLocalDateString());
   const [newCropTargetYield, setNewCropTargetYield] = useState('');
-  const [newCropYieldUnit, setNewCropYieldUnit] = useState('mann');
+  const [newCropYieldUnit, setNewCropYieldUnit] = useState(weighingUnit || 'mann');
+
+  useEffect(() => {
+    if (weighingUnit) {
+      setNewCropYieldUnit(weighingUnit);
+    }
+  }, [weighingUnit]);
   const [hasPartner, setHasPartner] = useState(false);
   const [partnerName, setPartnerName] = useState('');
   const [partnerPhone, setPartnerPhone] = useState('');
@@ -192,7 +201,7 @@ export default function CurrentStatePage() {
     setNewCropSeason('kharif');
     setNewCropSowingDate(toLocalDateString());
     setNewCropTargetYield('');
-    setNewCropYieldUnit('mann');
+    setNewCropYieldUnit(weighingUnit || 'mann');
     setHasPartner(false);
     setPartnerName('');
     setPartnerPhone('');
@@ -585,7 +594,9 @@ export default function CurrentStatePage() {
                     {crop.targetYield > 0 && (
                       <div className="text-right">
                         <span className="text-[10px] text-stone-400 font-bold block uppercase">ટાર્ગેટ</span>
-                        <span className="text-xs font-extrabold text-stone-700">{crop.targetYield} {crop.yieldUnit || 'મણ'}</span>
+                        <span className="text-xs font-extrabold text-stone-700">
+                          {crop.targetYield} {crop.yieldUnit === 'mann' ? 'મણ (Mann)' : crop.yieldUnit === 'quintal' ? 'ક્વિન્ટલ' : crop.yieldUnit === 'ton' ? 'ટન' : crop.yieldUnit === 'kg' ? 'કિલો' : (crop.yieldUnit || 'મણ')}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -871,10 +882,11 @@ export default function CurrentStatePage() {
                     onChange={(e) => setNewCropYieldUnit(e.target.value)}
                     className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-emerald-600 bg-white cursor-pointer"
                   >
-                    <option value="mann">મણ (1 Mann = 20 kg)</option>
-                    <option value="quintal">ક્વિન્ટલ (Quintal)</option>
-                    <option value="kg">કિલોગ્રામ (Kg)</option>
-                    <option value="ton">મેટ્રિક ટન (Ton)</option>
+                    {WEIGHING_UNITS.map((u) => (
+                      <option key={u.value} value={u.value}>
+                        {t(u.labelKey)}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

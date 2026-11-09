@@ -5,6 +5,7 @@ import { useAuthStore } from './useAuthStore.js';
 export const useSettingsStore = create((set, get) => ({
   language: localStorage.getItem('khet_kharcha_lang') || 'hi',
   unitPreference: localStorage.getItem('khet_kharcha_unit') || 'bigha',
+  weighingUnit: localStorage.getItem('khet_kharcha_weighing_unit') || 'mann',
   notificationsEnabled: localStorage.getItem('khet_kharcha_notif') !== 'false',
 
   setLanguage: async (lang) => {
@@ -38,6 +39,21 @@ export const useSettingsStore = create((set, get) => ({
     }
   },
 
+  setWeighingUnit: async (unit) => {
+    localStorage.setItem('khet_kharcha_weighing_unit', unit);
+    set({ weighingUnit: unit });
+
+    // Sync with Firestore profile if authenticated
+    const authStore = useAuthStore.getState();
+    if (authStore.user && authStore.profile) {
+      try {
+        await authStore.updateProfile({ weighingUnit: unit });
+      } catch (e) {
+        console.error('Failed to sync weighing unit setting to profile', e);
+      }
+    }
+  },
+
   setNotificationsEnabled: (enabled) => {
     localStorage.setItem('khet_kharcha_notif', String(enabled));
     set({ notificationsEnabled: enabled });
@@ -54,6 +70,10 @@ export const useSettingsStore = create((set, get) => ({
     if (profile.unitPreference && profile.unitPreference !== get().unitPreference) {
       localStorage.setItem('khet_kharcha_unit', profile.unitPreference);
       set({ unitPreference: profile.unitPreference });
+    }
+    if (profile.weighingUnit && profile.weighingUnit !== get().weighingUnit) {
+      localStorage.setItem('khet_kharcha_weighing_unit', profile.weighingUnit);
+      set({ weighingUnit: profile.weighingUnit });
     }
   }
 }));

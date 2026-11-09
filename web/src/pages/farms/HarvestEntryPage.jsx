@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore.js';
+import { useSettingsStore } from '../../store/useSettingsStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
 import { usePartnerStore } from '../../store/usePartnerStore.js';
 import { useTransactionStore } from '../../store/useTransactionStore.js';
 import { usePartnerLoanStore } from '../../store/usePartnerLoanStore.js';
+import { WEIGHING_UNITS } from '../../../../shared/constants/index.js';
 import { 
   ArrowLeft, Scale, Calendar, IndianRupee, Save, 
   Share2, Award, ClipboardCheck, Info, Wheat, Scissors
@@ -23,10 +25,17 @@ export default function HarvestEntryPage() {
   const { selectedFarm, setSelectedFarm } = useFarmStore();
   const { partners, fetchPartnersByFarm, createSettlement } = usePartnerStore();
   const { transactions, fetchTransactions, createTransaction } = useTransactionStore();
+  const { weighingUnit } = useSettingsStore();
 
   // Harvest form states
   const [totalYield, setTotalYield] = useState('');
-  const [yieldUnit, setYieldUnit] = useState('quintal'); // 'quintal' | 'kg' | 'ton'
+  const [yieldUnit, setYieldUnit] = useState(weighingUnit || 'mann'); // 'mann' | 'quintal' | 'kg' | 'ton'
+
+  useEffect(() => {
+    if (weighingUnit) {
+      setYieldUnit(weighingUnit);
+    }
+  }, [weighingUnit]);
   const [mandiRate, setMandiRate] = useState('');
   const [totalSaleAmount, setTotalSaleAmount] = useState('');
   const [harvestDeductions, setHarvestDeductions] = useState('');
@@ -284,18 +293,20 @@ _Generated via Khet Kharcha App_`;
               <select
                 value={yieldUnit}
                 onChange={(e) => setYieldUnit(e.target.value)}
-                className="w-28 px-3 py-2.5 text-sm border border-stone-200 rounded-xl focus:outline-none bg-white cursor-pointer"
+                className="w-40 px-3 py-2.5 text-xs font-semibold border border-stone-200 rounded-xl focus:outline-none bg-white cursor-pointer shadow-sm"
               >
-                <option value="quintal">Quintal</option>
-                <option value="kg">KG</option>
-                <option value="ton">Ton</option>
+                {WEIGHING_UNITS.map(u => (
+                  <option key={u.value} value={u.value}>
+                    {t(u.labelKey)}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
           <div>
             <label className="block text-xs font-bold text-stone-400 uppercase tracking-wider mb-2">
-              Mandi Rate (₹ per {yieldUnit} — optional)
+              Mandi Rate (₹ per {yieldUnit === 'mann' ? 'મણ (20 kg)' : yieldUnit} — optional)
             </label>
             <div className="relative">
               <span className="absolute left-3 top-3 text-stone-400 text-sm font-bold">₹</span>

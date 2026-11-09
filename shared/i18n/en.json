@@ -242,7 +242,9 @@
     "about": "About",
     "privacy": "Privacy Policy",
     "version": "Version",
-    "save": "Save Changes"
+    "save": "Save Changes",
+    "weighingUnit": "Weighing & Harvest Unit",
+    "weighingUnitDesc": "App-wide weighing unit for all crop targets, harvests, and mandi sales (20 kg = 1 Maann)."
   },
   "category": {
     "fertilizer": "Fertilizer",
@@ -270,7 +272,11 @@
   "unit": {
     "bigha": "Bigha",
     "acre": "Acre",
-    "hectare": "Hectare"
+    "hectare": "Hectare",
+    "mann": "Maann / Mann (1 Maann = 20 kg)",
+    "quintal": "Quintal (100 kg)",
+    "kg": "Kilogram / Kg",
+    "ton": "Metric Ton (1000 kg)"
   },
   "partnership": {
     "terms": "Partnership Terms",
