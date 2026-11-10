@@ -31,13 +31,27 @@ import {
   CheckCircle2,
   AlertCircle,
   HelpCircle,
-  Banknote
+  Banknote,
+  Edit3,
+  ChevronDown
 } from 'lucide-react';
 import { formatINR, formatDate, toLocalDateString } from '../../../../shared/utils/helpers.js';
 import { EXPENSE_CATEGORIES, getCategoryById } from '../../../../shared/constants/categories.js';
 import SeasonBadge from '../../components/SeasonBadge.jsx';
 import Toast from '../../components/Toast.jsx';
 import HisabFarmoModal from '../../components/HisabFarmoModal.jsx';
+
+const EXPENSE_CAT_LABELS = {
+  seeds: 'બિયારણ (Seeds)',
+  fertilizer: 'ખાતર (Fertilizer)',
+  pesticide: 'દવા / સ્પ્રે (Pesticide)',
+  labour: 'મજૂરી (Labour)',
+  machinery: 'ટ્રેક્ટર / મશીનરી',
+  irrigation: 'પિયત / વીજળી',
+  harvesting: 'કાપણી / લણણી',
+  transport: 'ભાડું / ટ્રાન્સપોર્ટ',
+  other: 'પરચુરણ ખર્ચ',
+};
 
 export default function CurrentStatePage() {
   const { t, i18n } = useTranslation();
@@ -53,10 +67,13 @@ export default function CurrentStatePage() {
     createCrop, 
     deleteCrop,
     addCropExpense, 
+    editCropExpense,
     deleteCropExpense, 
     addCropUpad,
+    editCropUpad,
     deleteCropUpad,
     addCropSale, 
+    editCropSale,
     deleteCropSale, 
     harvestAndSettleCrop 
   } = useCurrentCropStore();
@@ -80,6 +97,16 @@ export default function CurrentStatePage() {
 
   const [activeCrop, setActiveCrop] = useState(null);
   const [cropToDelete, setCropToDelete] = useState(null);
+
+  // Per-card Logged Entries HUD states (tab & collapse)
+  const [cardTabMap, setCardTabMap] = useState({});
+  const [collapsedCards, setCollapsedCards] = useState({});
+
+  // Entry Edit / Delete states
+  const [editingExpense, setEditingExpense] = useState(null);
+  const [editingUpad, setEditingUpad] = useState(null);
+  const [editingSale, setEditingSale] = useState(null);
+  const [entryToDelete, setEntryToDelete] = useState(null);
 
   // Form states - Add Ongoing Crop
   const [newCropFarmId, setNewCropFarmId] = useState('');
@@ -249,8 +276,9 @@ export default function CurrentStatePage() {
     setIsAddCropModalOpen(false);
   };
 
-  // Open Log Expense
+  // Open Log Expense (Add or Edit)
   const handleOpenExpenseModal = (crop) => {
+    setEditingExpense(null);
     setActiveCrop(crop);
     setExpCategory('seeds');
     setExpAmount('');
@@ -260,25 +288,52 @@ export default function CurrentStatePage() {
     setIsExpenseModalOpen(true);
   };
 
+  const handleOpenEditExpense = (crop, expense) => {
+    setEditingExpense(expense);
+    setActiveCrop(crop);
+    setExpCategory(expense.category || 'seeds');
+    setExpAmount(String(expense.amount || ''));
+    setExpDate(expense.date || toLocalDateString());
+    setExpPaidBy(expense.paidBy || 'owner');
+    setExpNotes(expense.notes || '');
+    setIsExpenseModalOpen(true);
+  };
+
   const handleSaveExpense = (e) => {
     e.preventDefault();
     if (!activeCrop || !expAmount || parseFloat(expAmount) <= 0) return;
+    const uid = profile?.uid || 'default';
 
-    addCropExpense(activeCrop.id, {
-      category: expCategory,
-      amount: parseFloat(expAmount),
-      date: expDate,
-      paidBy: expPaidBy,
-      notes: expNotes
-    }, profile?.uid || 'default');
+    if (editingExpense) {
+      editCropExpense(activeCrop.id, editingExpense.id, {
+        category: expCategory,
+        amount: parseFloat(expAmount),
+        date: expDate,
+        paidBy: expPaidBy,
+        notes: expNotes
+      }, uid);
+      setToastMsg(`ખર્ચ અપડેટ થયો: ${formatINR(parseFloat(expAmount))}`);
+    } else {
+      addCropExpense(activeCrop.id, {
+        category: expCategory,
+        amount: parseFloat(expAmount),
+        date: expDate,
+        paidBy: expPaidBy,
+        notes: expNotes
+      }, uid);
+      setToastMsg(`ખર્ચ નોંધાયો: ${formatINR(parseFloat(expAmount))} for ${activeCrop.cropName}`);
+    }
 
-    setToastMsg(`ખર્ચ નોંધાયો: ${formatINR(parseFloat(expAmount))} for ${activeCrop.cropName}`);
+    setCardTabMap(prev => ({ ...prev, [activeCrop.id]: 'expenses' }));
+    setCollapsedCards(prev => ({ ...prev, [activeCrop.id]: false }));
     setToastType('success');
+    setEditingExpense(null);
     setIsExpenseModalOpen(false);
   };
 
-  // Open Log Upad
+  // Open Log Upad (Add or Edit)
   const handleOpenUpadModal = (crop) => {
+    setEditingUpad(null);
     setActiveCrop(crop);
     setUpadAmount('');
     setUpadDate(toLocalDateString());
@@ -287,24 +342,49 @@ export default function CurrentStatePage() {
     setIsUpadModalOpen(true);
   };
 
+  const handleOpenEditUpad = (crop, upad) => {
+    setEditingUpad(upad);
+    setActiveCrop(crop);
+    setUpadAmount(String(upad.amount || ''));
+    setUpadDate(upad.date || toLocalDateString());
+    setUpadRecipient(upad.recipient || crop.partner?.name || 'Partner');
+    setUpadNotes(upad.notes || '');
+    setIsUpadModalOpen(true);
+  };
+
   const handleSaveUpad = (e) => {
     e.preventDefault();
     if (!activeCrop || !upadAmount || parseFloat(upadAmount) <= 0) return;
+    const uid = profile?.uid || 'default';
 
-    addCropUpad(activeCrop.id, {
-      amount: parseFloat(upadAmount),
-      date: upadDate,
-      recipient: upadRecipient || activeCrop.partner?.name || 'Partner',
-      notes: upadNotes
-    }, profile?.uid || 'default');
+    if (editingUpad) {
+      editCropUpad(activeCrop.id, editingUpad.id, {
+        amount: parseFloat(upadAmount),
+        date: upadDate,
+        recipient: upadRecipient || activeCrop.partner?.name || 'Partner',
+        notes: upadNotes
+      }, uid);
+      setToastMsg(`ઉપાડ અપડેટ થયો: ${formatINR(parseFloat(upadAmount))}`);
+    } else {
+      addCropUpad(activeCrop.id, {
+        amount: parseFloat(upadAmount),
+        date: upadDate,
+        recipient: upadRecipient || activeCrop.partner?.name || 'Partner',
+        notes: upadNotes
+      }, uid);
+      setToastMsg(`ઉપાડ નોંધાયો: ${formatINR(parseFloat(upadAmount))} for ${activeCrop.cropName}`);
+    }
 
-    setToastMsg(`ઉપાડ નોંધાયો: ${formatINR(parseFloat(upadAmount))} for ${activeCrop.cropName}`);
+    setCardTabMap(prev => ({ ...prev, [activeCrop.id]: 'upad' }));
+    setCollapsedCards(prev => ({ ...prev, [activeCrop.id]: false }));
     setToastType('success');
+    setEditingUpad(null);
     setIsUpadModalOpen(false);
   };
 
-  // Open Log Sale & Weighment
+  // Open Log Sale & Weighment (Add or Edit)
   const handleOpenSaleModal = (crop) => {
+    setEditingSale(null);
     setActiveCrop(crop);
     setSaleGrossWeight('');
     setSaleOtherWeight('0');
@@ -313,6 +393,19 @@ export default function CurrentStatePage() {
     setSaleBuyer('');
     setSaleDate(toLocalDateString());
     setSaleNotes('');
+    setIsSaleModalOpen(true);
+  };
+
+  const handleOpenEditSale = (crop, sale) => {
+    setEditingSale(sale);
+    setActiveCrop(crop);
+    setSaleGrossWeight(String(sale.grossWeightKg || ''));
+    setSaleOtherWeight(String(sale.otherWeightKg || '0'));
+    setSaleWeightDeduction(String(sale.weightDeductionKg || '0'));
+    setSaleRatePerMann(String(sale.ratePerMann || ''));
+    setSaleBuyer(sale.buyer || '');
+    setSaleDate(sale.date || toLocalDateString());
+    setSaleNotes(sale.notes || '');
     setIsSaleModalOpen(true);
   };
 
@@ -328,8 +421,9 @@ export default function CurrentStatePage() {
       setToastType('error');
       return;
     }
+    const uid = profile?.uid || 'default';
 
-    addCropSale(activeCrop.id, {
+    const payload = {
       grossWeightKg: parseFloat(saleGrossWeight) || 0,
       otherWeightKg: parseFloat(saleOtherWeight) || 0,
       weightDeductionKg: parseFloat(saleWeightDeduction) || 0,
@@ -337,11 +431,41 @@ export default function CurrentStatePage() {
       buyer: saleBuyer,
       date: saleDate,
       notes: saleNotes
-    }, profile?.uid || 'default');
+    };
 
-    setToastMsg(`વેચાણ & મદતર નોંધાયું: ${calculatedWeightInMann} મણ (${formatINR(calculatedMadatar)}) for ${activeCrop.cropName}`);
+    if (editingSale) {
+      editCropSale(activeCrop.id, editingSale.id, payload, uid);
+      setToastMsg(`વેચાણ & મદતર અપડેટ થયું: ${calculatedWeightInMann} મણ (${formatINR(calculatedMadatar)})`);
+    } else {
+      addCropSale(activeCrop.id, payload, uid);
+      setToastMsg(`વેચાણ & મદતર નોંધાયું: ${calculatedWeightInMann} મણ (${formatINR(calculatedMadatar)}) for ${activeCrop.cropName}`);
+    }
+
+    setCardTabMap(prev => ({ ...prev, [activeCrop.id]: 'sales' }));
+    setCollapsedCards(prev => ({ ...prev, [activeCrop.id]: false }));
     setToastType('success');
+    setEditingSale(null);
     setIsSaleModalOpen(false);
+  };
+
+  // Delete Logged Entry Handler (Expense / Upad / Sale)
+  const handleConfirmDeleteEntry = () => {
+    if (!entryToDelete) return;
+    const { crop, type, item } = entryToDelete;
+    const uid = profile?.uid || 'default';
+
+    if (type === 'expense') {
+      deleteCropExpense(crop.id, item.id, uid);
+      setToastMsg(`ખર્ચ એન્ટ્રી ડિલીટ કરી: ${formatINR(item.amount)}`);
+    } else if (type === 'upad') {
+      deleteCropUpad(crop.id, item.id, uid);
+      setToastMsg(`ઉપાડ એન્ટ્રી ડિલીટ કરી: ${formatINR(item.amount)}`);
+    } else if (type === 'sale') {
+      deleteCropSale(crop.id, item.id, uid);
+      setToastMsg(`વેચાણ એન્ટ્રી ડિલીટ કરી: ${formatINR(item.totalMadatar)}`);
+    }
+    setToastType('info');
+    setEntryToDelete(null);
   };
 
   // Open Farmo Modal
@@ -693,6 +817,243 @@ export default function CurrentStatePage() {
                     </div>
 
                   </div>
+
+                  {/* ======================================================== */}
+                  {/* LOGGED ENTRIES LEDGER (EXPENSES / UPAD / SALES)         */}
+                  {/* ======================================================== */}
+                  {((crop.expenses || []).length > 0 || (crop.upad || []).length > 0 || (crop.sales || []).length > 0) && (() => {
+                    const activeTab = cardTabMap[crop.id] || ((crop.expenses || []).length > 0 ? 'expenses' : (crop.upad || []).length > 0 ? 'upad' : 'sales');
+                    const isCollapsed = !!collapsedCards[crop.id];
+                    return (
+                      <div className="mt-4 border border-stone-200 rounded-2xl overflow-hidden bg-stone-50/70">
+                        {/* Collapsible Header */}
+                        <div
+                          onClick={() => setCollapsedCards(prev => ({ ...prev, [crop.id]: !prev[crop.id] }))}
+                          className="px-3.5 py-2.5 bg-stone-100/80 border-b border-stone-200/70 flex items-center justify-between cursor-pointer hover:bg-stone-100 transition"
+                        >
+                          <div className="flex items-center gap-1.5 text-xs font-extrabold text-stone-800">
+                            <Receipt className="w-3.5 h-3.5 text-amber-600" />
+                            <span>નોંધાયેલ ખર્ચ & હિસાબ વિગત</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] font-bold text-stone-500">
+                            <span>{(crop.expenses || []).length} ખર્ચ • {(crop.upad || []).length} ઉપાડ • {(crop.sales || []).length} વેચાણ</span>
+                            <ChevronDown className={`w-4 h-4 transition-transform ${isCollapsed ? '' : 'rotate-180'}`} />
+                          </div>
+                        </div>
+
+                        {!isCollapsed && (
+                          <div className="p-3 space-y-2.5">
+                            {/* Tab Selector */}
+                            <div className="flex gap-1.5 bg-white p-1 rounded-xl border border-stone-200/70 text-[11px] font-bold">
+                              <button
+                                type="button"
+                                onClick={() => setCardTabMap(prev => ({ ...prev, [crop.id]: 'expenses' }))}
+                                className={`flex-1 py-1.5 px-2 rounded-lg transition cursor-pointer ${
+                                  activeTab === 'expenses'
+                                    ? 'bg-amber-500 text-stone-950 shadow-sm font-extrabold'
+                                    : 'text-stone-500 hover:bg-stone-50'
+                                }`}
+                              >
+                                ખર્ચ ({(crop.expenses || []).length})
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCardTabMap(prev => ({ ...prev, [crop.id]: 'upad' }))}
+                                className={`flex-1 py-1.5 px-2 rounded-lg transition cursor-pointer ${
+                                  activeTab === 'upad'
+                                    ? 'bg-indigo-600 text-white shadow-sm font-extrabold'
+                                    : 'text-stone-500 hover:bg-stone-50'
+                                }`}
+                              >
+                                ઉપાડ ({(crop.upad || []).length})
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setCardTabMap(prev => ({ ...prev, [crop.id]: 'sales' }))}
+                                className={`flex-1 py-1.5 px-2 rounded-lg transition cursor-pointer ${
+                                  activeTab === 'sales'
+                                    ? 'bg-emerald-600 text-white shadow-sm font-extrabold'
+                                    : 'text-stone-500 hover:bg-stone-50'
+                                }`}
+                              >
+                                વેચાણ ({(crop.sales || []).length})
+                              </button>
+                            </div>
+
+                            {/* EXPENSES LIST */}
+                            {activeTab === 'expenses' && (
+                              <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
+                                {(crop.expenses || []).length > 0 ? (
+                                  (crop.expenses || []).map((exp) => (
+                                    <div
+                                      key={exp.id}
+                                      className="bg-white border border-stone-200/80 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs shadow-xs hover:border-amber-300 transition"
+                                    >
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                          <span className="font-extrabold text-amber-900 bg-amber-50 border border-amber-200/60 px-2 py-0.5 rounded-md text-[10px]">
+                                            {EXPENSE_CAT_LABELS[exp.category] || exp.category}
+                                          </span>
+                                          <span className="text-[10px] font-semibold text-stone-400">
+                                            {formatDate(exp.date)}
+                                          </span>
+                                          {hasPartner && (
+                                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">
+                                              {exp.paidBy === 'partner' ? 'પાર્ટનર' : 'માલિક'}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {exp.notes && (
+                                          <p className="text-[11px] text-stone-600 font-medium truncate mt-0.5">
+                                            {exp.notes}
+                                          </p>
+                                        )}
+                                      </div>
+
+                                      <div className="flex items-center gap-1 shrink-0">
+                                        <span className="font-black text-stone-900 text-xs mr-1">
+                                          {formatINR(exp.amount)}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleOpenEditExpense(crop, exp)}
+                                          className="p-1.5 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition cursor-pointer"
+                                          title="ખર્ચ સુધારો (Edit Expense)"
+                                        >
+                                          <Edit3 className="w-3.5 h-3.5" />
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => setEntryToDelete({ crop, type: 'expense', item: exp })}
+                                          className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                          title="ખર્ચ ડિલીટ કરો (Delete Expense)"
+                                        >
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <p className="text-[11px] text-stone-400 text-center py-3">કોઈ ખર્ચ નોંધાયેલ નથી.</p>
+                                )}
+                              </div>
+                            )}
+
+                            {/* UPAD LIST */}
+                            {activeTab === 'upad' && (
+                              <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
+                                {(crop.upad || []).length > 0 ? (
+                                  (crop.upad || []).map((u) => (
+                                    <div
+                                      key={u.id}
+                                      className="bg-white border border-stone-200/80 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs shadow-xs hover:border-indigo-300 transition"
+                                    >
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                          <span className="font-extrabold text-indigo-900 bg-indigo-50 border border-indigo-200/60 px-2 py-0.5 rounded-md text-[10px]">
+                                            {u.recipient || 'Partner'}
+                                          </span>
+                                          <span className="text-[10px] font-semibold text-stone-400">
+                                            {formatDate(u.date)}
+                                          </span>
+                                        </div>
+                                        {u.notes && (
+                                          <p className="text-[11px] text-stone-600 font-medium truncate mt-0.5">
+                                            {u.notes}
+                                          </p>
+                                        )}
+                                      </div>
+
+                                      <div className="flex items-center gap-1 shrink-0">
+                                        <span className="font-black text-indigo-700 text-xs mr-1">
+                                          {formatINR(u.amount)}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleOpenEditUpad(crop, u)}
+                                          className="p-1.5 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition cursor-pointer"
+                                          title="ઉપાડ સુધારો (Edit Upad)"
+                                        >
+                                          <Edit3 className="w-3.5 h-3.5" />
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => setEntryToDelete({ crop, type: 'upad', item: u })}
+                                          className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                          title="ઉપાડ ડિલીટ કરો (Delete Upad)"
+                                        >
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <p className="text-[11px] text-stone-400 text-center py-3">કોઈ ઉપાડ નોંધાયેલ નથી.</p>
+                                )}
+                              </div>
+                            )}
+
+                            {/* SALES LIST */}
+                            {activeTab === 'sales' && (
+                              <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
+                                {(crop.sales || []).length > 0 ? (
+                                  (crop.sales || []).map((s) => (
+                                    <div
+                                      key={s.id}
+                                      className="bg-white border border-stone-200/80 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs shadow-xs hover:border-emerald-300 transition"
+                                    >
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                          <span className="font-extrabold text-emerald-900 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md text-[10px]">
+                                            {s.weightInMann} મણ ({s.netWeightKg} kg)
+                                          </span>
+                                          <span className="text-[10px] font-semibold text-stone-500">
+                                            ₹{s.ratePerMann}/મણ
+                                          </span>
+                                          <span className="text-[10px] font-semibold text-stone-400">
+                                            • {formatDate(s.date)}
+                                          </span>
+                                        </div>
+                                        {(s.buyer || s.notes) && (
+                                          <p className="text-[11px] text-stone-600 font-medium truncate mt-0.5">
+                                            {s.buyer ? `${s.buyer} ` : ''}{s.notes ? `• ${s.notes}` : ''}
+                                          </p>
+                                        )}
+                                      </div>
+
+                                      <div className="flex items-center gap-1 shrink-0">
+                                        <span className="font-black text-emerald-700 text-xs mr-1">
+                                          {formatINR(s.totalMadatar)}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleOpenEditSale(crop, s)}
+                                          className="p-1.5 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition cursor-pointer"
+                                          title="વેચાણ સુધારો (Edit Sale)"
+                                        >
+                                          <Edit3 className="w-3.5 h-3.5" />
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={() => setEntryToDelete({ crop, type: 'sale', item: s })}
+                                          className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                          title="વેચાણ ડિલીટ કરો (Delete Sale)"
+                                        >
+                                          <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <p className="text-[11px] text-stone-400 text-center py-3">કોઈ પાક વેચાણ નોંધાયેલ નથી.</p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Card Action Buttons */}
@@ -983,7 +1344,9 @@ export default function CurrentStatePage() {
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-stone-100 p-6 md:p-8">
             <div className="flex justify-between items-center pb-4 border-b border-stone-100">
               <div>
-                <h3 className="text-lg font-extrabold text-stone-900 font-serif">ખર્ચ નોંધો (Log Expense)</h3>
+                <h3 className="text-lg font-extrabold text-stone-900 font-serif">
+                  {editingExpense ? 'ખર્ચ સુધારો (Edit Expense)' : 'ખર્ચ નોંધો (Log Expense)'}
+                </h3>
                 <p className="text-xs text-stone-400">
                   {activeCrop.cropName} • {activeCrop.farmName}
                 </p>
@@ -1087,7 +1450,7 @@ export default function CurrentStatePage() {
                   type="submit"
                   className="flex-1 py-3 text-xs font-extrabold text-stone-950 bg-amber-500 hover:bg-amber-600 rounded-xl transition shadow cursor-pointer"
                 >
-                  ખર્ચ સાચવો
+                  {editingExpense ? 'ફેરફાર સાચવો (Update)' : 'ખર્ચ સાચવો'}
                 </button>
               </div>
             </form>
@@ -1103,7 +1466,9 @@ export default function CurrentStatePage() {
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-stone-100 p-6 md:p-8">
             <div className="flex justify-between items-center pb-4 border-b border-stone-100">
               <div>
-                <h3 className="text-lg font-extrabold text-stone-900 font-serif">ઉપાડ નોંધો (Log Upad)</h3>
+                <h3 className="text-lg font-extrabold text-stone-900 font-serif">
+                  {editingUpad ? 'ઉપાડ સુધારો (Edit Upad)' : 'ઉપાડ નોંધો (Log Upad)'}
+                </h3>
                 <p className="text-xs text-stone-400">
                   {activeCrop.cropName} • {activeCrop.farmName}
                 </p>
@@ -1182,7 +1547,7 @@ export default function CurrentStatePage() {
                   type="submit"
                   className="flex-1 py-3 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition shadow cursor-pointer"
                 >
-                  ઉપાડ સાચવો
+                  {editingUpad ? 'ફેરફાર સાચવો (Update)' : 'ઉપાડ સાચવો'}
                 </button>
               </div>
             </form>
@@ -1198,7 +1563,9 @@ export default function CurrentStatePage() {
           <div className="bg-white rounded-3xl max-w-lg w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-stone-100 p-6 md:p-8">
             <div className="flex justify-between items-center pb-4 border-b border-stone-100">
               <div>
-                <h3 className="text-lg font-extrabold text-stone-900 font-serif">પાક વેચાણ & વજન વિગત (Log Sale)</h3>
+                <h3 className="text-lg font-extrabold text-stone-900 font-serif">
+                  {editingSale ? 'વેચાણ & વજન સુધારો (Edit Sale)' : 'પાક વેચાણ & વજન વિગત (Log Sale)'}
+                </h3>
                 <p className="text-xs text-stone-400">
                   {activeCrop.cropName} • Exact Hisab Farmo weighment format
                 </p>
@@ -1361,7 +1728,7 @@ export default function CurrentStatePage() {
                   type="submit"
                   className="flex-1 py-3 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition shadow cursor-pointer"
                 >
-                  વેચાણ નોંધો (Save Sale)
+                  {editingSale ? 'ફેરફાર સાચવો (Update Sale)' : 'વેચાણ નોંધો (Save Sale)'}
                 </button>
               </div>
             </form>
@@ -1372,12 +1739,21 @@ export default function CurrentStatePage() {
       {/* ======================================================== */}
       {/* MODAL 5: 2-PAGE UNIVERSAL HISAB FARMO MODAL              */}
       {/* ======================================================== */}
-      {isFarmoModalOpen && activeCrop && (
-        <HisabFarmoModal
-          crop={activeCrop}
-          onClose={() => setIsFarmoModalOpen(false)}
-        />
-      )}
+      {isFarmoModalOpen && activeCrop && (() => {
+        const liveActive = crops.find(c => c.id === activeCrop.id) || activeCrop;
+        return (
+          <HisabFarmoModal
+            crop={liveActive}
+            onClose={() => setIsFarmoModalOpen(false)}
+            onEditExpense={(exp) => { setIsFarmoModalOpen(false); handleOpenEditExpense(liveActive, exp); }}
+            onDeleteExpense={(exp) => { setIsFarmoModalOpen(false); setEntryToDelete({ crop: liveActive, type: 'expense', item: exp }); }}
+            onEditUpad={(u) => { setIsFarmoModalOpen(false); handleOpenEditUpad(liveActive, u); }}
+            onDeleteUpad={(u) => { setIsFarmoModalOpen(false); setEntryToDelete({ crop: liveActive, type: 'upad', item: u }); }}
+            onEditSale={(s) => { setIsFarmoModalOpen(false); handleOpenEditSale(liveActive, s); }}
+            onDeleteSale={(s) => { setIsFarmoModalOpen(false); setEntryToDelete({ crop: liveActive, type: 'sale', item: s }); }}
+          />
+        );
+      })()}
 
       {/* ======================================================== */}
       {/* MODAL 6: HARVEST & SETTLE FARMO (ARCHIVE TO HISTORY)     */}
@@ -1564,6 +1940,52 @@ export default function CurrentStatePage() {
                 className="flex-1 py-3 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs shadow-md hover:shadow-lg transition cursor-pointer flex items-center justify-center gap-2"
               >
                 <Trash2 className="w-4 h-4" />
+                હા, ડિલીટ કરો
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* MODAL 8: DELETE SINGLE LOGGED ENTRY CONFIRMATION          */}
+      {/* ======================================================== */}
+      {entryToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-stone-100 p-6 md:p-8 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-3 border border-red-100 shadow-sm">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-lg font-extrabold text-stone-900 tracking-tight font-serif">
+              {entryToDelete.type === 'expense'
+                ? 'ખર્ચ એન્ટ્રી ડિલીટ કરવી છે?'
+                : entryToDelete.type === 'upad'
+                  ? 'ઉપાડ એન્ટ્રી ડિલીટ કરવી છે?'
+                  : 'વેચાણ એન્ટ્રી ડિલીટ કરવી છે?'}
+            </h3>
+            <p className="text-xs text-stone-500 font-medium mt-1.5 leading-relaxed">
+              શું તમે <strong className="text-stone-900">{entryToDelete.crop?.cropName}</strong> માંથી{' '}
+              <strong className="text-red-700">
+                {formatINR(entryToDelete.type === 'sale' ? entryToDelete.item.totalMadatar : entryToDelete.item.amount)}
+              </strong>{' '}
+              ની આ એન્ટ્રી ડિલીટ કરવા માંગો છો? કુલ હિસાબ આપોઆપ અપડેટ થઈ જશે.
+            </p>
+
+            <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setEntryToDelete(null)}
+                className="flex-1 py-2.5 px-4 rounded-xl border border-stone-200 text-stone-700 font-bold text-xs hover:bg-stone-50 transition cursor-pointer"
+              >
+                રદ કરો (Cancel)
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteEntry}
+                className="flex-1 py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs shadow-md transition cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
                 હા, ડિલીટ કરો
               </button>
             </div>

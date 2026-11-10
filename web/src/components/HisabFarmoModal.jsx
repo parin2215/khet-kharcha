@@ -14,7 +14,9 @@ import {
   AlertCircle,
   Clock,
   ArrowDownRight,
-  ArrowUpRight
+  ArrowUpRight,
+  Edit3,
+  Trash2
 } from 'lucide-react';
 import { formatINR, formatDate } from '../../../shared/utils/helpers.js';
 import { calculateFarmoHisab } from '../store/useCurrentCropStore.js';
@@ -23,7 +25,17 @@ import { calculateFarmoHisab } from '../store/useCurrentCropStore.js';
  * Exact visual replica of the 2-page Gujarati accounting ledger:
  * "હિસાબ કરવાનો ફરમો" (Hisab Karvano Farmo)
  */
-export default function HisabFarmoModal({ crop, onClose, onRefresh }) {
+export default function HisabFarmoModal({ 
+  crop, 
+  onClose, 
+  onRefresh,
+  onEditExpense,
+  onDeleteExpense,
+  onEditUpad,
+  onDeleteUpad,
+  onEditSale,
+  onDeleteSale
+}) {
   if (!crop) return null;
 
   const [activeTab, setActiveTab] = useState('farmo'); // 'farmo' | 'expenses' | 'upad' | 'sales'
@@ -531,8 +543,8 @@ export default function HisabFarmoModal({ crop, onClose, onRefresh }) {
               {(crop.expenses || []).length > 0 ? (
                 <div className="border border-stone-200 rounded-2xl overflow-hidden divide-y divide-stone-100 text-xs">
                   {(crop.expenses || []).map((exp, idx) => (
-                    <div key={exp.id || idx} className="p-3.5 flex items-center justify-between hover:bg-stone-50">
-                      <div>
+                    <div key={exp.id || idx} className="p-3.5 flex items-center justify-between hover:bg-stone-50 gap-3">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-extrabold text-stone-900 uppercase text-[11px] bg-stone-100 px-2 py-0.5 rounded">
                             {exp.category}
@@ -542,7 +554,29 @@ export default function HisabFarmoModal({ crop, onClose, onRefresh }) {
                         </div>
                         {exp.notes && <p className="text-stone-600 text-[11px] mt-1">{exp.notes}</p>}
                       </div>
-                      <span className="font-extrabold text-stone-900 text-sm">{formatINR(exp.amount)}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="font-extrabold text-stone-900 text-sm mr-1">{formatINR(exp.amount)}</span>
+                        {onEditExpense && (
+                          <button
+                            type="button"
+                            onClick={() => onEditExpense(exp)}
+                            className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100 rounded-lg transition cursor-pointer print:hidden"
+                            title="Edit Expense"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                        )}
+                        {onDeleteExpense && (
+                          <button
+                            type="button"
+                            onClick={() => onDeleteExpense(exp)}
+                            className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer print:hidden"
+                            title="Delete Expense"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -565,8 +599,8 @@ export default function HisabFarmoModal({ crop, onClose, onRefresh }) {
               {(crop.upad || []).length > 0 ? (
                 <div className="border border-stone-200 rounded-2xl overflow-hidden divide-y divide-stone-100 text-xs">
                   {(crop.upad || []).map((u, idx) => (
-                    <div key={u.id || idx} className="p-3.5 flex items-center justify-between hover:bg-stone-50">
-                      <div>
+                    <div key={u.id || idx} className="p-3.5 flex items-center justify-between hover:bg-stone-50 gap-3">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="font-extrabold text-amber-900 bg-amber-50 px-2 py-0.5 rounded text-[11px]">
                             {u.recipient || partnerName}
@@ -575,7 +609,29 @@ export default function HisabFarmoModal({ crop, onClose, onRefresh }) {
                         </div>
                         {u.notes && <p className="text-stone-600 text-[11px] mt-1">{u.notes}</p>}
                       </div>
-                      <span className="font-extrabold text-amber-700 text-sm">{formatINR(u.amount)}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="font-extrabold text-amber-700 text-sm mr-1">{formatINR(u.amount)}</span>
+                        {onEditUpad && (
+                          <button
+                            type="button"
+                            onClick={() => onEditUpad(u)}
+                            className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100 rounded-lg transition cursor-pointer print:hidden"
+                            title="Edit Upad"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                        )}
+                        {onDeleteUpad && (
+                          <button
+                            type="button"
+                            onClick={() => onDeleteUpad(u)}
+                            className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer print:hidden"
+                            title="Delete Upad"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -607,7 +663,29 @@ export default function HisabFarmoModal({ crop, onClose, onRefresh }) {
                           <span className="text-stone-400 text-[11px]">{formatDate(s.date)}</span>
                           {s.buyer && <span className="text-stone-600 text-[11px] font-semibold">• {s.buyer}</span>}
                         </div>
-                        <span className="font-extrabold text-emerald-700 text-base">{formatINR(s.totalMadatar)}</span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="font-extrabold text-emerald-700 text-base mr-1">{formatINR(s.totalMadatar)}</span>
+                          {onEditSale && (
+                            <button
+                              type="button"
+                              onClick={() => onEditSale(s)}
+                              className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100 rounded-lg transition cursor-pointer print:hidden"
+                              title="Edit Sale"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                          )}
+                          {onDeleteSale && (
+                            <button
+                              type="button"
+                              onClick={() => onDeleteSale(s)}
+                              className="p-1.5 text-stone-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer print:hidden"
+                              title="Delete Sale"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-4 gap-2 text-[11px] text-stone-500 bg-stone-50/70 p-2 rounded-xl">

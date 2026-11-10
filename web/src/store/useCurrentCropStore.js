@@ -424,6 +424,41 @@ export const useCurrentCropStore = create((set, get) => ({
     }
   },
 
+  editCropExpense: (cropId, expenseId, expenseData, ownerId = 'default') => {
+    const currentCrops = get().crops;
+    const updated = currentCrops.map(c => {
+      if (c.id === cropId) {
+        return {
+          ...c,
+          expenses: (c.expenses || []).map(e => {
+            if (e.id === expenseId) {
+              return {
+                ...e,
+                date: expenseData.date || e.date,
+                category: expenseData.category || e.category,
+                amount: parseFloat(expenseData.amount) || 0,
+                paidBy: expenseData.paidBy || e.paidBy,
+                notes: expenseData.notes !== undefined ? expenseData.notes : e.notes
+              };
+            }
+            return e;
+          })
+        };
+      }
+      return c;
+    });
+
+    set({ crops: updated });
+    const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
+  },
+
   // Log Upad (ઉપાડ - Partner Cash Advance)
   addCropUpad: (cropId, upadData, ownerId = 'default') => {
     const currentCrops = get().crops;
@@ -462,6 +497,40 @@ export const useCurrentCropStore = create((set, get) => ({
         return {
           ...c,
           upad: (c.upad || []).filter(u => u.id !== upadId)
+        };
+      }
+      return c;
+    });
+
+    set({ crops: updated });
+    const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
+  },
+
+  editCropUpad: (cropId, upadId, upadData, ownerId = 'default') => {
+    const currentCrops = get().crops;
+    const updated = currentCrops.map(c => {
+      if (c.id === cropId) {
+        return {
+          ...c,
+          upad: (c.upad || []).map(u => {
+            if (u.id === upadId) {
+              return {
+                ...u,
+                date: upadData.date || u.date,
+                amount: parseFloat(upadData.amount) || 0,
+                recipient: upadData.recipient || u.recipient,
+                notes: upadData.notes !== undefined ? upadData.notes : u.notes
+              };
+            }
+            return u;
+          })
         };
       }
       return c;
@@ -531,6 +600,54 @@ export const useCurrentCropStore = create((set, get) => ({
         return {
           ...c,
           sales: (c.sales || []).filter(s => s.id !== saleId)
+        };
+      }
+      return c;
+    });
+
+    set({ crops: updated });
+    const storageKey = `khet_kharcha_ongoing_crops_${ownerId}`;
+    const initializedKey = `khet_kharcha_crops_init_${ownerId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    localStorage.setItem(initializedKey, 'true');
+    if (ownerId && ownerId !== 'default' && ownerId !== 'demo_farmer_101') {
+      const target = updated.find(c => c.id === cropId);
+      if (target) saveCurrentCropToCloud(target).catch(e => console.warn('Cloud sync error:', e));
+    }
+  },
+
+  editCropSale: (cropId, saleId, saleData, ownerId = 'default') => {
+    const currentCrops = get().crops;
+    const updated = currentCrops.map(c => {
+      if (c.id === cropId) {
+        return {
+          ...c,
+          sales: (c.sales || []).map(s => {
+            if (s.id === saleId) {
+              const gross = parseFloat(saleData.grossWeightKg) || 0;
+              const other = parseFloat(saleData.otherWeightKg) || 0;
+              const deduction = parseFloat(saleData.weightDeductionKg) || 0;
+              const net = gross + other - deduction;
+              const mann = saleData.weightInMann !== undefined ? (parseFloat(saleData.weightInMann) || 0) : (net / 20);
+              const rate = parseFloat(saleData.ratePerMann) || 0;
+              const madatar = saleData.totalMadatar !== undefined ? (parseFloat(saleData.totalMadatar) || 0) : (mann * rate);
+
+              return {
+                ...s,
+                date: saleData.date || s.date,
+                grossWeightKg: gross,
+                otherWeightKg: other,
+                weightDeductionKg: deduction,
+                netWeightKg: net,
+                weightInMann: Number(mann.toFixed(2)),
+                ratePerMann: rate,
+                totalMadatar: Math.round(madatar),
+                buyer: saleData.buyer !== undefined ? saleData.buyer : s.buyer,
+                notes: saleData.notes !== undefined ? saleData.notes : s.notes
+              };
+            }
+            return s;
+          })
         };
       }
       return c;
