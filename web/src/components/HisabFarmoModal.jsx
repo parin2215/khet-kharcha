@@ -403,19 +403,35 @@ export default function HisabFarmoModal({
                           ભાગે આવતી રકમ
                         </td>
                         <td className="p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                          <span className="text-stone-600">જે ભાગે રકમ આવી તે</span>
+                          <span className="text-stone-600">જે ભાગે રકમ આવી તે ({partnerShare}% હિસ્સો)</span>
                           <span className="font-extrabold text-stone-950 text-sm">
                             {formatINR(hisab.bhageAavtiRakamPartner)}
                           </span>
                         </td>
                       </tr>
 
+                      {(hisab.partnerOutOfPocketKharch > 0 || hisab.kharchPaidByPartner > 0) && (
+                        <tr className="bg-purple-50/50 hover:bg-purple-50">
+                          <td className="p-3 sm:p-3.5 font-bold text-purple-950 w-1/3 border-r-2 border-stone-800 bg-purple-100/50">
+                            + પાર્ટનર ખર્ચ જમા
+                          </td>
+                          <td className="p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <span className="text-purple-900 font-semibold">
+                              પાર્ટનરે જાતે ચૂકવેલ ખર્ચ ({hisab.kharchPaidByPartner > 0 ? `પૂરા ₹${hisab.kharchPaidByPartner.toLocaleString('en-IN')}` : ''} {hisab.kharchPaidShared > 0 ? `${hisab.kharchPaidByPartner > 0 ? '+ ' : ''}ભાગના ₹${Math.round(hisab.kharchPaidShared * (partnerShare / 100)).toLocaleString('en-IN')}` : ''}) પરત જમા
+                            </span>
+                            <span className="font-extrabold text-purple-800 text-sm">
+                              + {formatINR(hisab.partnerOutOfPocketKharch)}
+                            </span>
+                          </td>
+                        </tr>
+                      )}
+
                       <tr className="hover:bg-stone-50/60">
                         <td className="p-3 sm:p-3.5 font-bold text-stone-900 w-1/3 border-r-2 border-stone-800 bg-stone-100/50">
                           કુલ ઉપાડ રકમ
                         </td>
                         <td className="p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                          <span className="text-stone-600">પાર્ટનર એ જે ઉપાડ કર્યો કે એના ભાગનો ખર્ચ હતો તે</span>
+                          <span className="text-stone-600">પાર્ટનર એ જે ઉપાડ કર્યો કે રોકડ એડવાન્સ લીધી તે</span>
                           <span className="font-extrabold text-amber-700 text-sm">
                             - {formatINR(hisab.totalUpad)}
                           </span>
@@ -427,7 +443,11 @@ export default function HisabFarmoModal({
                           પાર્ટનર ના ભાગે આવતી રકમ
                         </td>
                         <td className="p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                          <span className="text-indigo-900 font-bold">“ભાગે આવતી રકમ – કુલ ઉપાડ રકમ = પાર્ટનર ના ભાગે આવતી રકમ”</span>
+                          <span className="text-indigo-900 font-bold">
+                            {hisab.partnerOutOfPocketKharch > 0
+                              ? '“ભાગે આવતી રકમ + પાર્ટનર ખર્ચ જમા – કુલ ઉપાડ રકમ”'
+                              : '“ભાગે આવતી રકમ – કુલ ઉપાડ રકમ = પાર્ટનર ના ભાગે આવતી રકમ”'}
+                          </span>
                           <span className={`font-extrabold text-base ${hisab.partnerNetShare >= 0 ? 'text-indigo-900' : 'text-red-700'}`}>
                             {formatINR(hisab.partnerNetShare)}
                           </span>
@@ -550,7 +570,19 @@ export default function HisabFarmoModal({
                             {exp.category}
                           </span>
                           <span className="text-stone-400 text-[11px]">{formatDate(exp.date)}</span>
-                          <span className="text-[10px] text-stone-500">({exp.paidBy || 'owner'})</span>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                            exp.paidBy === 'partner'
+                              ? 'bg-purple-50 text-purple-800'
+                              : exp.paidBy === 'shared'
+                                ? 'bg-emerald-50 text-emerald-800'
+                                : 'bg-stone-100 text-stone-600'
+                          }`}>
+                            {exp.paidBy === 'partner'
+                              ? '🤝 પાર્ટનરે પૂરા ચૂકવ્યા'
+                              : exp.paidBy === 'shared'
+                                ? '⚖️ બંનેએ ભાગ ચૂકવ્યો'
+                                : '💵 માલિકે પૂરા ચૂકવ્યા'}
+                          </span>
                         </div>
                         {exp.notes && <p className="text-stone-600 text-[11px] mt-1">{exp.notes}</p>}
                       </div>

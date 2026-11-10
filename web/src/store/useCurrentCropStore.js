@@ -15,15 +15,40 @@ import {
 export const calculateFarmoHisab = (crop) => {
   if (!crop) return {};
 
-  // 1. કુલ ખર્ચ રકમ (Total Expenses)
-  const totalKharch = (crop.expenses || []).reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-  
-  // ખર્ચ ભાગે (Shared expense per partner ratio, e.g. 50% = / 2)
+  // 1. કુલ ખર્ચ રકમ (Total Expenses & Paid-By Attribution)
   const hasPartner = !!(crop.partner?.hasPartner);
   const partnerShareRatio = (hasPartner ? (parseFloat(crop.partner.sharePercent) || 50) : 0) / 100;
   const ownerShareRatio = 1 - partnerShareRatio;
+
+  let totalKharch = 0;
+  let kharchPaidByOwner = 0;   // Owner paid full 100% now -> cut Partner's share at closing
+  let kharchPaidByPartner = 0; // Partner paid full 100% now -> pay Owner's share to Partner at closing
+  let kharchPaidShared = 0;    // Both already paid their % share at purchase
+
+  (crop.expenses || []).forEach(e => {
+    const amt = parseFloat(e.amount) || 0;
+    totalKharch += amt;
+    const paidBy = e.paidBy || 'owner';
+    if (paidBy === 'partner') {
+      kharchPaidByPartner += amt;
+    } else if (paidBy === 'shared') {
+      kharchPaidShared += amt;
+    } else {
+      kharchPaidByOwner += amt;
+    }
+  });
+
+  // ખર્ચ ભાગે (Total responsible expense share belonging to each partner)
   const kharchBhageOwner = Math.round(totalKharch * ownerShareRatio);
   const kharchBhagePartner = Math.round(totalKharch * partnerShareRatio);
+
+  // Cross-party expense reimbursement tracking
+  const partnerOwesOwnerForKharch = hasPartner ? Math.round(kharchPaidByOwner * partnerShareRatio) : 0;
+  const ownerOwesPartnerForKharch = hasPartner ? Math.round(kharchPaidByPartner * ownerShareRatio) : 0;
+  const exactPartnerOutOfPocket = hasPartner
+    ? (kharchPaidByPartner + kharchPaidShared * partnerShareRatio)
+    : 0;
+  const partnerOutOfPocketKharch = Math.round(exactPartnerOutOfPocket);
 
   // 2. કુલ ઉપાડ રકમ (Total Upad / Advance taken by partner from owner)
   const totalUpad = (crop.upad || []).reduce((sum, u) => sum + (parseFloat(u.amount) || 0), 0);
@@ -68,31 +93,37 @@ export const calculateFarmoHisab = (crop) => {
 
   // 5. ભાગે આવતી રકમ (Share of Net Profit)
   // "ખર્ચ કપાત મદતર / ૨" (for 50-50, or per partner share %)
-  const bhageAavtiRakamOwner = hasPartner 
-    ? Math.round(kharchKapatMadatar * ownerShareRatio) 
-    : kharchKapatMadatar;
-  const bhageAavtiRakamPartner = hasPartner 
-    ? Math.round(kharchKapatMadatar * partnerShareRatio) 
-    : 0;
+  const exactBhageOwner = hasPartner ? (kharchKapatMadatar * ownerShareRatio) : kharchKapatMadatar;
+  const exactBhagePartner = hasPartner ? (kharchKapatMadatar * partnerShareRatio) : 0;
+  const bhageAavtiRakamOwner = Math.round(exactBhageOwner);
+  const bhageAavtiRakamPartner = Math.round(exactBhagePartner);
 
   // 6. પાર્ટનર ના ભાગ નો હિસાબ:
-  // "ભાગે આવતી રકમ – કુલ ઉપાડ રકમ = પાર્ટનર ના ભાગે આવતી રકમ"
-  const partnerNetShare = bhageAavtiRakamPartner - totalUpad;
+  // "ભાગે આવતી રકમ + પાર્ટનરે ખિસ્સામાંથી ચૂકવેલ ખર્ચ – કુલ ઉપાડ રકમ = પાર્ટનર ના ભાગે આવતી ચોખ્ખી રકમ"
+  const partnerNetShare = hasPartner
+    ? Math.round(exactBhagePartner + exactPartnerOutOfPocket - totalUpad)
+    : 0;
 
   // 7. આખરી વિગત:
   const maneMadelRakam = bhageAavtiRakamOwner;
   const partnerNeMadelRakam = partnerNetShare;
 
-  // પાર્ટનર ની જોડે લેવાની રકમ (If partner took more Upad than his share)
+  // પાર્ટનર ની જોડે લેવાની રકમ (If negative -> Partner owes Owner at closing)
   const partnerJodeLevaniRakam = partnerNetShare < 0 ? Math.abs(partnerNetShare) : 0;
 
-  // પાર્ટનર ને આપવાની રકમ (If partner's share exceeds Upad)
+  // પાર્ટનર ને આપવાની રકમ (If positive -> Owner gives Partner at closing)
   const partnerNeAapvaniRakam = partnerNetShare > 0 ? partnerNetShare : 0;
 
   return {
     totalKharch,
+    kharchPaidByOwner,
+    kharchPaidByPartner,
+    kharchPaidShared,
     kharchBhageOwner,
     kharchBhagePartner,
+    partnerOwesOwnerForKharch,
+    ownerOwesPartnerForKharch,
+    partnerOutOfPocketKharch,
     totalUpad,
     totalGrossWeightKg: Number(totalGrossWeightKg.toFixed(1)),
     totalOtherWeightKg: Number(totalOtherWeightKg.toFixed(1)),

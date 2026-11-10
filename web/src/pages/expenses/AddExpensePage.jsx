@@ -36,6 +36,7 @@ export default function AddExpensePage() {
   const { partners, fetchPartnersByFarm } = usePartnerStore();
   const [ownerShare, setOwnerShare] = useState('');
   const [partnerShare, setPartnerShare] = useState('');
+  const [paidBy, setPaidBy] = useState('owner'); // 'owner' | 'partner' | 'shared'
   const [isManualOverride, setIsManualOverride] = useState(false);
   
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -124,6 +125,7 @@ export default function AddExpensePage() {
           setNotes(expData.notes || '');
           setExpenseType(expData.expenseType || 'own');
           setPartnerId(expData.partnerId || '');
+          setPaidBy(expData.paidBy || 'owner');
           
           if (expData.ownerShare !== undefined) setOwnerShare(expData.ownerShare.toString());
           if (expData.partnerShare !== undefined) setPartnerShare(expData.partnerShare.toString());
@@ -241,6 +243,7 @@ export default function AddExpensePage() {
         partnerId: activePartner ? activePartner.id : '',
         ownerShare: selectedFarm?.ownershipType === 'partner' ? parseFloat(ownerShare) || 0 : expAmount,
         partnerShare: selectedFarm?.ownershipType === 'partner' ? parseFloat(partnerShare) || 0 : 0,
+        paidBy: selectedFarm?.ownershipType === 'partner' ? paidBy : 'owner',
         date: parseLocalDateString(date) || new Date(),
         notes,
         receiptURL,
@@ -394,6 +397,53 @@ export default function AddExpensePage() {
                     }}
                     className="w-full px-3 py-2 text-xs border border-stone-200 bg-white rounded-lg focus:outline-none font-bold text-partnerExpense"
                   />
+                </div>
+              </div>
+
+              {/* Who Paid at Purchase Selector */}
+              <div className="pt-2 border-t border-stone-200/70 space-y-2">
+                <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+                  Who Paid Now? (કોણે પૈસા ચૂકવ્યા?)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPaidBy('owner')}
+                    className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                      paidBy === 'owner'
+                        ? 'bg-amber-50 border-amber-500 text-amber-950 font-bold'
+                        : 'bg-white border-stone-200 text-stone-600'
+                    }`}
+                  >
+                    <span className="text-[11px] font-extrabold block">💵 Owner Paid Full</span>
+                    <span className="text-[10px] text-stone-500 block mt-0.5">Cut partner's ₹{partnerShare || 0} at closing</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPaidBy('partner')}
+                    className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                      paidBy === 'partner'
+                        ? 'bg-purple-50 border-purple-500 text-purple-950 font-bold'
+                        : 'bg-white border-stone-200 text-stone-600'
+                    }`}
+                  >
+                    <span className="text-[11px] font-extrabold block">🤝 Partner Paid Full</span>
+                    <span className="text-[10px] text-stone-500 block mt-0.5">Give owner's ₹{ownerShare || 0} at closing</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPaidBy('shared')}
+                    className={`p-2.5 rounded-xl border text-left transition cursor-pointer ${
+                      paidBy === 'shared'
+                        ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold'
+                        : 'bg-white border-stone-200 text-stone-600'
+                    }`}
+                  >
+                    <span className="text-[11px] font-extrabold block">⚖️ Paid Split Direct</span>
+                    <span className="text-[10px] text-stone-500 block mt-0.5">Each paid own share now</span>
+                  </button>
                 </div>
               </div>
             </div>

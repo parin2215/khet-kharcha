@@ -31,6 +31,7 @@ export class FinancialEngine {
     // Share tracking
     let ownerShareExpense = 0;
     let partnerShareExpense = 0;
+    let partnerOutOfPocketExpense = 0;
     
     let totalYield = 0;
 
@@ -44,6 +45,13 @@ export class FinancialEngine {
         sharedExpenses += amt;
         ownerShareExpense += oShare;
         partnerShareExpense += pShare;
+
+        const paidBy = tx?.paidBy || 'owner';
+        if (paidBy === 'partner') {
+          partnerOutOfPocketExpense += amt;
+        } else if (paidBy === 'shared') {
+          partnerOutOfPocketExpense += pShare;
+        }
       } 
       else if (tx.type === 'crop_sale') {
         cropIncome += amt;
@@ -89,9 +97,9 @@ export class FinancialEngine {
     const partnerIncomeShare = (cropIncome * partnerProfitSharePercent) / 100;
     const ownerIncomeShare = (cropIncome * ownerProfitSharePercent) / 100;
 
-    // Partner Settlement
+    // Partner Settlement (accounts for who actually fronted the expense cash at purchase time)
     const partnerNetProfit = partnerIncomeShare - partnerShareExpense;
-    const partnerSettlement = partnerNetProfit - partnerNetLoanLiability;
+    const partnerSettlement = partnerNetProfit + partnerOutOfPocketExpense - partnerNetLoanLiability;
     
     const ownerNetProfit = ownerIncomeShare - ownerShareExpense;
     const ownerSettlement = ownerNetProfit + partnerNetLoanLiability; 

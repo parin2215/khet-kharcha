@@ -739,9 +739,14 @@ export default function CurrentStatePage() {
                         <span className="text-base font-extrabold text-amber-400 block mt-0.5">
                           {formatINR(hisab.totalKharch)}
                         </span>
-                        <span className="text-[10px] text-stone-400">
+                        <span className="text-[10px] text-stone-400 block">
                           ભાગે: {hasPartner ? formatINR(hisab.kharchBhagePartner) : '100%'}
                         </span>
+                        {hasPartner && (hisab.kharchPaidByPartner > 0 || hisab.kharchPaidShared > 0) && (
+                          <span className="text-[9px] text-amber-200/80 block mt-0.5 font-semibold">
+                            માલિકે: {formatINR(hisab.kharchPaidByOwner)} • પાર્ટનરે: {formatINR(hisab.kharchPaidByPartner)}
+                          </span>
+                        )}
                       </div>
 
                       <div>
@@ -788,9 +793,14 @@ export default function CurrentStatePage() {
                     <div className="flex items-center justify-between pt-1">
                       <div>
                         <span className="text-[10px] text-stone-400 font-bold uppercase block">ભાગે આવતી રકમ:</span>
-                        <span className="text-xs font-bold text-stone-200">
+                        <span className="text-xs font-bold text-stone-200 block">
                           {hasPartner ? `₹${hisab.bhageAavtiRakamPartner.toLocaleString('en-IN')} (${partnerShare}%)` : `₹${hisab.bhageAavtiRakamOwner.toLocaleString('en-IN')} (100%)`}
                         </span>
+                        {hasPartner && hisab.partnerOutOfPocketKharch > 0 && (
+                          <span className="text-[10px] font-bold text-purple-300 block mt-0.5">
+                            + {formatINR(hisab.partnerOutOfPocketKharch)} પાર્ટનર ખર્ચ જમા
+                          </span>
+                        )}
                       </div>
 
                       <div>
@@ -898,8 +908,18 @@ export default function CurrentStatePage() {
                                             {formatDate(exp.date)}
                                           </span>
                                           {hasPartner && (
-                                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">
-                                              {exp.paidBy === 'partner' ? 'પાર્ટનર' : 'માલિક'}
+                                            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                                              exp.paidBy === 'partner'
+                                                ? 'bg-purple-50 text-purple-800 border border-purple-200/70'
+                                                : exp.paidBy === 'shared'
+                                                  ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/70'
+                                                  : 'bg-stone-100 text-stone-700'
+                                            }`}>
+                                              {exp.paidBy === 'partner'
+                                                ? '🤝 પાર્ટનરે ચૂકવ્યા'
+                                                : exp.paidBy === 'shared'
+                                                  ? '✓ બંનેએ અડધા ચૂકવ્યા'
+                                                  : '💵 મેં પૂરા ચૂકવ્યા'}
                                             </span>
                                           )}
                                         </div>
@@ -1339,124 +1359,203 @@ export default function CurrentStatePage() {
       {/* ======================================================== */}
       {/* MODAL 2: LOG EXPENSE (ખર્ચ)                              */}
       {/* ======================================================== */}
-      {isExpenseModalOpen && activeCrop && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-stone-100 p-6 md:p-8">
-            <div className="flex justify-between items-center pb-4 border-b border-stone-100">
-              <div>
-                <h3 className="text-lg font-extrabold text-stone-900 font-serif">
-                  {editingExpense ? 'ખર્ચ સુધારો (Edit Expense)' : 'ખર્ચ નોંધો (Log Expense)'}
-                </h3>
-                <p className="text-xs text-stone-400">
-                  {activeCrop.cropName} • {activeCrop.farmName}
-                </p>
-              </div>
-              <button 
-                onClick={() => setIsExpenseModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      {isExpenseModalOpen && activeCrop && (() => {
+        const hasPartnerModal = !!(activeCrop.partner?.hasPartner);
+        const numericAmt = parseFloat(expAmount) || 0;
+        const pSharePct = parseFloat(activeCrop.partner?.sharePercent) || 50;
+        const oSharePct = 100 - pSharePct;
+        const partnerShareAmt = Math.round(numericAmt * (pSharePct / 100));
+        const ownerShareAmt = Math.round(numericAmt * (oSharePct / 100));
 
-            <form onSubmit={handleSaveExpense} className="space-y-4 mt-5">
-              <div>
-                <label className="block text-xs font-bold text-stone-600 mb-1">ખર્ચ રકમ (₹) *</label>
-                <input
-                  type="number"
-                  step="any"
-                  required
-                  autoFocus
-                  value={expAmount}
-                  onChange={(e) => setExpAmount(e.target.value)}
-                  placeholder="₹ 0.00"
-                  className="w-full text-lg font-extrabold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500 bg-amber-50/20 text-stone-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-stone-600 mb-1">ખર્ચ ની શ્રેણી (Category) *</label>
-                <select
-                  value={expCategory}
-                  onChange={(e) => setExpCategory(e.target.value)}
-                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500 bg-white cursor-pointer"
-                >
-                  <option value="seeds">બિયારણ (Seeds)</option>
-                  <option value="fertilizer">ખાતર (Fertilizer)</option>
-                  <option value="pesticide">જંતુનાશક દવા (Pesticide / Spray)</option>
-                  <option value="labour">મજૂરી / નિંદામણ (Labour)</option>
-                  <option value="machinery">ટ્રેક્ટર / રોટાવેટર (Machinery / Fuel)</option>
-                  <option value="irrigation">પિયત / વીજળી (Irrigation & Water)</option>
-                  <option value="harvesting">કાપણી / લણણી (Harvesting)</option>
-                  <option value="transport">ભાડું / ટ્રાન્સપોર્ટ (Transport)</option>
-                  <option value="other">પરચુરણ ખર્ચ (Other Expense)</option>
-                </select>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl max-w-md w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-stone-100 p-6 md:p-8">
+              <div className="flex justify-between items-center pb-4 border-b border-stone-100">
                 <div>
-                  <label className="block text-xs font-bold text-stone-600 mb-1">તારીખ (Date)</label>
+                  <h3 className="text-lg font-extrabold text-stone-900 font-serif">
+                    {editingExpense ? 'ખર્ચ સુધારો (Edit Expense)' : 'ખર્ચ નોંધો (Log Expense)'}
+                  </h3>
+                  <p className="text-xs text-stone-400">
+                    {activeCrop.cropName} • {activeCrop.farmName}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setIsExpenseModalOpen(false)}
+                  className="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 hover:text-stone-700 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveExpense} className="space-y-4 mt-5">
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">ખર્ચ રકમ (₹) *</label>
                   <input
-                    type="date"
+                    type="number"
+                    step="any"
                     required
-                    value={expDate}
-                    onChange={(e) => setExpDate(e.target.value)}
+                    autoFocus
+                    value={expAmount}
+                    onChange={(e) => setExpAmount(e.target.value)}
+                    placeholder="₹ 0.00"
+                    className="w-full text-lg font-extrabold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500 bg-amber-50/20 text-stone-900"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-600 mb-1">ખર્ચ ની શ્રેણી (Category) *</label>
+                    <select
+                      value={expCategory}
+                      onChange={(e) => setExpCategory(e.target.value)}
+                      className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500 bg-white cursor-pointer"
+                    >
+                      <option value="seeds">બિયારણ (Seeds)</option>
+                      <option value="fertilizer">ખાતર (Fertilizer)</option>
+                      <option value="pesticide">જંતુનાશક દવા (Pesticide / Spray)</option>
+                      <option value="labour">મજૂરી / નિંદામણ (Labour)</option>
+                      <option value="machinery">ટ્રેક્ટર / રોટાવેટર (Machinery / Fuel)</option>
+                      <option value="irrigation">પિયત / વીજળી (Irrigation & Water)</option>
+                      <option value="harvesting">કાપણી / લણણી (Harvesting)</option>
+                      <option value="transport">ભાડું / ટ્રાન્સપોર્ટ (Transport)</option>
+                      <option value="other">પરચુરણ ખર્ચ (Other Expense)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-stone-600 mb-1">તારીખ (Date)</label>
+                    <input
+                      type="date"
+                      required
+                      value={expDate}
+                      onChange={(e) => setExpDate(e.target.value)}
+                      className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Partner Settlement Who-Paid Selector */}
+                {hasPartnerModal && (
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-stone-700">
+                      કોણે પૈસા ચૂકવ્યા? (Who Paid Now? - {pSharePct}/{oSharePct} Shared)
+                    </label>
+                    <div className="space-y-2">
+                      {/* 1. Owner Paid Full */}
+                      <button
+                        type="button"
+                        onClick={() => setExpPaidBy('owner')}
+                        className={`w-full text-left p-3 rounded-2xl border transition cursor-pointer flex items-start gap-2.5 ${
+                          expPaidBy === 'owner'
+                            ? 'bg-amber-50 border-amber-500 ring-1 ring-amber-500/30'
+                            : 'bg-stone-50/70 border-stone-200 hover:bg-stone-100/70'
+                        }`}
+                      >
+                        <div className={`w-4 h-4 mt-0.5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          expPaidBy === 'owner' ? 'border-amber-600' : 'border-stone-300'
+                        }`}>
+                          {expPaidBy === 'owner' && <div className="w-2 h-2 rounded-full bg-amber-600" />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-xs font-extrabold text-stone-900 block">
+                            💵 મેં પૂરા ચૂકવ્યા (Owner Paid Full)
+                          </span>
+                          <span className="text-[11px] text-amber-800 font-semibold block mt-0.5">
+                            {numericAmt > 0
+                              ? `મેં ₹${numericAmt.toLocaleString('en-IN')} ચૂકવ્યા → પાર્ટનરનો ${pSharePct}% ભાગ (₹${partnerShareAmt.toLocaleString('en-IN')}) ક્લોઝિંગમાં કપાશે`
+                              : `પાર્ટનર પાસે પૈસા ન હોવાથી મેં પૂરા ચૂકવ્યા — ક્લોઝિંગમાં પાર્ટનરનો ભાગ કપાશે`}
+                          </span>
+                        </div>
+                      </button>
+
+                      {/* 2. Partner Paid Full */}
+                      <button
+                        type="button"
+                        onClick={() => setExpPaidBy('partner')}
+                        className={`w-full text-left p-3 rounded-2xl border transition cursor-pointer flex items-start gap-2.5 ${
+                          expPaidBy === 'partner'
+                            ? 'bg-purple-50 border-purple-500 ring-1 ring-purple-500/30'
+                            : 'bg-stone-50/70 border-stone-200 hover:bg-stone-100/70'
+                        }`}
+                      >
+                        <div className={`w-4 h-4 mt-0.5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          expPaidBy === 'partner' ? 'border-purple-600' : 'border-stone-300'
+                        }`}>
+                          {expPaidBy === 'partner' && <div className="w-2 h-2 rounded-full bg-purple-600" />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-xs font-extrabold text-stone-900 block">
+                            🤝 પાર્ટનર ({activeCrop.partner?.name || 'Partner'}) એ પૂરા ચૂકવ્યા
+                          </span>
+                          <span className="text-[11px] text-purple-800 font-semibold block mt-0.5">
+                            {numericAmt > 0
+                              ? `પાર્ટનરે ₹${numericAmt.toLocaleString('en-IN')} ચૂકવ્યા → મારો ${oSharePct}% ભાગ (₹${ownerShareAmt.toLocaleString('en-IN')}) ક્લોઝિંગમાં પાર્ટનરને આપીશ`
+                              : `પાર્ટનરે જાતે ખર્ચ સંભાળ્યો — ક્લોઝિંગ વખતે મારા ભાગના પૈસા પાર્ટનરને આપવાના`}
+                          </span>
+                        </div>
+                      </button>
+
+                      {/* 3. Shared Split Directly */}
+                      <button
+                        type="button"
+                        onClick={() => setExpPaidBy('shared')}
+                        className={`w-full text-left p-3 rounded-2xl border transition cursor-pointer flex items-start gap-2.5 ${
+                          expPaidBy === 'shared'
+                            ? 'bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500/30'
+                            : 'bg-stone-50/70 border-stone-200 hover:bg-stone-100/70'
+                        }`}
+                      >
+                        <div className={`w-4 h-4 mt-0.5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          expPaidBy === 'shared' ? 'border-emerald-600' : 'border-stone-300'
+                        }`}>
+                          {expPaidBy === 'shared' && <div className="w-2 h-2 rounded-full bg-emerald-600" />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-xs font-extrabold text-stone-900 block">
+                            ⚖️ બંનેએ પોતપોતાનો ભાગ ચૂકવ્યો (Paid Directly Split)
+                          </span>
+                          <span className="text-[11px] text-emerald-800 font-semibold block mt-0.5">
+                            {numericAmt > 0
+                              ? `માલિકે ₹${ownerShareAmt.toLocaleString('en-IN')} + પાર્ટનરે ₹${partnerShareAmt.toLocaleString('en-IN')} અલગ ચૂકવ્યા (કોઈ લેવડદેવડ બાકી નહીં)`
+                              : `બંનેએ પોતાનો ભાગ દુકાન પર જ ચૂકવી દીધો છે`}
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-xs font-bold text-stone-600 mb-1">વિગત / નોંધ (Notes)</label>
+                  <input
+                    type="text"
+                    value={expNotes}
+                    onChange={(e) => setExpNotes(e.target.value)}
+                    placeholder="e.g. 2 થેલી ડીએપી, નિંદામણ ના મજૂરો"
                     className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-stone-600 mb-1">કોણે ચૂકવ્યા (Paid By)</label>
-                  <select
-                    value={expPaidBy}
-                    onChange={(e) => setExpPaidBy(e.target.value)}
-                    className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500 bg-white cursor-pointer"
+                <div className="pt-4 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsExpenseModalOpen(false)}
+                    className="flex-1 py-3 text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-xl transition cursor-pointer"
                   >
-                    <option value="owner">માલિક (Me)</option>
-                    {activeCrop.partner?.hasPartner && (
-                      <>
-                        <option value="partner">ભાગીદાર ({activeCrop.partner.name})</option>
-                        <option value="shared">સહિયારા (Shared)</option>
-                      </>
-                    )}
-                  </select>
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-3 text-xs font-extrabold text-stone-950 bg-amber-500 hover:bg-amber-600 rounded-xl transition shadow cursor-pointer"
+                  >
+                    {editingExpense ? 'ફેરફાર સાચવો (Update)' : 'ખર્ચ સાચવો'}
+                  </button>
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-stone-600 mb-1">વિગત / નોંધ (Notes)</label>
-                <input
-                  type="text"
-                  value={expNotes}
-                  onChange={(e) => setExpNotes(e.target.value)}
-                  placeholder="e.g. 2 થેલી ડીએપી, નિંદામણ ના મજૂરો"
-                  className="w-full text-xs font-semibold border border-stone-200 rounded-xl p-3 focus:outline-none focus:border-amber-500"
-                />
-              </div>
-
-              <div className="p-3 bg-amber-50 rounded-xl text-[11px] text-amber-900 font-medium">
-                આ ખર્ચ "હિસાબ કરવાનો ફરમો" મુજબ કુલ ખર્ચમાં જોડાશે અને સીઝનના અંતે ભાગીદારી મુજબ કપાત થશે.
-              </div>
-
-              <div className="pt-4 flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setIsExpenseModalOpen(false)}
-                  className="flex-1 py-3 text-xs font-bold text-stone-600 bg-stone-100 hover:bg-stone-200 rounded-xl transition cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-3 text-xs font-extrabold text-stone-950 bg-amber-500 hover:bg-amber-600 rounded-xl transition shadow cursor-pointer"
-                >
-                  {editingExpense ? 'ફેરફાર સાચવો (Update)' : 'ખર્ચ સાચવો'}
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ======================================================== */}
       {/* MODAL 3: LOG UPAD (ઉપાડ) - PARTNER CASH DRAWINGS          */}
