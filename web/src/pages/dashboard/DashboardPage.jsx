@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
+import { useCurrentCropStore, calculateFarmoHisab } from '../../store/useCurrentCropStore.js';
 import { useTransactionStore } from '../../store/useTransactionStore.js';
 import { useBillStore } from '../../store/useBillStore.js';
 import { useReminderStore } from '../../store/useReminderStore.js';
@@ -17,7 +18,8 @@ import {
   CheckCircle,
   Clock,
   ArrowUpRight,
-  TrendingDown
+  TrendingDown,
+  Activity
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid, ComposedChart, Legend, Area } from 'recharts';
 import { formatINR, formatDate } from '../../../../shared/utils/helpers.js';
@@ -25,6 +27,7 @@ import { getWeightUnitLabel } from '../../../../shared/utils/units.js';
 import { useSettingsStore } from '../../store/useSettingsStore.js';
 
 import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js';
+import { buildUnifiedTransactions } from '../../../../shared/financial/buildUnifiedTransactions.js';
 import AmountDisplay from '../../components/AmountDisplay.jsx';
 import MonthSelector from '../../components/MonthSelector.jsx';
 import ChartCard from '../../components/ChartCard.jsx';
@@ -38,6 +41,7 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { profile } = useAuthStore();
   const { farms, fetchFarms } = useFarmStore();
+  const { crops, fetchCrops } = useCurrentCropStore();
   const { 
     transactions, 
     fetchTransactions, 
@@ -48,32 +52,32 @@ export default function DashboardPage() {
   const { weighingUnit } = useSettingsStore();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [periodType, setPeriodType] = useState('month'); // 'month' | 'year'
+  const [periodType, setPeriodType] = useState('year'); // 'month' | 'year' | 'all'
   const [selectedFarmId, setSelectedFarmId] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
     if (profile?.uid) {
       fetchFarms(profile.uid);
+      fetchCrops(profile.uid);
       fetchPendingSummary(profile.uid);
     }
-  }, [profile, fetchFarms, fetchPendingSummary]);
+  }, [profile, fetchFarms, fetchCrops, fetchPendingSummary]);
 
   useEffect(() => {
     if (profile?.uid) {
       const year = selectedDate.getFullYear();
-      let startDate, endDate;
-      
+      const filters = {};
+
       if (periodType === 'month') {
         const month = selectedDate.getMonth();
-        startDate = new Date(year, month, 1);
-        endDate = new Date(year, month + 1, 0, 23, 59, 59);
-      } else {
-        startDate = new Date(year, 0, 1);
-        endDate = new Date(year, 11, 31, 23, 59, 59);
+        filters.startDate = new Date(year, month, 1);
+        filters.endDate = new Date(year, month + 1, 0, 23, 59, 59);
+      } else if (periodType === 'year') {
+        filters.startDate = new Date(year, 0, 1);
+        filters.endDate = new Date(year, 11, 31, 23, 59, 59);
       }
 
-      const filters = { startDate, endDate };
       if (selectedFarmId) filters.farmId = selectedFarmId;
       if (selectedCategory) filters.category = selectedCategory;
 
@@ -82,8 +86,33 @@ export default function DashboardPage() {
     }
   }, [profile, selectedDate, periodType, selectedFarmId, selectedCategory, fetchTransactions, fetchUpcoming]);
 
-  // Use FinancialEngine to calculate everything
-  const financials = FinancialEngine.calculate(transactions, {
+  // Merge standalone transactions, live Current State ongoing crop entries, and Farm Harvest History
+  const unifiedTransactions = useMemo(() => {
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    let startDate = null;
+    let endDate = null;
+    if (periodType === 'month') {
+      startDate = new Date(year, month, 1);
+      endDate = new Date(year, month + 1, 0, 23, 59, 59);
+    } else if (periodType === 'year') {
+      startDate = new Date(year, 0, 1);
+      endDate = new Date(year, 11, 31, 23, 59, 59);
+    }
+
+    return buildUnifiedTransactions({
+      transactions,
+      crops,
+      farms,
+      startDate,
+      endDate,
+      farmId: selectedFarmId,
+      category: selectedCategory,
+    });
+  }, [transactions, crops, farms, selectedDate, periodType, selectedFarmId, selectedCategory]);
+
+  // Use FinancialEngine to calculate everything from unifiedTransactions
+  const financials = FinancialEngine.calculate(unifiedTransactions, {
     periodType,
     targetDate: selectedDate,
     weighingUnit: weighingUnit || 'mann'
@@ -99,10 +128,10 @@ export default function DashboardPage() {
     sharedExpenses
   } = financials;
   
-  // Need to compute category breakdown manually for the pie chart, or add it to FinancialEngine.
-  // Actually, FinancialEngine should probably just return it or we do a quick reduce here:
+  // Compute category breakdown for BarChart from unifiedTransactions
   const categoryMap = {};
-  transactions.forEach(tx => {
+  const expenseEntries = unifiedTransactions.filter(tx => tx.type === 'expense');
+  unifiedTransactions.forEach(tx => {
     if (tx.type === 'expense' || tx.type === 'loan') {
       if (!categoryMap[tx.category]) {
         categoryMap[tx.category] = { category: tx.category, total: 0 };
@@ -111,6 +140,10 @@ export default function DashboardPage() {
     }
   });
   const categoryBreakdown = Object.values(categoryMap).sort((a, b) => b.total - a.total);
+
+  const activeOngoingCrops = useMemo(() => {
+    return crops.filter(c => c.status === 'ongoing' && (!selectedFarmId || c.farmId === selectedFarmId));
+  }, [crops, selectedFarmId]);
 
   // Map Category Breakdown for Recharts
   const chartData = categoryBreakdown.map((item) => {
@@ -169,6 +202,7 @@ export default function DashboardPage() {
           >
             <option value="month">Month</option>
             <option value="year">Year</option>
+            <option value="all">All Time</option>
           </select>
 
           {/* Farm Filter */}
@@ -196,7 +230,13 @@ export default function DashboardPage() {
           </select>
         </div>
 
-        <MonthSelector selectedDate={selectedDate} onChange={setSelectedDate} mode={periodType} />
+        {periodType === 'all' ? (
+          <div className="bg-stone-50 border border-stone-200/50 rounded-xl px-4 py-2 text-xs font-bold text-stone-700">
+            All Time Overview
+          </div>
+        ) : (
+          <MonthSelector selectedDate={selectedDate} onChange={setSelectedDate} mode={periodType} />
+        )}
       </div>
 
       {/* 2x2 Summary Grid */}
@@ -209,9 +249,8 @@ export default function DashboardPage() {
           </span>
           <div className="mt-2 flex items-baseline justify-between">
             <AmountDisplay amount={financials.totalExpenses} className="text-2xl font-extrabold text-stone-900" />
-            <span className="text-[10px] font-bold text-red-500 flex items-center bg-red-50 px-1.5 py-0.5 rounded-md">
-              <TrendingUp className="w-3 h-3 mr-0.5" />
-              12%
+            <span className="text-[10px] font-bold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-md">
+              {expenseEntries.length} items
             </span>
           </div>
         </div>
@@ -223,7 +262,7 @@ export default function DashboardPage() {
           </span>
           <div className="mt-2 flex items-baseline justify-between">
             <AmountDisplay amount={financials.ownerShareExpense} className="text-2xl font-extrabold text-ownExpense" />
-            <span className="text-xs font-semibold text-ownExpense/70">Own Land</span>
+            <span className="text-xs font-semibold text-ownExpense/70">Own Share</span>
           </div>
         </div>
 
@@ -234,12 +273,15 @@ export default function DashboardPage() {
           </span>
           <div className="mt-2 flex items-baseline justify-between">
             <AmountDisplay amount={financials.partnerShareExpense} className="text-2xl font-extrabold text-partnerExpense" />
-            <span className="text-xs font-semibold text-partnerExpense/70">Share Share</span>
+            <span className="text-xs font-semibold text-partnerExpense/70">Partner Share</span>
           </div>
         </div>
 
         {/* Card 4: Pending bills */}
-        <div className="bg-white border border-stone-200/50 rounded-2xl p-5 shadow-sm hover:shadow transition flex flex-col justify-between">
+        <div
+          onClick={() => navigate('/bills')}
+          className="bg-white border border-stone-200/50 hover:border-primary/40 rounded-2xl p-5 shadow-sm hover:shadow transition flex flex-col justify-between cursor-pointer"
+        >
           <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
             {t('navigation.bills') || 'Pending Bills'}
           </span>
@@ -252,6 +294,50 @@ export default function DashboardPage() {
         </div>
 
       </div>
+
+      {/* Live Ongoing Crops Strip (Synced with Current State) */}
+      {activeOngoingCrops.length > 0 && (
+        <div className="bg-stone-900 text-white rounded-2xl p-4 sm:p-5 border border-stone-800 shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-emerald-400">
+                સક્રિય ચાલુ પાક ({activeOngoingCrops.length} Active Ongoing Crops)
+              </h3>
+            </div>
+            <Link to="/current-state" className="text-xs font-bold text-emerald-300 hover:underline flex items-center gap-1">
+              Manage <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {activeOngoingCrops.map(crop => {
+              const hisab = calculateFarmoHisab(crop);
+              return (
+                <div
+                  key={crop.id}
+                  onClick={() => navigate('/current-state')}
+                  className="bg-stone-800/70 hover:bg-stone-800 border border-stone-700/80 rounded-xl p-3 flex items-center justify-between gap-2 cursor-pointer transition"
+                >
+                  <div className="min-w-0">
+                    <p className="text-xs font-extrabold text-white truncate">{crop.cropName}</p>
+                    <p className="text-[10px] text-stone-400 truncate">
+                      {crop.farmName} {crop.partner?.hasPartner ? `• 🤝 ${crop.partner.name}` : ''}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <span className="text-xs font-extrabold text-amber-400 block">
+                      {formatINR(hisab.totalKharch)} ખર્ચ
+                    </span>
+                    <span className="text-[10px] text-emerald-400 font-semibold block">
+                      વેચાણ: {formatINR(hisab.totalMadatar)}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Business Growth & Analytics KPIs */}
       <div>
@@ -304,9 +390,9 @@ export default function DashboardPage() {
           {/* Category breakdown */}
           <ChartCard 
             title="Expenses by Category" 
-            subtitle="Which operations cost the most this month"
+            subtitle={`Which operations cost the most (${periodType === 'month' ? 'this month' : periodType === 'year' ? selectedDate.getFullYear() : 'all time'})`}
           >
-            {loading ? (
+            {loading && chartData.length === 0 ? (
               <LoadingSkeleton width="w-full" height="h-64" />
             ) : chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={260}>
@@ -322,7 +408,7 @@ export default function DashboardPage() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <EmptyState message="No expenses recorded for this month." />
+              <EmptyState message={`No expenses recorded for ${periodType === 'month' ? 'this month' : periodType === 'year' ? selectedDate.getFullYear() : 'this period'}.`} />
             )}
           </ChartCard>
 
@@ -379,15 +465,15 @@ export default function DashboardPage() {
               </Link>
             </div>
 
-            {loading ? (
+            {loading && expenseEntries.length === 0 ? (
               <div className="space-y-3">
                 <LoadingSkeleton height="h-14" />
                 <LoadingSkeleton height="h-14" />
                 <LoadingSkeleton height="h-14" />
               </div>
-            ) : transactions.filter(t => t.type === 'expense').length > 0 ? (
+            ) : expenseEntries.length > 0 ? (
               <div className="space-y-3">
-                {transactions.filter(t => t.type === 'expense').slice(0, 5).map((exp) => {
+                {expenseEntries.slice(0, 6).map((exp) => {
                   const cat = getCategoryById(exp.category);
                   const color = cat?.color || '#6B7280';
                   
@@ -395,7 +481,7 @@ export default function DashboardPage() {
                     <div 
                       key={exp.id}
                       className="flex items-center justify-between p-3 bg-stone-50 hover:bg-stone-100/50 border border-stone-100 rounded-xl transition cursor-pointer"
-                      onClick={() => navigate(`/farms/${exp.farmId}`)}
+                      onClick={() => navigate(exp.source === 'current_crop' ? '/current-state' : (exp.farmId ? `/farms/${exp.farmId}` : '/farms'))}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div 
@@ -411,11 +497,11 @@ export default function DashboardPage() {
                             {cat?.nameKey ? t(cat.nameKey) : exp.category}
                           </p>
                           <p className="text-[10px] text-stone-400 font-semibold truncate">
-                            {formatDate(exp.date)}
+                            {formatDate(exp.date)}{exp.notes ? ` • ${exp.notes}` : ''}
                           </p>
                         </div>
                       </div>
-                      <AmountDisplay amount={exp.amount} className="text-xs font-extrabold text-stone-900 ml-2" />
+                      <AmountDisplay amount={exp.amount} className="text-xs font-extrabold text-stone-900 ml-2 shrink-0" />
                     </div>
                   );
                 })}

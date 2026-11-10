@@ -6,6 +6,7 @@
  */
 
 import { convertWeight } from '../utils/units.js';
+import { parseLocalDateString } from '../utils/helpers.js';
 
 export class FinancialEngine {
   /**
@@ -154,7 +155,29 @@ export class FinancialEngine {
     const targetDate = options.targetDate ? new Date(options.targetDate) : new Date();
     const targetUnit = options.weighingUnit || 'mann';
 
-    if (periodType === 'year') {
+    if (periodType === 'all') {
+      const yearMap = {};
+      transactions.forEach(tx => {
+        const d = this.parseDate(tx.date || tx.createdAt);
+        if (!d || isNaN(d.getTime())) return;
+        const yr = d.getFullYear().toString();
+        if (!yearMap[yr]) {
+          yearMap[yr] = { name: yr, expense: 0, revenue: 0, profit: 0, yield: 0 };
+        }
+        if (tx.type === 'expense') yearMap[yr].expense += parseFloat(tx.amount) || 0;
+        if (tx.type === 'crop_sale') {
+          yearMap[yr].revenue += parseFloat(tx.amount) || 0;
+          yearMap[yr].yield += convertWeight(tx.totalYield || 0, tx.yieldUnit || 'quintal', targetUnit);
+        }
+      });
+
+      Object.keys(yearMap).sort().forEach(yr => {
+        const entry = yearMap[yr];
+        entry.profit = entry.revenue - entry.expense;
+        trendData.push(entry);
+      });
+      yearlyAnalytics = trendData;
+    } else if (periodType === 'year') {
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const monthlyExpenses = new Array(12).fill(0);
       const monthlyRevenue = new Array(12).fill(0);
@@ -225,6 +248,9 @@ export class FinancialEngine {
     if (!d) return null;
     if (d.toDate) return d.toDate();
     if (d.seconds) return new Date(d.seconds * 1000);
+    if (typeof d === 'string') {
+      return parseLocalDateString(d) || new Date(d);
+    }
     return new Date(d);
   }
 }

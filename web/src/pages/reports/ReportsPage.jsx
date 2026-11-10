@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/useAuthStore.js';
 import { useFarmStore } from '../../store/useFarmStore.js';
+import { useCurrentCropStore } from '../../store/useCurrentCropStore.js';
 import { useTransactionStore } from '../../store/useTransactionStore.js';
 import { usePartnerStore } from '../../store/usePartnerStore.js';
 import { Calendar, Sprout, FileDown, Eye, Filter, ArrowUpDown } from 'lucide-react';
@@ -24,6 +25,7 @@ import { formatINR, formatDate } from '../../../../shared/utils/helpers.js';
 import { convertWeight, getWeightUnitLabel } from '../../../../shared/utils/units.js';
 import { useSettingsStore } from '../../store/useSettingsStore.js';
 import { FinancialEngine } from '../../../../shared/financial/FinancialEngine.js';
+import { buildUnifiedTransactions } from '../../../../shared/financial/buildUnifiedTransactions.js';
 import AmountDisplay from '../../components/AmountDisplay.jsx';
 import ChartCard from '../../components/ChartCard.jsx';
 import DataTable from '../../components/DataTable.jsx';
@@ -38,6 +40,7 @@ export default function ReportsPage() {
   const { profile } = useAuthStore();
   const { weighingUnit } = useSettingsStore();
   const { farms, fetchFarms } = useFarmStore();
+  const { crops, fetchCrops } = useCurrentCropStore();
   const { 
     transactions, 
     fetchTransactions,
@@ -46,7 +49,7 @@ export default function ReportsPage() {
 
   const [farmFilter, setFarmFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all'); // 'all' | 'own' | 'partner'
-  const [dateRange, setDateRange] = useState('this-month'); // 'this-month' | 'last-month' | 'all'
+  const [dateRange, setDateRange] = useState('all'); // 'this-month' | 'last-month' | 'all'
   
   const [activeTab, setActiveTab] = useState('analytics'); // 'analytics' | 'bhagidari'
   const { partners, fetchPartners } = usePartnerStore();
@@ -55,8 +58,10 @@ export default function ReportsPage() {
   useEffect(() => {
     if (profile?.uid) {
       fetchPartners(profile.uid);
+      fetchFarms(profile.uid);
+      fetchCrops(profile.uid);
     }
-  }, [profile, fetchPartners]);
+  }, [profile, fetchPartners, fetchFarms, fetchCrops]);
 
   // Set default partner
   useEffect(() => {
@@ -64,12 +69,6 @@ export default function ReportsPage() {
       setSelectedPartnerId(partners[0].id);
     }
   }, [partners, selectedPartnerId]);
-  
-  useEffect(() => {
-    if (profile?.uid) {
-      fetchFarms(profile.uid);
-    }
-  }, [profile, fetchFarms]);
 
   useEffect(() => {
     if (profile?.uid) {
@@ -97,14 +96,37 @@ export default function ReportsPage() {
     }
   }, [profile, farmFilter, typeFilter, dateRange, fetchTransactions]);
 
-  const financials = FinancialEngine.calculate(transactions, {});
+  const unifiedTransactions = useMemo(() => {
+    let startDate = null;
+    let endDate = null;
+    const now = new Date();
+    if (dateRange === 'this-month') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    } else if (dateRange === 'last-month') {
+      startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+    }
+
+    return buildUnifiedTransactions({
+      transactions,
+      crops,
+      farms,
+      startDate,
+      endDate,
+      farmId: farmFilter,
+      expenseType: typeFilter
+    });
+  }, [transactions, crops, farms, dateRange, farmFilter, typeFilter]);
+
+  const financials = FinancialEngine.calculate(unifiedTransactions, { weighingUnit: weighingUnit || 'mann' });
   const { totalExpenses, ownerShareExpense, partnerShareExpense } = financials;
 
   // Manual aggregations for pie charts
   const categoryMap = {};
   const farmMap = {};
   
-  transactions.forEach(tx => {
+  unifiedTransactions.forEach(tx => {
     if (tx.type === 'expense' || tx.type === 'loan') {
       if (!categoryMap[tx.category]) categoryMap[tx.category] = { category: tx.category, total: 0 };
       categoryMap[tx.category].total += parseFloat(tx.amount) || 0;
@@ -133,14 +155,14 @@ export default function ReportsPage() {
     doc.text(`Own Land Expense: INR ${ownerShareExpense}`, 14, 43);
     doc.text(`Partnership Expense: INR ${partnerShareExpense}`, 14, 48);
 
-    const tableRows = transactions.map((exp) => {
+    const tableRows = unifiedTransactions.map((exp) => {
       const farm = farms.find(f => f.id === exp.farmId);
       const cat = getCategoryById(exp.category);
       const categoryLabel = cat ? t(cat.nameKey) : exp.category;
       return [
         formatDate(exp.date),
         categoryLabel,
-        farm?.name || 'Unknown',
+        farm?.name || exp.farmName || 'Unknown',
         exp.expenseType === 'own' ? 'Own Share' : 'Partner Share',
         `Rs. ${exp.amount}`
       ];
@@ -231,7 +253,7 @@ export default function ReportsPage() {
 
         <button
           onClick={handleExportPDF}
-          disabled={transactions.length === 0}
+          disabled={unifiedTransactions.length === 0}
           className="flex items-center gap-1.5 px-4.5 py-2.5 bg-primary hover:bg-primary-dark disabled:bg-stone-300 text-white font-bold rounded-xl text-sm shadow transition duration-200 cursor-pointer"
         >
           <FileDown className="w-4.5 h-4.5" />
@@ -382,7 +404,7 @@ export default function ReportsPage() {
         <h3 className="font-bold text-base text-stone-900 px-1">Expense Ledger Statement</h3>
         <DataTable
           columns={columns}
-          data={transactions.filter(t => t.type === 'expense')}
+          data={unifiedTransactions.filter(t => t.type === 'expense')}
           emptyMessage="No ledger logs recorded for selected filter criteria."
         />
       </div>
@@ -420,7 +442,7 @@ export default function ReportsPage() {
                   ) : (
                     partners.map((partner) => {
                       const farm = farms.find(f => f.id === partner.farmId);
-                      const farmTransactions = transactions.filter(e => e.farmId === partner.farmId);
+                      const farmTransactions = unifiedTransactions.filter(e => e.farmId === partner.farmId);
                       const latestHarvest = farm?.harvests?.length > 0 ? farm.harvests[farm.harvests.length - 1] : null;
                       
                       const financials = FinancialEngine.calculate(farmTransactions, { partnerProfitSharePercent: partner.partnerSharePercent });
@@ -474,7 +496,7 @@ export default function ReportsPage() {
           {partners.length > 0 && (() => {
             const selectedPartner = partners.find(p => p.id === selectedPartnerId) || partners[0];
             const farm = farms.find(f => f.id === selectedPartner.farmId);
-            const farmTransactions = transactions.filter(e => e.farmId === selectedPartner.farmId);
+            const farmTransactions = unifiedTransactions.filter(e => e.farmId === selectedPartner.farmId);
             const financials = FinancialEngine.calculate(farmTransactions, { partnerProfitSharePercent: selectedPartner.partnerSharePercent || 50 });
             
             const categoryMap = {};
